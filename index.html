@@ -814,6 +814,21 @@ body[data-hdr="light"] #hdr{--hbg:#fff;opacity:1}
   .form input,.form select,.form textarea,.sel .sel-btn{font-size:16px}
   .sr .srk .lnk{font-size:10px}
 }
+@media (max-width:900px){
+  .tl li{opacity:1;transform:none;transition:none}
+  .tl li::before{transform:none}
+  .tl::before{width:var(--tlp,38%)}
+  .menu,.menu .mcol{overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y}
+  .menu .mcol{padding-top:calc(96px + env(safe-area-inset-top,0px));padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));min-height:100%;box-sizing:border-box}
+  .menu li a{font-size:14px;padding:7px 0;line-height:1.25;gap:16px}
+  .menu li a small{font-size:9px}
+  .menu .aside{margin-top:18px;gap:8px;padding-top:14px;flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:flex-end}
+  .menu .aside>div{flex:1 1 45%}
+  .menu .aside>div:nth-child(3){display:none}
+  .menu .aside .row{flex:1 1 100%;margin-top:4px;gap:14px}
+  .menu .aside .t-body,.menu .aside{font-size:11px}
+}
+@media (hover:none){.menu li a:hover{transform:none;opacity:.92}.menu li a{transition:opacity .3s}}
 </style>
 </head>
 <body>
@@ -1777,7 +1792,7 @@ body[data-hdr="light"] #hdr{--hbg:#fff;opacity:1}
 
   /* ---- timeline ---- */
   var tlEl=document.getElementById('tl');
-  new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting){tlEl.classList.add('on');o.unobserve(tlEl);}});},{threshold:.3}).observe(tlEl);
+  new (function(){var tgt=document.getElementById('tlwrap')||tlEl;new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting){tlEl.classList.add('on');o.unobserve(tgt);}});},{threshold:.05}).observe(tgt);})();
 
   /* ---- form -> WhatsApp ---- */
   document.getElementById('form').addEventListener('submit',function(e){e.preventDefault();var f=e.target,n=f.nombre.value.trim(),t=f.tel.value.trim(),p=f.proyecto.value,m=f.msg.value.trim();if(!n){f.nombre.focus();f.nombre.style.borderBottomColor='#ff0006';return;}var txt='Hola, soy '+n+(t?' ('+t+')':'')+'. Me interesa '+p+'.'+(m?' '+m:'');window.open('https://wa.me/595981044061?text='+encodeURIComponent(txt),'_blank','noopener');});

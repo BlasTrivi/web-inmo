@@ -1,12 +1,12 @@
-INMO Desarrollos · sitio web (v4)
+INMO Desarrollos · sitio web (v5)
 
 Contenido
   index.html      página completa (una sola página con rutas #/…)
   assets/         imágenes WebP (2x resolución) y favicons
 
 Cómo usarlo
-  - Descomprimí el ZIP en una carpeta y abrí index.html, o subí la carpeta completa
-    (index.html + assets/) a tu hosting manteniendo la estructura.
+  - Descomprimí el ZIP y subí la carpeta completa (index.html + assets/) a tu hosting
+    manteniendo la estructura, o abrí index.html en el navegador.
   - Requiere internet para las fuentes (Google Fonts) y la librería de animación (GSAP, CDN).
 
 Notas
