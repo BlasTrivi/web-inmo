@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>INMO Desarrollos — Departamentos grandes, en serio</title>
+<title>INMO Desarrollos · Departamentos grandes, en serio</title>
 <meta name="description" content="INMO Desarrollos, desarrolladora inmobiliaria en Asunción. Trinity 2, The Address, President Tower, Boston 842. Diez años construyendo patrimonio.">
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="icon" type="image/png" sizes="512x512" href="assets/favicon-512.png">
@@ -67,7 +67,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 @media (max-width:700px){.topnav .t-label{display:none}}
 
 /* menu */
-.menu{position:fixed;inset:0;z-index:65;background:#000;color:#fff;display:grid;grid-template-columns:1.2fr .8fr;gap:var(--pad);padding:calc(190px + env(safe-area-inset-top,0px)) var(--pad) var(--pad);visibility:hidden;opacity:0;transition:opacity .6s var(--ease),visibility 0s .6s}
+.menu{position:fixed;top:0;right:0;bottom:0;left:0;z-index:65;background:#000;color:#fff;display:grid;grid-template-columns:1.2fr .8fr;gap:var(--pad);padding:calc(190px + env(safe-area-inset-top,0px)) var(--pad) var(--pad);visibility:hidden;opacity:0;transition:opacity .6s var(--ease),visibility 0s .6s}
 .menu.open{visibility:visible;opacity:1;transition:opacity .6s var(--ease),visibility 0s}
 .menu ul{display:flex;flex-direction:column;justify-content:flex-start;gap:0;overflow:auto}
 .menu li a{display:flex;align-items:baseline;gap:18px;font-size:clamp(22px,3.6vw,50px);letter-spacing:-.01em;text-transform:uppercase;font-weight:500;line-height:1.1;padding:4px 0;color:#fff;opacity:.92;transition:opacity .3s,transform .6s var(--ease)}
@@ -85,7 +85,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 /* cursor */
 .cur{position:fixed;left:0;top:0;width:10px;height:10px;border-radius:50%;background:#fff;mix-blend-mode:difference;z-index:90;pointer-events:none;transform:translate(-50%,-50%);transition:width .3s var(--ease),height .3s var(--ease),background .3s,border-radius .3s;display:none}
 .cur.big{width:56px;height:56px;background:#fff}
-.cur .lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#000;opacity:0;transition:opacity .3s;font-weight:600}
+.cur .lbl{position:absolute;top:0;right:0;bottom:0;left:0;display:flex;align-items:center;justify-content:center;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#000;opacity:0;transition:opacity .3s;font-weight:600}
 .cur.drag{width:74px;height:74px}
 .cur.drag .lbl{opacity:1}
 @media (hover:hover) and (pointer:fine){.cur{display:block}}
@@ -102,9 +102,9 @@ ul,ol{margin:0;padding:0;list-style:none}
 .sp{height:clamp(60px,9vw,140px)}
 
 /* hero */
-.hero{height:100svh;min-height:600px;position:relative;overflow:hidden;background:#000;color:#fff}
-.hero video,.hero img.fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,.08) 55%,rgba(0,0,0,.25) 100%)}
+.hero{height:100vh;height:100svh;min-height:600px;position:relative;overflow:hidden;background:#000;color:#fff}
+.hero video,.hero img.fallback{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;object-fit:cover}
+.hero::after{content:"";position:absolute;top:0;right:0;bottom:0;left:0;background:linear-gradient(90deg,rgba(0,0,0,.42) 0%,rgba(0,0,0,.08) 55%,rgba(0,0,0,.25) 100%)}
 .hero .tag{position:absolute;left:var(--pad);top:50%;transform:translateY(-40%);z-index:2;max-width:18ch}
 .hero .tag .l{display:block;overflow:hidden}
 .hero .tag .l span{display:block;transform:translateY(110%)}
@@ -118,7 +118,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 @media (max-width:700px){.hero .cards{right:0;left:0;justify-content:stretch}.hero .card{flex:1;height:auto;min-height:72px;flex-direction:row;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px}.hero .card .t-label{display:none}.hero .card .ttl{text-align:left;font-size:13px}.hero .meta{display:none}.hero .tag{top:44%}}
 
 /* about/manifiesto intro */
-.intro{height:100svh;min-height:620px;position:relative;overflow:hidden}
+.intro{height:100vh;height:100svh;min-height:620px;position:relative;overflow:hidden}
 .intro .txt{position:absolute;left:var(--pad);top:clamp(150px,20vh,220px);max-width:30ch;z-index:3}
 .intro .txt .arrow{display:block;margin-top:22px;font-size:20px}
 .intro .pic{position:absolute;right:0;top:0;bottom:0;width:62%;overflow:hidden}
@@ -232,7 +232,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 /* horizontal slider (pinned) */
 .hs{position:relative;overflow:visible;height:auto;min-height:0}
-.hs>.stk{position:sticky;top:0;height:100svh;min-height:600px;overflow:hidden}
+.hs>.stk{position:-webkit-sticky;position:sticky;top:0;height:100vh;height:100svh;min-height:600px;overflow:hidden}
 .hs .track{display:flex;height:100%;will-change:transform}
 .hs .slide{flex:0 0 100vw;height:100%;display:grid;grid-template-columns:5fr 7fr;position:relative}
 .hs .slide .l{padding:clamp(180px,26vh,260px) clamp(28px,4vw,72px) clamp(96px,13vh,130px) var(--pad);display:flex;flex-direction:column;justify-content:space-between;gap:28px}
@@ -261,7 +261,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 /* gallery strip (pinned) */
 .gal{position:relative;overflow:visible;height:auto;min-height:0}
-.gal>.stk{position:sticky;top:0;height:100svh;min-height:600px;overflow:hidden}
+.gal>.stk{position:-webkit-sticky;position:sticky;top:0;height:100vh;height:100svh;min-height:600px;overflow:hidden}
 .gal .lab{position:absolute;left:var(--pad);top:clamp(170px,24vh,240px);z-index:2}
 .gal .strip{position:absolute;left:0;top:0;height:100%;display:flex;align-items:center;gap:clamp(14px,2vw,30px);padding-left:34vw;padding-right:var(--pad);will-change:transform}
 .gal .strip figure{flex:none;overflow:hidden}
@@ -297,7 +297,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 .done>li:hover .thumb{opacity:1;transform:translateY(-50%) scale(1)}
 @media (max-width:900px){.done>li{grid-template-columns:34px 1fr;grid-template-areas:"n nm" "n loc" "n st";gap:8px 14px;align-items:start}.done>li>*:nth-child(1),.done>li>a>*:nth-child(1){grid-area:n;padding-top:.5em}.done>li>*:nth-child(2),.done>li>a>*:nth-child(2){grid-area:nm}.done>li>*:nth-child(3),.done>li>a>*:nth-child(3){grid-area:loc}.done>li>*:nth-child(4),.done>li>a>*:nth-child(4){grid-area:st;justify-self:start}.done>li .thumb{display:none}.done>li:hover .nm{transform:none}}
 
-/* delivered list — expandable ficha */
+/* delivered list · expandable ficha */
 .done>li.ex{cursor:pointer}.done>li.ex .st{white-space:nowrap}.done>li .ficha a{cursor:pointer}.fx.nopic .info{grid-column:1/13;max-width:70ch}.done>li.ex .st .red{color:var(--red)}
 .done>li .st .ind{display:inline-block;width:11px;height:11px;position:relative;margin-left:14px;vertical-align:middle;top:-1px;transition:transform .6s var(--ease)}
 .done>li .st .ind::before,.done>li .st .ind::after{content:"";position:absolute;left:0;top:50%;width:100%;height:1px;background:currentColor;transform:translateY(-50%)}
@@ -392,7 +392,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 
 /* preloader */
-.pre{position:fixed;inset:0;z-index:95;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;transition:opacity .8s var(--ease),visibility 0s .8s}
+.pre{position:fixed;top:0;right:0;bottom:0;left:0;z-index:95;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;transition:opacity .8s var(--ease),visibility 0s .8s}
 .pre.off{opacity:0;visibility:hidden;pointer-events:none}
 .lcard{width:200px;height:290px;border:1px solid rgba(255,255,255,.7);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:26px 18px;color:#fff;text-align:center}
 .lcard img{width:120px}
@@ -444,7 +444,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 
 /* ---- page transition: curtain rising ---- */
-.trans{position:fixed;inset:0;z-index:80;background:#000;display:flex;align-items:center;justify-content:center;transform:translateY(102%);visibility:hidden;pointer-events:none}
+.trans{position:fixed;top:0;right:0;bottom:0;left:0;z-index:80;background:#000;display:flex;align-items:center;justify-content:center;transform:translateY(102%);visibility:hidden;pointer-events:none}
 .trans.in{visibility:visible;pointer-events:auto;transform:translateY(0);transition:transform .7s var(--ease)}
 .trans.out{visibility:visible;transform:translateY(-102%);transition:transform .7s var(--ease)}
 .trans .lcard{opacity:0;transition:opacity .3s .25s}
@@ -490,7 +490,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 .gal .strip figure:hover::before,.gal .strip figure:hover::after{opacity:1;transform:none}
 .gal .strip figure img{transition:transform 1s var(--ease)}
 .gal .strip figure:hover img{transform:scale(1.04)}
-.gv{position:fixed;inset:0;z-index:85;background:#000;color:#fff;overflow:auto;visibility:hidden;opacity:0;transition:opacity .5s var(--ease),visibility 0s .5s;-webkit-overflow-scrolling:touch}
+.gv{position:fixed;top:0;right:0;bottom:0;left:0;z-index:85;background:#000;color:#fff;overflow:auto;visibility:hidden;opacity:0;transition:opacity .5s var(--ease),visibility 0s .5s;-webkit-overflow-scrolling:touch}
 .gv.open{visibility:visible;opacity:1;transition:opacity .5s var(--ease),visibility 0s}
 .gv .lab{position:fixed;left:var(--pad);top:calc(50% - .5em);z-index:2}
 .gv .x{position:fixed;right:var(--pad);top:calc(26px + env(safe-area-inset-top,0px));width:44px;height:44px;border:1px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:20px;z-index:2;background:#000}
@@ -503,10 +503,10 @@ ul,ol{margin:0;padding:0;list-style:none}
 
 /* ---- a day in the building (clock) ---- */
 .day{position:relative;overflow:visible}
-.day .wrap{height:100svh;min-height:620px;position:sticky;top:0;overflow:hidden}
+.day .wrap{height:100vh;height:100svh;min-height:620px;position:-webkit-sticky;position:sticky;top:0;overflow:hidden}
 .day .head2{position:absolute;right:var(--pad);top:clamp(150px,21vh,210px);z-index:3;text-align:right}
 .day .imgs{position:absolute;left:0;top:0;width:52%;height:100%;overflow:hidden}
-.day .imgs img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.06);transition:opacity .9s var(--ease),transform 1.6s var(--ease)}
+.day .imgs img{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.06);transition:opacity .9s var(--ease),transform 1.6s var(--ease)}
 .day .imgs img.on{opacity:1;transform:none}
 .day .clock{position:absolute;right:-18vw;top:50%;transform:translateY(-50%);width:min(64vw,900px);aspect-ratio:1;pointer-events:none}
 .day .clock svg{width:100%;height:100%;overflow:visible}
@@ -585,11 +585,12 @@ ul,ol{margin:0;padding:0;list-style:none}
   .ten .txt{margin-top:0}
   .pill{margin-top:30px;gap:20px 22px}
   .partners{margin-top:40px;gap:10px}
-  .tlwrap{overflow:hidden;min-height:62vh;display:flex;align-items:center;padding-left:0;padding-right:0}
-  .tl{margin-top:0;display:flex;gap:0;width:max-content;padding:0 var(--pad);border-top:0;will-change:transform}
-  .tl::before{left:var(--pad);width:var(--tlp,0%);transition:none}
-  .tl.on::before{width:var(--tlp,0%)}
-  .tl li{flex:0 0 62vw;padding-right:26px;padding-top:18px}
+  .tlwrap{overflow-x:auto;overflow-y:hidden;min-height:0;display:block;padding-left:0;padding-right:0;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-top:clamp(40px,7vw,90px)}
+  .tlwrap::-webkit-scrollbar{display:none}
+  .tl{margin-top:0;display:flex;gap:0;width:max-content;padding:0 var(--pad);border-top:0;--tlp:38%}
+  .tl::before{left:var(--pad);width:var(--tlp);transition:width .3s linear}
+  .tl.on::before{width:var(--tlp)}
+  .tl li{flex:0 0 62vw;padding-right:26px;padding-top:18px;scroll-snap-align:start}
   .tl li::before{left:0}
   .tl b{font-size:34px}
   .tl span{max-width:none;font-size:12px}
@@ -649,9 +650,9 @@ ul,ol{margin:0;padding:0;list-style:none}
 /* ---------- vistas (páginas) ---------- */
 main.view{display:none}main.view.on{display:block}
 /* portada de proyecto */
-.phero{position:relative;height:100svh;min-height:560px;overflow:hidden;background:#000;color:#fff}
-.phero>img,.phero>video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9}
-.phero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.4) 0%,rgba(0,0,0,0) 38%,rgba(0,0,0,.62) 100%);pointer-events:none}
+.phero{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;background:#000;color:#fff}
+.phero>img,.phero>video{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;object-fit:cover;opacity:.9}
+.phero::after{content:"";position:absolute;top:0;right:0;bottom:0;left:0;background:linear-gradient(180deg,rgba(0,0,0,.4) 0%,rgba(0,0,0,0) 38%,rgba(0,0,0,.62) 100%);pointer-events:none}
 .phero .in{position:absolute;left:var(--pad);right:var(--pad);bottom:clamp(44px,8vh,90px);z-index:2;display:grid;grid-template-columns:7fr 5fr;gap:24px;align-items:end}
 .phero .k{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#d8d8d8;font-weight:500}
 .phero h1{font-size:clamp(42px,8.4vw,136px);line-height:.9;letter-spacing:-.02em;text-transform:uppercase;font-weight:500;margin:16px 0 0}
@@ -740,7 +741,7 @@ main.view{display:none}main.view.on{display:block}
   .mf .blk{margin-bottom:clamp(40px,5vw,80px)}
 }
 @media (min-width:901px){
-  .ten{grid-template-areas:"a b" "p b";grid-template-columns:5fr 7fr;min-height:100svh;align-content:center;padding-top:clamp(110px,13vh,150px);padding-bottom:clamp(30px,5vh,70px)}
+  .ten{grid-template-areas:"a b" "p b";grid-template-columns:5fr 7fr;min-height:100vh;min-height:100svh;align-content:center;padding-top:clamp(110px,13vh,150px);padding-bottom:clamp(30px,5vh,70px)}
   .ten .ten-a{grid-area:a}.ten .ten-b{grid-area:b}.ten .partners{grid-area:p;margin-top:clamp(26px,4vh,54px);grid-template-columns:repeat(2,minmax(0,210px))}
   .ten .big10{font-size:min(19vw,270px)}
   .ten .txt{margin-top:0}
@@ -797,10 +798,27 @@ main.view{display:none}main.view.on{display:block}
   .head>p{margin-top:14px!important}
   .typo{padding-top:100px}
 }
+
+/* ===== v3 ===== */
+#hdr{position:fixed;left:0;top:0;right:0;z-index:69;pointer-events:none;height:calc(var(--hdrh,150px) + 70px);opacity:0;transition:opacity .35s;background:linear-gradient(to bottom,var(--hbg,#000) 0,var(--hbg,#000) var(--hdrh,150px),transparent 100%)}
+body[data-hdr="dark"] #hdr{--hbg:#000;opacity:1}
+body[data-hdr="light"] #hdr{--hbg:#fff;opacity:1}
+.sr{position:fixed;top:0;right:0;bottom:0;left:0;z-index:86;background:#000;color:#fff;display:flex;flex-direction:column;visibility:hidden;opacity:0;transition:opacity .4s var(--ease),visibility 0s .4s}
+.sr.open{visibility:visible;opacity:1;transition:opacity .4s var(--ease),visibility 0s}
+.sr .srbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:calc(12px + env(safe-area-inset-top,0px)) var(--pad) 12px;border-bottom:1px solid var(--line);min-height:52px}
+.sr .srk{display:flex;align-items:center;gap:22px}
+.sr .x{background:transparent;border:0;color:#fff;font:inherit;cursor:pointer;padding:8px 0;letter-spacing:.14em;text-transform:uppercase}
+.sr iframe{flex:1;width:100%;border:0;background:#111;min-height:0}
+.sr .srhint{padding:10px var(--pad) calc(10px + env(safe-area-inset-bottom,0px));font-size:10px;border-top:1px solid var(--line)}
+@media (max-width:900px){
+  .form input,.form select,.form textarea,.sel .sel-btn{font-size:16px}
+  .sr .srk .lnk{font-size:10px}
+}
 </style>
 </head>
 <body>
 <div id="sp" aria-hidden="true"><i></i></div>
+<div id="hdr" aria-hidden="true"></div>
 <a class="brand" href="#/" aria-label="INMO Desarrollos, inicio"><img src="assets/logo_white.webp" alt="INMO Desarrollos"></a>
 <div class="topnav">
   <a class="t-label" href="#/proyectos">Elegí tu departamento</a>
@@ -808,7 +826,7 @@ main.view{display:none}main.view.on{display:block}
 </div>
 
 <nav class="menu" id="menu" aria-label="Principal">
-  <div class="mimg"><img src="assets/trinity2_exterior_2.webp" alt=""><div class="cap t-label">Departamentos grandes, en serio — Asunción</div></div>
+  <div class="mimg"><img src="assets/trinity2_exterior_2.webp" alt=""><div class="cap t-label">Departamentos grandes, en serio · Asunción</div></div>
   <div class="mcol">
   <ul>
     <li><a href="#/"><small>01</small>Inicio</a></li>
@@ -835,7 +853,8 @@ main.view{display:none}main.view.on{display:block}
 <div class="trans" id="trans" aria-hidden="true"><div class="lcard"><img src="assets/logo_white.webp" alt=""><span id="transTxt">Departamentos<br>grandes, en serio</span></div></div>
 <div class="ctx" id="ctx" aria-live="polite"><span class="nm" id="ctxNm"></span><span class="st" id="ctxSt"></span><a class="lnk" id="ctxLnk" href="#" target="_blank" rel="noopener">Consultar</a></div>
 <div class="cur" id="cur" aria-hidden="true"><span class="lbl">Deslizá</span></div>
-<div class="gv" id="gv" inert><div class="lab t-label">Galería — Boston 842</div><button class="x" id="gvX" aria-label="Cerrar">×</button><div class="col" id="gvCol"></div></div>
+<div class="sr" id="sr" inert><div class="srbar"><span class="t-label" id="srT">Showroom virtual 3D</span><div class="srk"><a class="lnk" id="srExt" href="#" target="_blank" rel="noopener">Abrir en pestaña nueva</a><button class="x t-label" type="button" id="srX" aria-label="Cerrar el showroom">Cerrar ×</button></div></div><iframe id="srF" title="Showroom virtual 3D" allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; magnetometer" referrerpolicy="no-referrer-when-downgrade"></iframe><p class="srhint t-label mid">Si el showroom no carga acá, abrilo en una pestaña nueva.</p></div>
+<div class="gv" id="gv" inert><div class="lab t-label">Galería · Boston 842</div><button class="x" id="gvX" aria-label="Cerrar">×</button><div class="col" id="gvCol"></div></div>
 
 <main class="view on" data-view="" data-title="Inicio">
 <!-- ===== HERO ===== -->
@@ -846,7 +865,7 @@ main.view{display:none}main.view.on{display:block}
     <a class="card k" href="#/manifiesto"><span class="t-label">Manifiesto</span><span class="ttl">El fin es el comienzo</span><span class="go">Leer</span></a>
     <a class="card w" href="#/trinity-2"><span class="t-label">Nuevo lanzamiento<br>al lado del CIT</span><span class="ttl">Trinity 2</span><span class="go">Ver</span></a>
   </div>
-  <div class="meta t-label">Asunción, Paraguay — 2016–2026</div>
+  <div class="meta t-label">Asunción, Paraguay · 2016–2026</div>
 </section>
 
 <!-- ===== MANIFIESTO ===== -->
@@ -910,7 +929,7 @@ main.view{display:none}main.view.on{display:block}
 
 <section class="page light" id="trinity-2-home" data-title="Trinity 2" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
   <div class="pad chap-head grid">
-    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 01 — Nuevo lanzamiento</span><h2 class="name" data-r style="margin-top:12px">Trinity 2</h2></div>
+    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 01 · Nuevo lanzamiento</span><h2 class="name" data-r style="margin-top:12px">Trinity 2</h2></div>
     <p class="t-body right" style="grid-column:7/13" data-r>La mejor ubicación tiene nombre propio: al lado del Club Internacional de Tenis. Dieciséis niveles con vista directa al CIT, monoambientes a tres dormitorios y un piso entero de amenities. Tercera torre del complejo Trinity Towers.</p>
   </div>
   <div class="feature tall" data-r="clip"><a href="#/trinity-2" aria-label="Ver Trinity 2"><img src="assets/trinity2_exterior.webp" alt="Trinity 2" data-p="0.1" loading="lazy"></a></div>
@@ -920,7 +939,7 @@ main.view{display:none}main.view.on{display:block}
 </section>
 <section class="page dark" id="the-address-home" data-title="The Address" data-ctx="The Address|Últimas unidades|The%20Address">
   <div class="pad chap-head grid">
-    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 02 — Finalizado, últimas unidades</span><h2 class="name" data-r style="margin-top:12px">The Address</h2></div>
+    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 02 · Finalizado, últimas unidades</span><h2 class="name" data-r style="margin-top:12px">The Address</h2></div>
     <p class="t-body right" style="grid-column:7/13" data-r>Lujo sobre la avenida Santísima Trinidad, en Mburucuyá. Residencias de dos y tres dormitorios en suite, dúplex de cuatro dormitorios con piscina privada, amenities en el piso 5 y en la azotea. Terminado y habitado: quedan las últimas unidades.</p>
   </div>
   <div class="feature tall" data-r="clip"><a href="#/the-address" aria-label="Ver The Address"><img src="assets/address_dr_remate_3.webp" alt="The Address" data-p="0.1" loading="lazy"></a></div>
@@ -930,7 +949,7 @@ main.view{display:none}main.view.on{display:block}
 </section>
 <section class="page light" id="president-tower-home" data-title="President Tower" data-ctx="President Tower|En preparación|President%20Tower">
   <div class="pad chap-head grid">
-    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 03 — En preparación</span><h2 class="name" data-r style="margin-top:12px">President Tower</h2></div>
+    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 03 · En preparación</span><h2 class="name" data-r style="margin-top:12px">President Tower</h2></div>
     <p class="t-body right" style="grid-column:7/13" data-r>Exclusividad y lujo: pisos completos con ascensor privado. Cada departamento ocupa un piso entero y se accede directamente desde el ascensor. Lobby de doble altura, piscina, gimnasio, salón, coworking, kids room y playroom.</p>
   </div>
   <div class="feature tall" data-r="clip"><a href="#/president-tower" aria-label="Ver President Tower"><img src="assets/president_frame_aerea.webp" alt="President Tower" data-p="0.1" loading="lazy"></a></div>
@@ -940,7 +959,7 @@ main.view{display:none}main.view.on{display:block}
 </section>
 <section class="page dark" id="boston-842-home" data-title="Boston 842" data-ctx="Boston 842|Terminado|Boston%20842">
   <div class="pad chap-head grid">
-    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 04 — Terminado</span><h2 class="name" data-r style="margin-top:12px">Boston 842</h2></div>
+    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 04 · Terminado</span><h2 class="name" data-r style="margin-top:12px">Boston 842</h2></div>
     <p class="t-body right" style="grid-column:7/13" data-r>Sentí, viví y disfrutá Las Mercedes. Estilo Soho de Nueva York, ladrillo visto y diseño industrial sobre Juan de Salazar. Siete pisos, veintinueve unidades de uno a tres dormitorios, seis dúplex y dos terrazas con piscina, rooftop grill, quincho y gimnasio.</p>
   </div>
   <div class="feature tall" data-r="clip"><a href="#/boston-842" aria-label="Ver Boston 842"><img src="assets/boston_aerial.webp" alt="Boston 842" data-p="0.1" loading="lazy"></a></div>
@@ -997,13 +1016,14 @@ main.view{display:none}main.view.on{display:block}
     </div>
   </div>
 
-  <div class="pad tlwrap" id="tlwrap"><ol class="tl t-body" id="tl">
+  <div class="pad tlwrap" id="tlwrap" data-scrollhint="1"><ol class="tl t-body" id="tl">
     <li><b>2016</b><span>Nace INMO Group SA en Asunción.</span></li>
     <li><b>2020</b><span>Se entrega Trinity 1, la primera torre junto al CIT: 80 departamentos, 100% vendidos.</span></li>
     <li><b>2021</b><span>Lanzamiento de Trinity 3, la segunda torre del complejo: 28 departamentos de dos dormitorios.</span></li>
     <li><b>2022</b><span>Inauguración de Marquis, en Villa Morra.</span></li>
     <li><b>2026</b><span>Diez años. The Address finalizado, Boston 842 terminado y el lanzamiento de Trinity 2.</span></li>
   </ol></div>
+  <div class="pair-hint pad">Deslizá para recorrer los años →</div>
   <div class="tail"></div>
 </section>
 
@@ -1045,14 +1065,14 @@ main.view{display:none}main.view.on{display:block}
 <section class="phero" id="trinity-2-top" data-title="Trinity 2">
   <img src="assets/trinity2_exterior_2.webp" alt="">
   <div class="in">
-    <div><span class="k an">Proyecto 01 — Nuevo lanzamiento</span><h1 class="an">Trinity 2</h1><p class="loc an">Tte. Máximo Caballero esq. José Pappalardo · A 50 m del Club Internacional de Tenis · Asunción</p></div>
+    <div><span class="k an">Proyecto 01 · Nuevo lanzamiento</span><h1 class="an">Trinity 2</h1><p class="loc an">Tte. Máximo Caballero esq. José Pappalardo · A 50 m del Club Internacional de Tenis · Asunción</p></div>
     <ul class="idx"><li class="an"><a href="#/trinity-2/proyecto"><small>01</small>El proyecto</a></li><li class="an"><a href="#/trinity-2/amenities"><small>02</small>Amenities</a></li><li class="an"><a href="#/trinity-2/niveles"><small>03</small>Elegí tu nivel</a></li><li class="an"><a href="#/trinity-2/tipologias"><small>04</small>Tipologías</a></li><li class="an"><a href="#/trinity-2/galeria"><small>05</small>Galería</a></li><li class="an"><a href="#/trinity-2/ficha"><small>06</small>Ficha y ubicación</a></li></ul>
   </div>
   <span class="cue" aria-hidden="true">↓</span>
 </section>
-<section class="page light" id="trinity-2-proyecto" data-title="Trinity 2 — El proyecto" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
+<section class="page light" id="trinity-2-proyecto" data-title="Trinity 2 · El proyecto" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
   <div class="pad chap-head grid">
-    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 01 — Nuevo lanzamiento</span><h2 class="name" data-r style="margin-top:12px">La mejor ubicación tiene nombre propio</h2></div>
+    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 01 · Nuevo lanzamiento</span><h2 class="name" data-r style="margin-top:12px">La mejor ubicación tiene nombre propio</h2></div>
     <p class="t-body right" style="grid-column:7/13" data-r>Al lado del Club Internacional de Tenis. Dieciséis niveles con vista directa al CIT, sobre Tte. Máximo Caballero esquina José Pappalardo. Trinity 2 es la tercera torre de Trinity Towers, un complejo de tres torres sobre 20.000 m² junto al CIT que empezó con Trinity 1 (80 departamentos, entregada en 2020) y siguió con Trinity 3. Los más grandes, en serio: monoambientes a tres dormitorios, todos con balcón.</p>
   </div>
   <div class="feature tall" data-r="clip"><img src="assets/trinity2_exterior.webp" alt="Complejo Trinity Towers: las tres torres junto al CIT" data-p="0.1" loading="lazy"></div>
@@ -1067,7 +1087,7 @@ main.view{display:none}main.view.on{display:block}
   </div>
   <div class="tail"></div>
 </section>
-<section class="page dark hs" id="trinity-2-amenities" data-hs data-title="Trinity 2 — Amenities" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
+<section class="page dark hs" id="trinity-2-amenities" data-hs data-title="Trinity 2 · Amenities" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
   <div class="stk">
   <div class="track">
     <div class="slide lead"><div class="l"><span class="n"></span><span class="lab">Trinity 2<em>Amenities</em></span><p class="desc t-body">Un piso entero para vivir el edificio, no solo el departamento. Nueve espacios. Deslizá para recorrerlos.</p></div><div class="r"><span>→</span></div></div>
@@ -1076,7 +1096,7 @@ main.view{display:none}main.view.on{display:block}
   <div class="prog"><i></i></div>
 </div>
 </section>
-<section class="page dark typo" id="trinity-2-niveles" data-title="Trinity 2 — Elegí tu nivel" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
+<section class="page dark typo" id="trinity-2-niveles" data-title="Trinity 2 · Elegí tu nivel" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
   <div class="pad">
     <div class="num t-num" data-r>16<sup>niveles</sup></div>
     <p class="t-body" data-r style="max-width:46ch;margin-top:10px">Elegí tu nivel. Planta baja con lobby, cowork y salón comercial; cocheras; pisos tipo con nueve departamentos por planta alrededor del núcleo; un piso de amenities y la azotea.</p>
@@ -1085,7 +1105,7 @@ main.view{display:none}main.view.on{display:block}
     <div class="giant2" data-giant="rise">Trinity Towers</div>
   </div>
 </section>
-<section class="page dark typo" id="trinity-2-tipologias" data-title="Trinity 2 — Tipologías" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
+<section class="page dark typo" id="trinity-2-tipologias" data-title="Trinity 2 · Tipologías" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
   <div class="pad">
     <div class="num t-num" data-r>36–88<sup>m²</sup></div>
     <p class="t-body" data-r style="max-width:46ch;margin-top:10px">Elegí tu departamento. Monoambientes, uno, dos y tres dormitorios; todas las unidades con balcón. Plantas 3D amobladas y renders de interiores de cada tipo. También hay unidades de tres dormitorios de 88,46 m² (consultar).</p>
@@ -1096,13 +1116,13 @@ main.view{display:none}main.view.on{display:block}
     <div class="giant2" data-giant="rise">Departamentos grandes</div>
   </div>
 </section>
-<section class="page dark gal" id="trinity-2-galeria" data-gal data-title="Galería — Trinity 2" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
+<section class="page dark gal" id="trinity-2-galeria" data-gal data-title="Galería · Trinity 2" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
   <div class="stk">
-  <div class="lab t-label mid">Galería — Trinity 2</div>
-  <div class="strip" data-gallery="Galería — Trinity 2"><figure class="s1"><img src="assets/trinity2_exterior_2.webp" alt="Trinity 2, frente" loading="lazy"></figure><figure class="s2"><img src="assets/trinity2_int_lobby.webp" alt="Lobby de doble altura" loading="lazy"></figure><figure class="s3"><img src="assets/trinity2_int_tipo1_living.webp" alt="Living, 1 dormitorio" loading="lazy"></figure><figure class="s4"><img src="assets/trinity2_piscina_y_solarium.webp" alt="Piscina y solarium" loading="lazy"></figure><figure class="s5"><img src="assets/trinity2_int_tipo3_mono.webp" alt="Monoambiente" loading="lazy"></figure><figure class="s1"><img src="assets/trinity2_exterior.webp" alt="Complejo Trinity Towers" loading="lazy"></figure><figure class="s2"><img src="assets/trinity2_int_tipo5_living.webp" alt="Living, 2 dormitorios" loading="lazy"></figure><figure class="s3"><img src="assets/trinity2_quincho.webp" alt="Estar exterior" loading="lazy"></figure><figure class="s4"><img src="assets/trinity2_int_tipo1_dorm.webp" alt="Dormitorio" loading="lazy"></figure><figure class="s5"><img src="assets/trinity2_int_gym_cubierto.webp" alt="Gimnasio cubierto" loading="lazy"></figure><figure class="s1"><img src="assets/trinity2_exterior_3.webp" alt="Desde la calle" loading="lazy"></figure><figure class="s2"><img src="assets/trinity2_int_tipo6_living.webp" alt="Living, 2 dormitorios" loading="lazy"></figure><figure class="s3"><img src="assets/trinity2_sala_de_reuniones.webp" alt="Sala de reuniones" loading="lazy"></figure><figure class="s4"><img src="assets/trinity2_int_tipo2_dorm.webp" alt="Dormitorio" loading="lazy"></figure><figure class="s5"><img src="assets/trinity2_salon_comercial.webp" alt="Salón comercial" loading="lazy"></figure></div>
+  <div class="lab t-label mid">Galería · Trinity 2</div>
+  <div class="strip" data-gallery="Galería · Trinity 2"><figure class="s1"><img src="assets/trinity2_exterior_2.webp" alt="Trinity 2, frente" loading="lazy"></figure><figure class="s2"><img src="assets/trinity2_int_lobby.webp" alt="Lobby de doble altura" loading="lazy"></figure><figure class="s3"><img src="assets/trinity2_int_tipo1_living.webp" alt="Living, 1 dormitorio" loading="lazy"></figure><figure class="s4"><img src="assets/trinity2_piscina_y_solarium.webp" alt="Piscina y solarium" loading="lazy"></figure><figure class="s5"><img src="assets/trinity2_int_tipo3_mono.webp" alt="Monoambiente" loading="lazy"></figure><figure class="s1"><img src="assets/trinity2_exterior.webp" alt="Complejo Trinity Towers" loading="lazy"></figure><figure class="s2"><img src="assets/trinity2_int_tipo5_living.webp" alt="Living, 2 dormitorios" loading="lazy"></figure><figure class="s3"><img src="assets/trinity2_quincho.webp" alt="Estar exterior" loading="lazy"></figure><figure class="s4"><img src="assets/trinity2_int_tipo1_dorm.webp" alt="Dormitorio" loading="lazy"></figure><figure class="s5"><img src="assets/trinity2_int_gym_cubierto.webp" alt="Gimnasio cubierto" loading="lazy"></figure><figure class="s1"><img src="assets/trinity2_exterior_3.webp" alt="Desde la calle" loading="lazy"></figure><figure class="s2"><img src="assets/trinity2_int_tipo6_living.webp" alt="Living, 2 dormitorios" loading="lazy"></figure><figure class="s3"><img src="assets/trinity2_sala_de_reuniones.webp" alt="Sala de reuniones" loading="lazy"></figure><figure class="s4"><img src="assets/trinity2_int_tipo2_dorm.webp" alt="Dormitorio" loading="lazy"></figure><figure class="s5"><img src="assets/trinity2_salon_comercial.webp" alt="Salón comercial" loading="lazy"></figure></div>
 </div>
 </section>
-<section class="page light" id="trinity-2-ficha" data-title="Trinity 2 — Ficha" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
+<section class="page light" id="trinity-2-ficha" data-title="Trinity 2 · Ficha" data-ctx="Trinity 2|Nuevo lanzamiento|Trinity%202">
   <div class="pad head"><h2 class="t-h" data-r>Ficha y ubicación</h2></div>
   <div class="pad ficha2" data-r><dl><div class="r"><dt>Dirección</dt><dd>Tte. Máximo Caballero esq. José Pappalardo, Asunción</dd></div><div class="r"><dt>Complejo</dt><dd>Trinity Towers: tres torres sobre 20.000 m² junto al Club Internacional de Tenis</dd></div><div class="r"><dt>Niveles</dt><dd>16</dd></div><div class="r"><dt>Tipologías</dt><dd>Monoambiente (35,64 m²) a 3 dormitorios (88,46 m²)</dd></div><div class="r"><dt>Amenities</dt><dd>Piso completo: piscina, solarium, deck, quinchos, gimnasio cubierto y exterior, playroom, cowork, sala de reuniones y de streaming</dd></div><div class="r"><dt>Estado</dt><dd>Nuevo lanzamiento</dd></div><div class="r"><dt>Showroom virtual</dt><dd><a href="https://trinity-ii.urbania3d.app/" target="_blank" rel="noopener">trinity-ii.urbania3d.app</a></dd></div><div class="r"><dt>Desarrolla y comercializa</dt><dd>INMO Desarrollos</dd></div></dl><div><h3 class="t-label mid" style="margin:0 0 14px">Distancias</h3><ul class="poi t-body"><li><span>Club Internacional de Tenis</span><b>50 m</b></li><li><span>Autopista Ñu Guazú</span><b>5'</b></li><li><span>Paseo La Galería</span><b>6'</b></li><li><span>Eje corporativo</span><b>7'</b></li><li><span>Shopping del Sol</span><b>7'</b></li><li><span>Parque Ñu Guazú</span><b>9'</b></li><li><span>Aeropuerto</span><b>11'</b></li></ul></div></div>
   
@@ -1123,14 +1143,14 @@ main.view{display:none}main.view.on{display:block}
 <section class="phero" id="the-address-top" data-title="The Address">
   <img class="kb" src="assets/address_pool.webp" alt="">
   <div class="in">
-    <div><span class="k an">Proyecto 02 — Finalizado, últimas unidades</span><h1 class="an">The Address</h1><p class="loc an">Av. Santísima Trinidad · Barrio Mburucuyá · Asunción</p></div>
+    <div><span class="k an">Proyecto 02 · Finalizado, últimas unidades</span><h1 class="an">The Address</h1><p class="loc an">Av. Santísima Trinidad · Barrio Mburucuyá · Asunción</p></div>
     <ul class="idx"><li class="an"><a href="#/the-address/proyecto"><small>01</small>El proyecto</a></li><li class="an"><a href="#/the-address/amenities"><small>02</small>Amenities</a></li><li class="an"><a href="#/the-address/tipologias"><small>03</small>Residencias y dúplex</a></li><li class="an"><a href="#/the-address/galeria"><small>04</small>Galería nocturna</a></li><li class="an"><a href="#/the-address/ficha"><small>05</small>Ficha y ubicación</a></li></ul>
   </div>
   <span class="cue" aria-hidden="true">↓</span>
 </section>
-<section class="page dark" id="the-address-proyecto" data-title="The Address — El proyecto" data-ctx="The Address|Últimas unidades|The%20Address">
+<section class="page dark" id="the-address-proyecto" data-title="The Address · El proyecto" data-ctx="The Address|Últimas unidades|The%20Address">
   <div class="pad chap-head grid">
-    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 02 — Finalizado, últimas unidades</span><h2 class="name" data-r style="margin-top:12px">El placer de vivir The Address</h2></div>
+    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 02 · Finalizado, últimas unidades</span><h2 class="name" data-r style="margin-top:12px">El placer de vivir The Address</h2></div>
     <p class="t-body right" style="grid-column:7/13" data-r>En su vasta dimensión, Asunción actúa de cómplice con The Address, un edificio que se erige en armonía en su evolución hacia el cielo. Sobre la avenida Santísima Trinidad, en el barrio Mburucuyá: catorce pisos de residencias de dos y tres dormitorios en suite, cuatro pisos de dúplex con piscina y deck privados, un piso de amenities y una azotea para toda la familia. Terminado y habitado.</p>
   </div>
   <div class="feature tall" data-r="clip"><img src="assets/address_dr_remate_3.webp" alt="The Address de noche, con la azotea iluminada y Asunción de fondo" data-p="0.1" loading="lazy"></div>
@@ -1143,7 +1163,7 @@ main.view{display:none}main.view.on{display:block}
   
   <div class="tail"></div>
 </section>
-<section class="page dark hs" id="the-address-amenities" data-hs data-title="The Address — Amenities" data-ctx="The Address|Últimas unidades|The%20Address">
+<section class="page dark hs" id="the-address-amenities" data-hs data-title="The Address · Amenities" data-ctx="The Address|Últimas unidades|The%20Address">
   <div class="stk">
   <div class="track">
     <div class="slide lead"><div class="l"><span class="n"></span><span class="lab">The Address<em>Amenities</em></span><p class="desc t-body">Piso 5 y azotea: ocho espacios para el descanso, el deporte y el trabajo, con las superficies del proyecto.</p></div><div class="r"><span>→</span></div></div>
@@ -1152,7 +1172,7 @@ main.view{display:none}main.view.on{display:block}
   <div class="prog"><i></i></div>
 </div>
 </section>
-<section class="page dark typo" id="the-address-tipologias" data-title="The Address — Residencias y dúplex" data-ctx="The Address|Últimas unidades|The%20Address">
+<section class="page dark typo" id="the-address-tipologias" data-title="The Address · Residencias y dúplex" data-ctx="The Address|Últimas unidades|The%20Address">
   <div class="pad">
     <div class="num t-num" data-r>142–297<sup>m²</sup></div>
     <p class="t-body" data-r style="max-width:46ch;margin-top:10px">Elegí tu residencia. Cincuenta y seis residencias de dos y tres dormitorios en suite entre los pisos 6 y 19, y ocho dúplex de cuatro dormitorios con piscina privada entre los pisos 20 y 23.</p>
@@ -1163,18 +1183,18 @@ main.view{display:none}main.view.on{display:block}
     <div class="giant2" data-giant="rise">Santísima Trinidad</div>
   </div>
 </section>
-<section class="page dark" id="the-address-ultimas" data-title="The Address — Últimas unidades" data-ctx="The Address|Últimas unidades|The%20Address">
+<section class="page dark" id="the-address-ultimas" data-title="The Address · Últimas unidades" data-ctx="The Address|Últimas unidades|The%20Address">
   <div class="feature tall" data-r="clip" style="margin-top:0"><img src="assets/address_dr_torre_depto.webp" alt="Un departamento iluminado y amoblado en The Address, de noche" data-p="0.08" loading="lazy"></div>
   <div class="pad grid" style="margin-top:clamp(24px,3vw,40px)"><p class="t-body" style="grid-column:8/13" data-r>Despertar de ensueño. Los departamentos que quedan se visitan terminados, con el edificio en funcionamiento y la ciudad encendida desde la terraza.</p></div>
   <div class="tail"></div>
 </section>
-<section class="page dark gal" id="the-address-galeria" data-gal data-title="Galería nocturna — The Address" data-ctx="The Address|Últimas unidades|The%20Address">
+<section class="page dark gal" id="the-address-galeria" data-gal data-title="Galería nocturna · The Address" data-ctx="The Address|Últimas unidades|The%20Address">
   <div class="stk">
-  <div class="lab t-label mid">Galería nocturna — The Address</div>
-  <div class="strip" data-gallery="Galería nocturna — The Address"><figure class="s2"><img src="assets/remate_de_la_torre_con_la_azotea_ilumina_31.webp" alt="Remate de la torre con la azotea iluminada" loading="lazy"></figure><figure class="s4"><img src="assets/contrafrente_y_torres_vecinas_32.webp" alt="Contrafrente y torres vecinas" loading="lazy"></figure><figure class="s1"><img src="assets/cuerpo_alto_de_la_torre_33.webp" alt="Cuerpo alto de la torre" loading="lazy"></figure><figure class="s3"><img src="assets/suite_del_duplex_34.webp" alt="Suite del dúplex" loading="lazy"></figure><figure class="s2"><img src="assets/la_ciudad_de_fondo_35.webp" alt="La ciudad de fondo" loading="lazy"></figure><figure class="s5"><img src="assets/acceso_vehicular_36.webp" alt="Acceso vehicular" loading="lazy"></figure><figure class="s4"><img src="assets/address_dr_torre_depto.webp" alt="Un departamento iluminado" loading="lazy"></figure><figure class="s1"><img src="assets/estar_comedor_37.webp" alt="Estar comedor" loading="lazy"></figure><figure class="s3"><img src="assets/address_br_azotea_1.webp" alt="Azotea" loading="lazy"></figure><figure class="s2"><img src="assets/address_dr_amenities_1.webp" alt="Piso 5 de noche" loading="lazy"></figure></div>
+  <div class="lab t-label mid">Galería nocturna · The Address</div>
+  <div class="strip" data-gallery="Galería nocturna · The Address"><figure class="s2"><img src="assets/remate_de_la_torre_con_la_azotea_ilumina_31.webp" alt="Remate de la torre con la azotea iluminada" loading="lazy"></figure><figure class="s4"><img src="assets/contrafrente_y_torres_vecinas_32.webp" alt="Contrafrente y torres vecinas" loading="lazy"></figure><figure class="s1"><img src="assets/cuerpo_alto_de_la_torre_33.webp" alt="Cuerpo alto de la torre" loading="lazy"></figure><figure class="s3"><img src="assets/suite_del_duplex_34.webp" alt="Suite del dúplex" loading="lazy"></figure><figure class="s2"><img src="assets/la_ciudad_de_fondo_35.webp" alt="La ciudad de fondo" loading="lazy"></figure><figure class="s5"><img src="assets/acceso_vehicular_36.webp" alt="Acceso vehicular" loading="lazy"></figure><figure class="s4"><img src="assets/address_dr_torre_depto.webp" alt="Un departamento iluminado" loading="lazy"></figure><figure class="s1"><img src="assets/estar_comedor_37.webp" alt="Estar comedor" loading="lazy"></figure><figure class="s3"><img src="assets/address_br_azotea_1.webp" alt="Azotea" loading="lazy"></figure><figure class="s2"><img src="assets/address_dr_amenities_1.webp" alt="Piso 5 de noche" loading="lazy"></figure></div>
 </div>
 </section>
-<section class="page light" id="the-address-ficha" data-title="The Address — Ficha" data-ctx="The Address|Últimas unidades|The%20Address">
+<section class="page light" id="the-address-ficha" data-title="The Address · Ficha" data-ctx="The Address|Últimas unidades|The%20Address">
   <div class="pad head"><h2 class="t-h" data-r>Ficha y ubicación</h2></div>
   <div class="pad ficha2" data-r><dl><div class="r"><dt>Nombre completo</dt><dd>The Address · Santísima Trinidad</dd></div><div class="r"><dt>Dirección</dt><dd>Av. Santísima Trinidad, barrio Mburucuyá, Asunción</dd></div><div class="r"><dt>Niveles</dt><dd>Subsuelo, planta baja, cinco niveles de estacionamiento, amenities en el piso 5, residencias en los pisos 6 a 19, dúplex en los pisos 20 a 23 y azotea</dd></div><div class="r"><dt>Residencias</dt><dd>56 · A 143 · B 142 · C 160 · D 160 m²</dd></div><div class="r"><dt>Dúplex</dt><dd>8 · A 294 · B 278 · C 289 · D 297 m²</dd></div><div class="r"><dt>Cocheras</dt><dd>142 propias, bauleras y estacionamiento para visitas</dd></div><div class="r"><dt>Diseña</dt><dd>F. Bibolini</dd></div><div class="r"><dt>Estado</dt><dd>Finalizado · últimas unidades en venta</dd></div></dl><div><h3 class="t-label mid" style="margin:0 0 14px">Referencias</h3><ul class="poi t-body"><li><span>Av. Santísima Trinidad</span><b>sobre la avenida</b></li><li><span>Jade Park</span><b>cerca</b></li><li><span>Palacio de los Patos</span><b>cerca</b></li><li><span>Pasaje de Francia</span><b>a una cuadra</b></li><li><span>Congreso de Colombia</span><b>a una cuadra</b></li><li><span>Río Paraguay</span><b>vista</b></li></ul></div></div>
   
@@ -1195,41 +1215,41 @@ main.view{display:none}main.view.on{display:block}
 <section class="phero" id="president-tower-top" data-title="President Tower">
   <img class="kb" src="assets/president_frame_torre.webp" alt="">
   <div class="in">
-    <div><span class="k an">Proyecto 03 — En preparación</span><h1 class="an">President Tower</h1><p class="loc an">Luxury Residences · Un departamento por piso · Asunción</p></div>
+    <div><span class="k an">Proyecto 03 · En preparación</span><h1 class="an">President Tower</h1><p class="loc an">Luxury Residences · Un departamento por piso · Asunción</p></div>
     <ul class="idx"><li class="an"><a href="#/president-tower/proyecto"><small>01</small>El proyecto</a></li><li class="an"><a href="#/president-tower/amenities"><small>02</small>Amenities</a></li><li class="an"><a href="#/president-tower/galeria"><small>03</small>Galería</a></li><li class="an"><a href="#/president-tower/unidades"><small>04</small>Unidades</a></li><li class="an"><a href="#/president-tower/ficha"><small>05</small>Ficha</a></li></ul>
   </div>
   <span class="cue" aria-hidden="true">↓</span>
 </section>
-<section class="page light" id="president-tower-proyecto" data-title="President Tower — El proyecto" data-ctx="President Tower|En preparación|President%20Tower">
+<section class="page light" id="president-tower-proyecto" data-title="President Tower · El proyecto" data-ctx="President Tower|En preparación|President%20Tower">
   <div class="pad chap-head grid">
-    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 03 — En preparación</span><h2 class="name" data-r style="margin-top:12px">Un piso entero para vos</h2></div>
+    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 03 · En preparación</span><h2 class="name" data-r style="margin-top:12px">Un piso entero para vos</h2></div>
     <p class="t-body right" style="grid-column:7/13" data-r>Exclusividad y lujo: pisos completos con ascensor privado. Cada departamento ocupa un piso entero y se accede directamente desde el ascensor, sin palier compartido. Estamos preparando la presentación del proyecto: renders, showroom virtual y una primera lista de interesados.</p>
   </div>
   <div class="feature tall" data-r="clip"><img src="assets/president_frame_aerea.webp" alt="Vista aérea de la zona de President Tower" data-p="0.1" loading="lazy"></div>
   <div class="pad layer">
     <div class="a" data-r="clip"><img src="assets/president_frame_acceso.webp" alt="Acceso y lobby" data-p="0.06" loading="lazy"></div>
     <div class="b" data-r="clip"><img src="assets/president_piscina.webp" alt="Piscina con la torre de fondo" data-p="-0.05" loading="lazy"></div>
-    <p class="txt t-body" data-r>Lobby de doble altura con la placa President Tower — Luxury Residences, salón de eventos, gimnasio, terraza con piscina, playroom, kids room y coworking. En cada departamento: living, comedor, cocina, balcón, cava, dormitorios con vestidor y baños en suite.</p>
+    <p class="txt t-body" data-r>Lobby de doble altura con la placa President Tower · Luxury Residences, salón de eventos, gimnasio, terraza con piscina, playroom, kids room y coworking. En cada departamento: living, comedor, cocina, balcón, cava, dormitorios con vestidor y baños en suite.</p>
   </div>
   <div class="pad specs t-label" data-r><div><b>1</b>departamento por piso</div><div><b>Privado</b>ascensor con llegada directa</div><div><b>Luxury</b>residences</div></div>
   
   <div class="tail"></div>
 </section>
-<section class="page dark hs" id="president-tower-amenities" data-hs data-title="President Tower — Amenities" data-ctx="President Tower|En preparación|President%20Tower">
+<section class="page dark hs" id="president-tower-amenities" data-hs data-title="President Tower · Amenities" data-ctx="President Tower|En preparación|President%20Tower">
   <div class="stk">
   <div class="track">
     <div class="slide lead"><div class="l"><span class="n"></span><span class="lab">President Tower<em>Amenities</em></span><p class="desc t-body">Ocho espacios comunes, en renders del proyecto. Deslizá para recorrerlos.</p></div><div class="r"><span>→</span></div></div>
-    <div class="slide"><div class="l"><span class="n"></span><span class="lab">Lobby</span><p class="desc t-body">Doble altura, mármol y la placa President Tower — Luxury Residences.</p></div><div class="r"><img src="assets/president_lobby.webp" alt="Lobby" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Salón de eventos</span><p class="desc t-body">Para reuniones y celebraciones dentro del edificio.</p></div><div class="r"><img src="assets/president_salon.webp" alt="Salón de eventos" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Gimnasio</span><p class="desc t-body">Equipado y con luz natural.</p></div><div class="r"><img src="assets/president_gimnasio.webp" alt="Gimnasio" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Terraza</span><p class="desc t-body">Estar al aire libre con la ciudad de fondo.</p></div><div class="r"><img src="assets/president_terraza.webp" alt="Terraza" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Piscina</span><p class="desc t-body">Con la torre elevándose por encima.</p></div><div class="r"><img src="assets/president_piscina.webp" alt="Piscina" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Playroom</span><p class="desc t-body">Sala de juegos.</p></div><div class="r"><img src="assets/president_playroom.webp" alt="Playroom" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Kids room</span><p class="desc t-body">Espacio para los más chicos.</p></div><div class="r"><img src="assets/president_kidsroom.webp" alt="Kids room" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Coworking</span><p class="desc t-body">Puestos de trabajo y sala de reuniones.</p></div><div class="r"><img src="assets/president_coworking.webp" alt="Coworking" loading="lazy"></div></div>
+    <div class="slide"><div class="l"><span class="n"></span><span class="lab">Lobby</span><p class="desc t-body">Doble altura, mármol y la placa President Tower · Luxury Residences.</p></div><div class="r"><img src="assets/president_lobby.webp" alt="Lobby" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Salón de eventos</span><p class="desc t-body">Para reuniones y celebraciones dentro del edificio.</p></div><div class="r"><img src="assets/president_salon.webp" alt="Salón de eventos" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Gimnasio</span><p class="desc t-body">Equipado y con luz natural.</p></div><div class="r"><img src="assets/president_gimnasio.webp" alt="Gimnasio" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Terraza</span><p class="desc t-body">Estar al aire libre con la ciudad de fondo.</p></div><div class="r"><img src="assets/president_terraza.webp" alt="Terraza" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Piscina</span><p class="desc t-body">Con la torre elevándose por encima.</p></div><div class="r"><img src="assets/president_piscina.webp" alt="Piscina" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Playroom</span><p class="desc t-body">Sala de juegos.</p></div><div class="r"><img src="assets/president_playroom.webp" alt="Playroom" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Kids room</span><p class="desc t-body">Espacio para los más chicos.</p></div><div class="r"><img src="assets/president_kidsroom.webp" alt="Kids room" loading="lazy"></div></div><div class="slide"><div class="l"><span class="n"></span><span class="lab">Coworking</span><p class="desc t-body">Puestos de trabajo y sala de reuniones.</p></div><div class="r"><img src="assets/president_coworking.webp" alt="Coworking" loading="lazy"></div></div>
   </div>
   <div class="prog"><i></i></div>
 </div>
 </section>
-<section class="page dark" id="president-tower-galeria" data-title="Galería — President Tower" data-ctx="President Tower|En preparación|President%20Tower">
-  <div class="pad head"><h2 class="t-h" data-r>Galería — President Tower</h2><p class="t-body" data-r style="max-width:52ch;margin-top:14px">Renders del proyecto. Imágenes referenciales.</p></div>
-  <div class="pad" data-r><div class="strip3" data-gallery="Galería — President Tower"><figure><img src="assets/president_frame_torre.webp" alt="La torre" loading="lazy"><figcaption class="t-label">La torre</figcaption></figure><figure><img src="assets/president_lobby.webp" alt="Lobby" loading="lazy"><figcaption class="t-label">Lobby</figcaption></figure><figure><img src="assets/president_frame_acceso.webp" alt="Acceso" loading="lazy"><figcaption class="t-label">Acceso</figcaption></figure><figure><img src="assets/president_terraza.webp" alt="Terraza" loading="lazy"><figcaption class="t-label">Terraza</figcaption></figure><figure><img src="assets/president_piscina.webp" alt="Piscina" loading="lazy"><figcaption class="t-label">Piscina</figcaption></figure><figure><img src="assets/president_salon.webp" alt="Salón" loading="lazy"><figcaption class="t-label">Salón</figcaption></figure><figure><img src="assets/president_gimnasio.webp" alt="Gimnasio" loading="lazy"><figcaption class="t-label">Gimnasio</figcaption></figure><figure><img src="assets/president_coworking.webp" alt="Coworking" loading="lazy"><figcaption class="t-label">Coworking</figcaption></figure><figure><img src="assets/president_playroom.webp" alt="Playroom" loading="lazy"><figcaption class="t-label">Playroom</figcaption></figure><figure><img src="assets/president_kidsroom.webp" alt="Kids room" loading="lazy"><figcaption class="t-label">Kids room</figcaption></figure><figure><img src="assets/president_frame_aerea.webp" alt="Aérea" loading="lazy"><figcaption class="t-label">Aérea</figcaption></figure></div><p class="t-label mid" style="margin-top:14px">Deslizá · Tocá una foto para verla en grande</p></div>
+<section class="page dark" id="president-tower-galeria" data-title="Galería · President Tower" data-ctx="President Tower|En preparación|President%20Tower">
+  <div class="pad head"><h2 class="t-h" data-r>Galería · President Tower</h2><p class="t-body" data-r style="max-width:52ch;margin-top:14px">Renders del proyecto. Imágenes referenciales.</p></div>
+  <div class="pad" data-r><div class="strip3" data-gallery="Galería · President Tower"><figure><img src="assets/president_frame_torre.webp" alt="La torre" loading="lazy"><figcaption class="t-label">La torre</figcaption></figure><figure><img src="assets/president_lobby.webp" alt="Lobby" loading="lazy"><figcaption class="t-label">Lobby</figcaption></figure><figure><img src="assets/president_frame_acceso.webp" alt="Acceso" loading="lazy"><figcaption class="t-label">Acceso</figcaption></figure><figure><img src="assets/president_terraza.webp" alt="Terraza" loading="lazy"><figcaption class="t-label">Terraza</figcaption></figure><figure><img src="assets/president_piscina.webp" alt="Piscina" loading="lazy"><figcaption class="t-label">Piscina</figcaption></figure><figure><img src="assets/president_salon.webp" alt="Salón" loading="lazy"><figcaption class="t-label">Salón</figcaption></figure><figure><img src="assets/president_gimnasio.webp" alt="Gimnasio" loading="lazy"><figcaption class="t-label">Gimnasio</figcaption></figure><figure><img src="assets/president_coworking.webp" alt="Coworking" loading="lazy"><figcaption class="t-label">Coworking</figcaption></figure><figure><img src="assets/president_playroom.webp" alt="Playroom" loading="lazy"><figcaption class="t-label">Playroom</figcaption></figure><figure><img src="assets/president_kidsroom.webp" alt="Kids room" loading="lazy"><figcaption class="t-label">Kids room</figcaption></figure><figure><img src="assets/president_frame_aerea.webp" alt="Aérea" loading="lazy"><figcaption class="t-label">Aérea</figcaption></figure></div><p class="t-label mid" style="margin-top:14px">Deslizá · Tocá una foto para verla en grande</p></div>
   <div class="tail"></div>
 </section>
-<section class="page dark typo" id="president-tower-unidades" data-title="President Tower — Unidades" data-ctx="President Tower|En preparación|President%20Tower">
+<section class="page dark typo" id="president-tower-unidades" data-title="President Tower · Unidades" data-ctx="President Tower|En preparación|President%20Tower">
   <div class="pad">
     <div class="num t-num" data-r>1<sup>por piso</sup></div>
     <p class="t-body" data-r style="max-width:46ch;margin-top:10px">Un departamento por piso, con ascensor privado. Superficies, plantas y precios se presentan en el lanzamiento. Mientras tanto, el showroom virtual permite recorrer el proyecto en 3D.</p>
@@ -1242,7 +1262,7 @@ main.view{display:none}main.view.on{display:block}
     <div class="giant2" data-giant="rise">Luxury residences</div>
   </div>
 </section>
-<section class="page light" id="president-tower-ficha" data-title="President Tower — Ficha" data-ctx="President Tower|En preparación|President%20Tower">
+<section class="page light" id="president-tower-ficha" data-title="President Tower · Ficha" data-ctx="President Tower|En preparación|President%20Tower">
   <div class="pad head"><h2 class="t-h" data-r>Ficha</h2></div>
   <div class="pad ficha2" data-r><dl><div class="r"><dt>Concepto</dt><dd>Luxury residences: un departamento por piso con ascensor privado</dd></div><div class="r"><dt>Amenities</dt><dd>Lobby de doble altura, salón de eventos, gimnasio, terraza con piscina, playroom, kids room y coworking</dd></div><div class="r"><dt>Ubicación</dt><dd>A confirmar en el lanzamiento</dd></div><div class="r"><dt>Unidades y superficies</dt><dd>A confirmar en el lanzamiento</dd></div><div class="r"><dt>Showroom virtual</dt><dd><a href="https://president-tower.urbania3d.app/" target="_blank" rel="noopener">president-tower.urbania3d.app</a></dd></div><div class="r"><dt>Estado</dt><dd>En preparación</dd></div><div class="r"><dt>Desarrolla y comercializa</dt><dd>INMO Desarrollos</dd></div></dl></div>
   <div class="pad"><p class="t-label mid" style="margin-top:22px">Imágenes referenciales del proyecto.</p></div>
@@ -1263,14 +1283,14 @@ main.view{display:none}main.view.on{display:block}
 <section class="phero" id="boston-842-top" data-title="Boston 842">
   <img src="assets/boston_aerial.webp" alt="">
   <div class="in">
-    <div><span class="k an">Proyecto 04 — Terminado</span><h1 class="an">Boston 842</h1><p class="loc an">Juan de Salazar entre Washington y Padre Cardozo · Las Mercedes · Asunción</p></div>
+    <div><span class="k an">Proyecto 04 · Terminado</span><h1 class="an">Boston 842</h1><p class="loc an">Juan de Salazar entre Washington y Padre Cardozo · Las Mercedes · Asunción</p></div>
     <ul class="idx"><li class="an"><a href="#/boston-842/proyecto"><small>01</small>El proyecto</a></li><li class="an"><a href="#/boston-842/materiales"><small>02</small>Materiales</a></li><li class="an"><a href="#/boston-842/galeria"><small>03</small>Galería</a></li><li class="an"><a href="#/boston-842/dia"><small>04</small>Un día en Boston</a></li><li class="an"><a href="#/boston-842/amenities"><small>05</small>Amenities</a></li><li class="an"><a href="#/boston-842/tipologias"><small>06</small>Tipologías</a></li><li class="an"><a href="#/boston-842/ficha"><small>07</small>Ficha y ubicación</a></li></ul>
   </div>
   <span class="cue" aria-hidden="true">↓</span>
 </section>
-<section class="page light" id="boston-842-proyecto" data-title="Boston 842 — El proyecto" data-ctx="Boston 842|Terminado|Boston%20842">
+<section class="page light" id="boston-842-proyecto" data-title="Boston 842 · El proyecto" data-ctx="Boston 842|Terminado|Boston%20842">
   <div class="pad chap-head grid">
-    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 04 — Terminado</span><h2 class="name" data-r style="margin-top:12px">Sentí, viví y disfrutá Las Mercedes</h2></div>
+    <div style="grid-column:1/6"><span class="t-label mid" data-r>Proyecto 04 · Terminado</span><h2 class="name" data-r style="margin-top:12px">Sentí, viví y disfrutá Las Mercedes</h2></div>
     <p class="t-body right" style="grid-column:7/13" data-r>Estilo Soho de Nueva York, ladrillo visto y diseño industrial en el barrio más tradicional de Asunción: sobre Juan de Salazar entre Washington y Padre Cardozo, a cinco minutos del centro y a diez del nuevo eje corporativo, a pasos de colegios, universidades, sanatorios, cafés y restaurantes. Edificio terminado y habitado.</p>
   </div>
   <div class="feature tall" data-r="clip"><img src="assets/boston_aerial.webp" alt="Boston 842 desde el aire, al atardecer" data-p="0.1" loading="lazy"></div>
@@ -1283,7 +1303,7 @@ main.view{display:none}main.view.on{display:block}
   <div class="tail"></div>
 </section>
 
-<section class="page light mats" id="boston-842-materiales" data-title="Boston 842 — Materiales" data-ctx="Boston 842|Terminado|Boston%20842">
+<section class="page light mats" id="boston-842-materiales" data-title="Boston 842 · Materiales" data-ctx="Boston 842|Terminado|Boston%20842">
   <div class="pad head"><h2 class="t-h" data-r>Materiales</h2></div>
   <div class="pad">
     <div class="stage">
@@ -1298,10 +1318,10 @@ main.view{display:none}main.view.on{display:block}
   <div class="tail"></div>
 </section>
 
-<section class="page dark gal" id="boston-842-galeria" data-gal data-title="Galería — Boston 842" data-ctx="Boston 842|Terminado|Boston%20842">
+<section class="page dark gal" id="boston-842-galeria" data-gal data-title="Galería · Boston 842" data-ctx="Boston 842|Terminado|Boston%20842">
   <div class="stk">
-  <div class="lab t-label mid">Galería — Boston 842</div>
-  <div class="strip" data-gallery="Galería — Boston 842">
+  <div class="lab t-label mid">Galería · Boston 842</div>
+  <div class="strip" data-gallery="Galería · Boston 842">
     <figure class="s1"><img src="assets/boston_lobby.webp" alt="Lobby" loading="lazy"></figure>
     <figure class="s2"><img src="assets/boston_lobby_general.webp" alt="Lobby, sector de estar" loading="lazy"></figure>
     <figure class="s3"><img src="assets/detalle_del_lobby_45.webp" alt="Detalle del lobby" loading="lazy"></figure>
@@ -1357,7 +1377,7 @@ main.view{display:none}main.view.on{display:block}
   </ul>
 </section>
 
-<section class="page dark hs" id="boston-842-amenities" data-hs data-title="Boston 842 — Amenities" data-ctx="Boston 842|Terminado|Boston%20842">
+<section class="page dark hs" id="boston-842-amenities" data-hs data-title="Boston 842 · Amenities" data-ctx="Boston 842|Terminado|Boston%20842">
   <div class="stk">
   <div class="track">
     <div class="slide lead"><div class="l"><span class="n"></span><span class="lab">Boston 842<em>Amenities</em></span><p class="desc t-body">Dos terrazas y diez espacios comunes, todos terminados y en uso. Deslizá para recorrerlos.</p></div><div class="r"><span>→</span></div></div>
@@ -1376,7 +1396,7 @@ main.view{display:none}main.view.on{display:block}
 </div>
 </section>
 
-<section class="page dark typo" id="boston-842-tipologias" data-title="Boston 842 — Tipologías" data-ctx="Boston 842|Terminado|Boston%20842">
+<section class="page dark typo" id="boston-842-tipologias" data-title="Boston 842 · Tipologías" data-ctx="Boston 842|Terminado|Boston%20842">
   <div class="pad">
     <div class="num t-num" data-r>49–173<sup>m²</sup></div>
     <p class="t-body" data-r style="max-width:44ch;margin-top:10px">Elegí tu departamento. Uno, dos y tres dormitorios con balcón y cocina integrada; los de dos y tres dormitorios con parrilla en el balcón y baño social. Dúplex en dos niveles con amplios ventanales para aprovechar al máximo la luz exterior.</p>
@@ -1423,7 +1443,7 @@ main.view{display:none}main.view.on{display:block}
   </div>
 </section>
 
-<section class="page light" id="boston-842-ficha" data-title="Boston 842 — Ficha" data-ctx="Boston 842|Terminado|Boston%20842">
+<section class="page light" id="boston-842-ficha" data-title="Boston 842 · Ficha" data-ctx="Boston 842|Terminado|Boston%20842">
   <div class="pad head"><h2 class="t-h" data-r>Ficha y ubicación</h2></div>
   <div class="pad ficha2" data-r><dl><div class="r"><dt>Dirección</dt><dd>Juan de Salazar entre Washington y Padre Cardozo, barrio Las Mercedes, Asunción</dd></div><div class="r"><dt>Edificio</dt><dd>7 pisos · 29 unidades · 6 dúplex</dd></div><div class="r"><dt>Tipologías</dt><dd>1, 2 y 3 dormitorios, de 49,28 a 172,72 m²</dd></div><div class="r"><dt>Terraza sobre Juan de Salazar</dt><dd>Sector social: terraza al aire libre, quincho y bar climatizados</dd></div><div class="r"><dt>Terraza contrafrente</dt><dd>Sector piscina y gym: piscina, playground, rooftop grill y gimnasio</dd></div><div class="r"><dt>Además</dt><dd>Play room, meeting room y cowork</dd></div><div class="r"><dt>Diseña</dt><dd>F. Bibolini</dd></div><div class="r"><dt>Construye</dt><dd>AGB</dd></div><div class="r"><dt>Estado</dt><dd>Terminado y habitado</dd></div></dl><div><h3 class="t-label mid" style="margin:0 0 14px">En el barrio</h3><ul class="poi t-body"><li><span>Centro de Asunción</span><b>5'</b></li><li><span>Eje corporativo</span><b>10'</b></li><li><span>Sanatorio Americano</span><b>a pasos</b></li><li><span>Banco Familiar</span><b>a pasos</b></li><li><span>Rowing Club</span><b>a pasos</b></li><li><span>Ña Eustaquia y La Herencia</span><b>a pasos</b></li><li><span>Índigo</span><b>a pasos</b></li><li><span>Biggie Express y Copetrol</span><b>a pasos</b></li></ul></div></div>
   
@@ -1444,14 +1464,14 @@ main.view{display:none}main.view.on{display:block}
 <section class="phero" id="trinity-3-top" data-title="Trinity 3">
   <img src="assets/trinity3_aerial.webp" alt="">
   <div class="in">
-    <div><span class="k an">Proyecto  — Entregado · Segunda etapa de Trinity Towers</span><h1 class="an">Trinity 3</h1><p class="loc an">Tte. Máximo Caballero esq. Calle 4 · A 50 m del Club Internacional de Tenis</p></div>
+    <div><span class="k an">Proyecto  · Entregado · Segunda etapa de Trinity Towers</span><h1 class="an">Trinity 3</h1><p class="loc an">Tte. Máximo Caballero esq. Calle 4 · A 50 m del Club Internacional de Tenis</p></div>
     <ul class="idx"><li class="an"><a href="#/trinity-3/proyecto"><small>01</small>El proyecto</a></li><li class="an"><a href="#/trinity-3/tipologias"><small>02</small>Tipologías</a></li><li class="an"><a href="#/trinity-3/galeria"><small>03</small>Galería</a></li><li class="an"><a href="#/trinity-3/ficha"><small>04</small>Ficha</a></li></ul>
   </div>
   <span class="cue" aria-hidden="true">↓</span>
 </section>
-<section class="page light" id="trinity-3-proyecto" data-title="Trinity 3 — El proyecto" data-ctx="Trinity 3|Entregado|Trinity%203">
+<section class="page light" id="trinity-3-proyecto" data-title="Trinity 3 · El proyecto" data-ctx="Trinity 3|Entregado|Trinity%203">
   <div class="pad chap-head grid">
-    <div style="grid-column:1/6"><span class="t-label mid" data-r>Entregado — Trinity Towers</span><h2 class="name" data-r style="margin-top:12px">Segunda etapa del complejo</h2></div>
+    <div style="grid-column:1/6"><span class="t-label mid" data-r>Entregado · Trinity Towers</span><h2 class="name" data-r style="margin-top:12px">Segunda etapa del complejo</h2></div>
     <p class="t-body right" style="grid-column:7/13" data-r>Segunda etapa del complejo Trinity Towers, a 50 metros del Club Internacional de Tenis, sobre Tte. Máximo Caballero (continuación de la Av. Laguna Grande) esquina Calle 4. Planta baja, dos pisos de estacionamiento, siete pisos con 28 departamentos de dos dormitorios y una azotea con piscina de vista panorámica, quincho climatizado con parrilla y gimnasio.</p>
   </div>
   <div class="feature tall" data-r="clip"><img src="assets/trinity3_aerial.webp" alt="Render aéreo del complejo Trinity Towers" data-p="0.1" loading="lazy"></div>
@@ -1464,7 +1484,7 @@ main.view{display:none}main.view.on{display:block}
   
   <div class="tail"></div>
 </section>
-<section class="page dark typo" id="trinity-3-tipologias" data-title="Trinity 3 — Tipologías" data-ctx="Trinity 3|Entregado|Trinity%203">
+<section class="page dark typo" id="trinity-3-tipologias" data-title="Trinity 3 · Tipologías" data-ctx="Trinity 3|Entregado|Trinity%203">
   <div class="pad">
     <div class="num t-num" data-r>62–80<sup>m²</sup></div>
     <p class="t-body" data-r style="max-width:46ch;margin-top:10px">Cuatro tipologías de dos dormitorios y dos baños. Consultá disponibilidad de las unidades que quedan.</p>
@@ -1475,12 +1495,12 @@ main.view{display:none}main.view.on{display:block}
     <div class="giant2" data-giant="rise">Trinity Towers</div>
   </div>
 </section>
-<section class="page dark" id="trinity-3-galeria" data-title="Galería — Trinity 3" data-ctx="Trinity 3|Entregado|Trinity%203">
-  <div class="pad head"><h2 class="t-h" data-r>Galería — Trinity 3</h2></div>
-  <div class="pad" data-r><div class="strip3" data-gallery="Galería — Trinity 3"><figure><img src="assets/trinity3_tower.webp" alt="Torre" loading="lazy"><figcaption class="t-label">Torre</figcaption></figure><figure><img src="assets/trinity3_pool.webp" alt="Piscina con vista panorámica" loading="lazy"><figcaption class="t-label">Piscina con vista panorámica</figcaption></figure><figure><img src="assets/quincho_climatizado_60.webp" alt="Quincho climatizado" loading="lazy"><figcaption class="t-label">Quincho climatizado</figcaption></figure><figure><img src="assets/gimnasio_61.webp" alt="Gimnasio" loading="lazy"><figcaption class="t-label">Gimnasio</figcaption></figure><figure><img src="assets/lobby_62.webp" alt="Lobby" loading="lazy"><figcaption class="t-label">Lobby</figcaption></figure><figure><img src="assets/trinity3_living.webp" alt="Living · Familiar Plus" loading="lazy"><figcaption class="t-label">Living · Familiar Plus</figcaption></figure><figure><img src="assets/trinity3_kitchen.webp" alt="Cocina amoblada" loading="lazy"><figcaption class="t-label">Cocina amoblada</figcaption></figure><figure><img src="assets/trinity3_bedroom.webp" alt="Dormitorio · Familiar" loading="lazy"><figcaption class="t-label">Dormitorio · Familiar</figcaption></figure><figure><img src="assets/trinity3_living2.webp" alt="Living · Funcional" loading="lazy"><figcaption class="t-label">Living · Funcional</figcaption></figure><figure class="plan"><img src="assets/trinity3_plan.webp" alt="Plano · Familiar 75,35 m²" loading="lazy"><figcaption class="t-label">Plano · Familiar 75,35 m²</figcaption></figure></div><p class="t-label mid" style="margin-top:14px">Deslizá · Tocá una foto para verla en grande</p></div>
+<section class="page dark" id="trinity-3-galeria" data-title="Galería · Trinity 3" data-ctx="Trinity 3|Entregado|Trinity%203">
+  <div class="pad head"><h2 class="t-h" data-r>Galería · Trinity 3</h2></div>
+  <div class="pad" data-r><div class="strip3" data-gallery="Galería · Trinity 3"><figure><img src="assets/trinity3_tower.webp" alt="Torre" loading="lazy"><figcaption class="t-label">Torre</figcaption></figure><figure><img src="assets/trinity3_pool.webp" alt="Piscina con vista panorámica" loading="lazy"><figcaption class="t-label">Piscina con vista panorámica</figcaption></figure><figure><img src="assets/quincho_climatizado_60.webp" alt="Quincho climatizado" loading="lazy"><figcaption class="t-label">Quincho climatizado</figcaption></figure><figure><img src="assets/gimnasio_61.webp" alt="Gimnasio" loading="lazy"><figcaption class="t-label">Gimnasio</figcaption></figure><figure><img src="assets/lobby_62.webp" alt="Lobby" loading="lazy"><figcaption class="t-label">Lobby</figcaption></figure><figure><img src="assets/trinity3_living.webp" alt="Living · Familiar Plus" loading="lazy"><figcaption class="t-label">Living · Familiar Plus</figcaption></figure><figure><img src="assets/trinity3_kitchen.webp" alt="Cocina amoblada" loading="lazy"><figcaption class="t-label">Cocina amoblada</figcaption></figure><figure><img src="assets/trinity3_bedroom.webp" alt="Dormitorio · Familiar" loading="lazy"><figcaption class="t-label">Dormitorio · Familiar</figcaption></figure><figure><img src="assets/trinity3_living2.webp" alt="Living · Funcional" loading="lazy"><figcaption class="t-label">Living · Funcional</figcaption></figure><figure class="plan"><img src="assets/trinity3_plan.webp" alt="Plano · Familiar 75,35 m²" loading="lazy"><figcaption class="t-label">Plano · Familiar 75,35 m²</figcaption></figure></div><p class="t-label mid" style="margin-top:14px">Deslizá · Tocá una foto para verla en grande</p></div>
   <div class="tail"></div>
 </section>
-<section class="page light" id="trinity-3-ficha" data-title="Trinity 3 — Ficha" data-ctx="Trinity 3|Entregado|Trinity%203">
+<section class="page light" id="trinity-3-ficha" data-title="Trinity 3 · Ficha" data-ctx="Trinity 3|Entregado|Trinity%203">
   <div class="pad head"><h2 class="t-h" data-r>Ficha</h2></div>
   <div class="pad ficha2" data-r><dl><div class="r"><dt>Dirección</dt><dd>Tte. Máximo Caballero (cont. Av. Laguna Grande) esq. Calle 4, Asunción</dd></div><div class="r"><dt>Edificio</dt><dd>PB + 2 pisos de estacionamiento + 7 pisos · 28 departamentos</dd></div><div class="r"><dt>Azotea</dt><dd>Quincho climatizado con parrilla, piscina panorámica y gimnasio</dd></div><div class="r"><dt>Complejo</dt><dd>Trinity Towers, junto al CIT: Trinity 1 (2020), Trinity 3 y Trinity 2 (nuevo lanzamiento)</dd></div><div class="r"><dt>Estado</dt><dd>Entregado</dd></div></dl></div>
   
@@ -1501,12 +1521,12 @@ main.view{display:none}main.view.on{display:block}
 <section class="phero" id="laguna-club-top" data-title="Laguna Club">
   <img src="assets/laguna_02.webp" alt="">
   <div class="in">
-    <div><span class="k an">Proyecto  — Entregado</span><h1 class="an">Laguna Club</h1><p class="loc an">Apartments & Lofts · Máximo Caballero esq. José Pappalardo · A pasos del CIT</p></div>
+    <div><span class="k an">Proyecto  · Entregado</span><h1 class="an">Laguna Club</h1><p class="loc an">Apartments & Lofts · Máximo Caballero esq. José Pappalardo · A pasos del CIT</p></div>
     <ul class="idx"><li class="an"><a href="#/laguna-club/proyecto"><small>01</small>El proyecto</a></li><li class="an"><a href="#/laguna-club/tipologias"><small>02</small>Tipologías</a></li><li class="an"><a href="#/laguna-club/galeria"><small>03</small>Galería</a></li><li class="an"><a href="#/laguna-club/ficha"><small>04</small>Ficha</a></li></ul>
   </div>
   <span class="cue" aria-hidden="true">↓</span>
 </section>
-<section class="page light" id="laguna-club-proyecto" data-title="Laguna Club — El proyecto" data-ctx="Laguna Club|Entregado|Laguna%20Club">
+<section class="page light" id="laguna-club-proyecto" data-title="Laguna Club · El proyecto" data-ctx="Laguna Club|Entregado|Laguna%20Club">
   <div class="pad chap-head grid">
     <div style="grid-column:1/6"><span class="t-label mid" data-r>Entregado</span><h2 class="name" data-r style="margin-top:12px">Apartments & lofts junto al CIT</h2></div>
     <p class="t-body right" style="grid-column:7/13" data-r>Cinco pisos de departamentos, dos niveles de cocheras y una azotea con piscina panorámica y terraza descubierta, sobre Máximo Caballero (continuación de Laguna Grande) esquina José Pappalardo, a pasos del Club Internacional de Tenis. Salón de eventos climatizado con parrilla, gimnasio equipado y business center.</p>
@@ -1521,7 +1541,7 @@ main.view{display:none}main.view.on{display:block}
   
   <div class="tail"></div>
 </section>
-<section class="page dark typo" id="laguna-club-tipologias" data-title="Laguna Club — Tipologías" data-ctx="Laguna Club|Entregado|Laguna%20Club">
+<section class="page dark typo" id="laguna-club-tipologias" data-title="Laguna Club · Tipologías" data-ctx="Laguna Club|Entregado|Laguna%20Club">
   <div class="pad">
     <div class="num t-num" data-r>39–60<sup>m²</sup></div>
     <p class="t-body" data-r style="max-width:46ch;margin-top:10px">Suites, lofts y un departamento familiar. Consultá disponibilidad.</p>
@@ -1532,12 +1552,12 @@ main.view{display:none}main.view.on{display:block}
     <div class="giant2" data-giant="rise">Laguna Club</div>
   </div>
 </section>
-<section class="page dark" id="laguna-club-galeria" data-title="Galería — Laguna Club" data-ctx="Laguna Club|Entregado|Laguna%20Club">
-  <div class="pad head"><h2 class="t-h" data-r>Galería — Laguna Club</h2></div>
-  <div class="pad" data-r><div class="strip3" data-gallery="Galería — Laguna Club"><figure class="p"><img src="assets/laguna_02.webp" alt="Fachada" loading="lazy"><figcaption class="t-label">Fachada</figcaption></figure><figure class="p"><img src="assets/laguna_03.webp" alt="Azotea con piscina" loading="lazy"><figcaption class="t-label">Azotea con piscina</figcaption></figure><figure class="p"><img src="assets/laguna_15.webp" alt="Terraza con el skyline" loading="lazy"><figcaption class="t-label">Terraza con el skyline</figcaption></figure><figure class="p"><img src="assets/piscina_panoramica_64.webp" alt="Piscina panorámica" loading="lazy"><figcaption class="t-label">Piscina panorámica</figcaption></figure><figure class="p"><img src="assets/laguna_16.webp" alt="Quincho con parrilla" loading="lazy"><figcaption class="t-label">Quincho con parrilla</figcaption></figure><figure class="p"><img src="assets/salon_de_eventos_65.webp" alt="Salón de eventos" loading="lazy"><figcaption class="t-label">Salón de eventos</figcaption></figure><figure class="p"><img src="assets/gimnasio_66.webp" alt="Gimnasio" loading="lazy"><figcaption class="t-label">Gimnasio</figcaption></figure><figure class="p"><img src="assets/sala_de_reuniones_67.webp" alt="Sala de reuniones" loading="lazy"><figcaption class="t-label">Sala de reuniones</figcaption></figure><figure class="p"><img src="assets/deck_68.webp" alt="Deck" loading="lazy"><figcaption class="t-label">Deck</figcaption></figure><figure class="p"><img src="assets/laguna_29.webp" alt="Living" loading="lazy"><figcaption class="t-label">Living</figcaption></figure><figure class="p"><img src="assets/laguna_49.webp" alt="Living con sillones" loading="lazy"><figcaption class="t-label">Living con sillones</figcaption></figure><figure class="p"><img src="assets/laguna_52.webp" alt="Comedor" loading="lazy"><figcaption class="t-label">Comedor</figcaption></figure><figure class="p"><img src="assets/laguna_59.webp" alt="Cocina" loading="lazy"><figcaption class="t-label">Cocina</figcaption></figure><figure class="p"><img src="assets/laguna_36.webp" alt="Baño" loading="lazy"><figcaption class="t-label">Baño</figcaption></figure><figure class="p"><img src="assets/estar_exterior_69.webp" alt="Estar exterior" loading="lazy"><figcaption class="t-label">Estar exterior</figcaption></figure><figure class="p"><img src="assets/laguna_facade.webp" alt="Acceso" loading="lazy"><figcaption class="t-label">Acceso</figcaption></figure><figure class="plan"><img src="assets/laguna_plan_a.webp" alt="Plano · Suite A" loading="lazy"><figcaption class="t-label">Plano · Suite A</figcaption></figure><figure class="plan"><img src="assets/laguna_plan_g.webp" alt="Plano · Familiar G" loading="lazy"><figcaption class="t-label">Plano · Familiar G</figcaption></figure></div><p class="t-label mid" style="margin-top:14px">Deslizá · Tocá una foto para verla en grande</p></div>
+<section class="page dark" id="laguna-club-galeria" data-title="Galería · Laguna Club" data-ctx="Laguna Club|Entregado|Laguna%20Club">
+  <div class="pad head"><h2 class="t-h" data-r>Galería · Laguna Club</h2></div>
+  <div class="pad" data-r><div class="strip3" data-gallery="Galería · Laguna Club"><figure class="p"><img src="assets/laguna_02.webp" alt="Fachada" loading="lazy"><figcaption class="t-label">Fachada</figcaption></figure><figure class="p"><img src="assets/laguna_03.webp" alt="Azotea con piscina" loading="lazy"><figcaption class="t-label">Azotea con piscina</figcaption></figure><figure class="p"><img src="assets/laguna_15.webp" alt="Terraza con el skyline" loading="lazy"><figcaption class="t-label">Terraza con el skyline</figcaption></figure><figure class="p"><img src="assets/piscina_panoramica_64.webp" alt="Piscina panorámica" loading="lazy"><figcaption class="t-label">Piscina panorámica</figcaption></figure><figure class="p"><img src="assets/laguna_16.webp" alt="Quincho con parrilla" loading="lazy"><figcaption class="t-label">Quincho con parrilla</figcaption></figure><figure class="p"><img src="assets/salon_de_eventos_65.webp" alt="Salón de eventos" loading="lazy"><figcaption class="t-label">Salón de eventos</figcaption></figure><figure class="p"><img src="assets/gimnasio_66.webp" alt="Gimnasio" loading="lazy"><figcaption class="t-label">Gimnasio</figcaption></figure><figure class="p"><img src="assets/sala_de_reuniones_67.webp" alt="Sala de reuniones" loading="lazy"><figcaption class="t-label">Sala de reuniones</figcaption></figure><figure class="p"><img src="assets/deck_68.webp" alt="Deck" loading="lazy"><figcaption class="t-label">Deck</figcaption></figure><figure class="p"><img src="assets/laguna_29.webp" alt="Living" loading="lazy"><figcaption class="t-label">Living</figcaption></figure><figure class="p"><img src="assets/laguna_49.webp" alt="Living con sillones" loading="lazy"><figcaption class="t-label">Living con sillones</figcaption></figure><figure class="p"><img src="assets/laguna_52.webp" alt="Comedor" loading="lazy"><figcaption class="t-label">Comedor</figcaption></figure><figure class="p"><img src="assets/laguna_59.webp" alt="Cocina" loading="lazy"><figcaption class="t-label">Cocina</figcaption></figure><figure class="p"><img src="assets/laguna_36.webp" alt="Baño" loading="lazy"><figcaption class="t-label">Baño</figcaption></figure><figure class="p"><img src="assets/estar_exterior_69.webp" alt="Estar exterior" loading="lazy"><figcaption class="t-label">Estar exterior</figcaption></figure><figure class="p"><img src="assets/laguna_facade.webp" alt="Acceso" loading="lazy"><figcaption class="t-label">Acceso</figcaption></figure><figure class="plan"><img src="assets/laguna_plan_a.webp" alt="Plano · Suite A" loading="lazy"><figcaption class="t-label">Plano · Suite A</figcaption></figure><figure class="plan"><img src="assets/laguna_plan_g.webp" alt="Plano · Familiar G" loading="lazy"><figcaption class="t-label">Plano · Familiar G</figcaption></figure></div><p class="t-label mid" style="margin-top:14px">Deslizá · Tocá una foto para verla en grande</p></div>
   <div class="tail"></div>
 </section>
-<section class="page light" id="laguna-club-ficha" data-title="Laguna Club — Ficha" data-ctx="Laguna Club|Entregado|Laguna%20Club">
+<section class="page light" id="laguna-club-ficha" data-title="Laguna Club · Ficha" data-ctx="Laguna Club|Entregado|Laguna%20Club">
   <div class="pad head"><h2 class="t-h" data-r>Ficha</h2></div>
   <div class="pad ficha2" data-r><dl><div class="r"><dt>Dirección</dt><dd>Máximo Caballero (cont. Laguna Grande) esq. José Pappalardo, Asunción</dd></div><div class="r"><dt>Edificio</dt><dd>5 pisos de departamentos, 2 niveles de cocheras y azotea</dd></div><div class="r"><dt>Amenities</dt><dd>Piscina panorámica con terraza descubierta, salón de eventos climatizado con parrilla, gimnasio equipado y business center</dd></div><div class="r"><dt>Tipologías</dt><dd>Suites A, B, E y F · Lofts C y D · Familiar G</dd></div><div class="r"><dt>Diseña</dt><dd>F. Bibolini</dd></div><div class="r"><dt>Construye</dt><dd>Tedec</dd></div><div class="r"><dt>Estado</dt><dd>Entregado</dd></div></dl></div>
   
@@ -1558,14 +1578,14 @@ main.view{display:none}main.view.on{display:block}
 <section class="phero" id="infinity-top" data-title="Infinity">
   <img class="kb" src="assets/img_70.webp" alt="">
   <div class="in">
-    <div><span class="k an">Proyecto  — Entregado · 100% vendido</span><h1 class="an">Infinity</h1><p class="loc an">Apartments & Lofts · Av. Santísima Trinidad entre Julio Correa y Prof. Francisco Fernández</p></div>
+    <div><span class="k an">Proyecto  · Entregado · 100% vendido</span><h1 class="an">Infinity</h1><p class="loc an">Apartments & Lofts · Av. Santísima Trinidad entre Julio Correa y Prof. Francisco Fernández</p></div>
     <ul class="idx"><li class="an"><a href="#/infinity/proyecto"><small>01</small>El proyecto</a></li><li class="an"><a href="#/infinity/tipologias"><small>02</small>Tipologías</a></li><li class="an"><a href="#/infinity/galeria"><small>03</small>Galería</a></li><li class="an"><a href="#/infinity/ficha"><small>04</small>Ficha</a></li></ul>
   </div>
   <span class="cue" aria-hidden="true">↓</span>
 </section>
-<section class="page light" id="infinity-proyecto" data-title="Infinity — El proyecto" data-ctx="Infinity|100% vendido|Infinity">
+<section class="page light" id="infinity-proyecto" data-title="Infinity · El proyecto" data-ctx="Infinity|100% vendido|Infinity">
   <div class="pad chap-head grid">
-    <div style="grid-column:1/6"><span class="t-label mid" data-r>Entregado — 100% vendido</span><h2 class="name" data-r style="margin-top:12px">Apartments & lofts sobre Santísima Trinidad</h2></div>
+    <div style="grid-column:1/6"><span class="t-label mid" data-r>Entregado · 100% vendido</span><h2 class="name" data-r style="margin-top:12px">Apartments & lofts sobre Santísima Trinidad</h2></div>
     <p class="t-body right" style="grid-column:7/13" data-r>Sobre la avenida Santísima Trinidad, entre Julio Correa y Prof. Francisco Fernández, en una zona con gastronomía, shoppings, supermercados, bancos y universidades, con vista al río Paraguay. Edificio terminado en 2026, con imágenes reales de dron.</p>
   </div>
   <div class="feature tall" data-r="clip"><img src="assets/infinity_aerial.webp" alt="Infinity desde el aire" data-p="0.1" loading="lazy"></div>
@@ -1578,7 +1598,7 @@ main.view{display:none}main.view.on{display:block}
   
   <div class="tail"></div>
 </section>
-<section class="page dark typo" id="infinity-tipologias" data-title="Infinity — Tipologías" data-ctx="Infinity|100% vendido|Infinity">
+<section class="page dark typo" id="infinity-tipologias" data-title="Infinity · Tipologías" data-ctx="Infinity|100% vendido|Infinity">
   <div class="pad">
     <div class="num t-num" data-r>36–93<sup>m²</sup></div>
     <p class="t-body" data-r style="max-width:46ch;margin-top:10px">Cinco tipologías, todas vendidas. Infinity es la referencia de lo que viene: en la misma avenida, The Address tiene las últimas unidades.</p>
@@ -1589,12 +1609,12 @@ main.view{display:none}main.view.on{display:block}
     <div class="giant2" data-giant="rise">Infinity</div>
   </div>
 </section>
-<section class="page dark" id="infinity-galeria" data-title="Galería — Infinity" data-ctx="Infinity|100% vendido|Infinity">
-  <div class="pad head"><h2 class="t-h" data-r>Galería — Infinity</h2></div>
-  <div class="pad" data-r><div class="strip3" data-gallery="Galería — Infinity"><figure><img src="assets/infinity_front.webp" alt="Frente" loading="lazy"><figcaption class="t-label">Frente</figcaption></figure><figure><img src="assets/infinity_aerial.webp" alt="Aérea" loading="lazy"><figcaption class="t-label">Aérea</figcaption></figure><figure><img src="assets/infinity_roof.webp" alt="Azotea con piscina" loading="lazy"><figcaption class="t-label">Azotea con piscina</figcaption></figure><figure><img src="assets/infinity_roof2.webp" alt="Terraza descubierta" loading="lazy"><figcaption class="t-label">Terraza descubierta</figcaption></figure><figure><img src="assets/infinity_access.webp" alt="Acceso" loading="lazy"><figcaption class="t-label">Acceso</figcaption></figure><figure class="p"><img src="assets/infinity_up.webp" alt="Fachada" loading="lazy"><figcaption class="t-label">Fachada</figcaption></figure><figure><img src="assets/infinity_s6.webp" alt="Vista" loading="lazy"><figcaption class="t-label">Vista</figcaption></figure><figure><img src="assets/infinity_top.webp" alt="Remate" loading="lazy"><figcaption class="t-label">Remate</figcaption></figure><figure class="plan"><img src="assets/infinity_plan_b.webp" alt="Plano · B" loading="lazy"><figcaption class="t-label">Plano · B</figcaption></figure><figure class="plan"><img src="assets/infinity_plan_e.webp" alt="Plano · E" loading="lazy"><figcaption class="t-label">Plano · E</figcaption></figure></div><p class="t-label mid" style="margin-top:14px">Deslizá · Tocá una foto para verla en grande</p></div>
+<section class="page dark" id="infinity-galeria" data-title="Galería · Infinity" data-ctx="Infinity|100% vendido|Infinity">
+  <div class="pad head"><h2 class="t-h" data-r>Galería · Infinity</h2></div>
+  <div class="pad" data-r><div class="strip3" data-gallery="Galería · Infinity"><figure><img src="assets/infinity_front.webp" alt="Frente" loading="lazy"><figcaption class="t-label">Frente</figcaption></figure><figure><img src="assets/infinity_aerial.webp" alt="Aérea" loading="lazy"><figcaption class="t-label">Aérea</figcaption></figure><figure><img src="assets/infinity_roof.webp" alt="Azotea con piscina" loading="lazy"><figcaption class="t-label">Azotea con piscina</figcaption></figure><figure><img src="assets/infinity_roof2.webp" alt="Terraza descubierta" loading="lazy"><figcaption class="t-label">Terraza descubierta</figcaption></figure><figure><img src="assets/infinity_access.webp" alt="Acceso" loading="lazy"><figcaption class="t-label">Acceso</figcaption></figure><figure class="p"><img src="assets/infinity_up.webp" alt="Fachada" loading="lazy"><figcaption class="t-label">Fachada</figcaption></figure><figure><img src="assets/infinity_s6.webp" alt="Vista" loading="lazy"><figcaption class="t-label">Vista</figcaption></figure><figure><img src="assets/infinity_top.webp" alt="Remate" loading="lazy"><figcaption class="t-label">Remate</figcaption></figure><figure class="plan"><img src="assets/infinity_plan_b.webp" alt="Plano · B" loading="lazy"><figcaption class="t-label">Plano · B</figcaption></figure><figure class="plan"><img src="assets/infinity_plan_e.webp" alt="Plano · E" loading="lazy"><figcaption class="t-label">Plano · E</figcaption></figure></div><p class="t-label mid" style="margin-top:14px">Deslizá · Tocá una foto para verla en grande</p></div>
   <div class="tail"></div>
 </section>
-<section class="page light" id="infinity-ficha" data-title="Infinity — Ficha" data-ctx="Infinity|100% vendido|Infinity">
+<section class="page light" id="infinity-ficha" data-title="Infinity · Ficha" data-ctx="Infinity|100% vendido|Infinity">
   <div class="pad head"><h2 class="t-h" data-r>Ficha</h2></div>
   <div class="pad ficha2" data-r><dl><div class="r"><dt>Dirección</dt><dd>Av. Santísima Trinidad entre Julio Correa y Prof. Francisco Fernández, Asunción</dd></div><div class="r"><dt>Tipologías</dt><dd>A 53,11 · B 92,63 · C 73,30 · D 35,96 · E 53,08 m²</dd></div><div class="r"><dt>Amenities</dt><dd>Piscina panorámica, dos salones de eventos, gimnasio con sauna, playground, business center y laundry</dd></div><div class="r"><dt>Diseña</dt><dd>F. Bibolini</dd></div><div class="r"><dt>Construye</dt><dd>Tedec</dd></div><div class="r"><dt>Estado</dt><dd>Entregado · 100% vendido</dd></div></dl></div>
   
@@ -1624,7 +1644,7 @@ main.view{display:none}main.view.on{display:block}
 
   /* ---- menu ---- */
   var menu=document.getElementById('menu'), burger=document.getElementById('burger'), trans=document.getElementById('trans'), transTxt=document.getElementById('transTxt');
-  function setMenu(open){menu.classList.toggle('open',open);burger.setAttribute('aria-expanded',open?'true':'false');document.body.style.overflow=open?'hidden':'';
+  function setMenu(open){menu.classList.toggle('open',open); if(typeof hdrTick==='function') setTimeout(hdrTick,20);burger.setAttribute('aria-expanded',open?'true':'false');document.body.style.overflow=open?'hidden':'';
     burger.children[0].style.transform=open?'translateY(3.75px) rotate(45deg)':'';burger.children[1].style.transform=open?'translateY(-3.75px) rotate(-45deg)':'';if(open){burger.children[1].style.width='26px';}else{burger.children[1].style.width='';}}
   burger.addEventListener('click',function(){setMenu(!menu.classList.contains('open'));});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&menu.classList.contains('open'))setMenu(false);});
@@ -1649,7 +1669,7 @@ main.view{display:none}main.view.on{display:block}
     Object.keys(VIEWS).forEach(function(k){ VIEWS[k].classList.toggle('on',k===name); });
     document.body.setAttribute('data-view',name||'home');
     current=name; window.scrollTo(0,0);
-    eagerView(VIEWS[name]);
+    eagerView(VIEWS[name]); if(typeof hdrTick==='function') setTimeout(hdrTick,30);
     initView(VIEWS[name]);
   }
   function route(first){
@@ -1732,7 +1752,7 @@ main.view{display:none}main.view.on{display:block}
     gvCol.innerHTML=''; gvLab.textContent=label; var items=[];
     figs.forEach(function(f,i){
       var img=f.querySelector('img'); var fig=document.createElement('figure'); if(f.classList.contains('plan')) fig.className='plan';
-      var im=document.createElement('img'); im.src=img.src; im.alt=img.alt; var c=document.createElement('figcaption'); c.className='t-label mid'; c.textContent=pad(i+1)+' — '+img.alt;
+      var im=document.createElement('img'); im.src=img.src; im.alt=img.alt; var c=document.createElement('figcaption'); c.className='t-label mid'; c.textContent=pad(i+1)+' · '+img.alt;
       fig.appendChild(im); fig.appendChild(c); gvCol.appendChild(fig); items.push(fig); gvIo.observe(fig);
     });
     gv.classList.add('open'); gv.removeAttribute('inert'); gv.removeAttribute('aria-hidden'); document.body.style.overflow='hidden';
@@ -1763,7 +1783,7 @@ main.view{display:none}main.view.on{display:block}
   document.getElementById('form').addEventListener('submit',function(e){e.preventDefault();var f=e.target,n=f.nombre.value.trim(),t=f.tel.value.trim(),p=f.proyecto.value,m=f.msg.value.trim();if(!n){f.nombre.focus();f.nombre.style.borderBottomColor='#ff0006';return;}var txt='Hola, soy '+n+(t?' ('+t+')':'')+'. Me interesa '+p+'.'+(m?' '+m:'');window.open('https://wa.me/595981044061?text='+encodeURIComponent(txt),'_blank','noopener');});
 
   /* ---- slider numbering without GSAP ---- */
-  function numberHs(sec){ var sl=sec.querySelectorAll('.slide:not(.lead)'); sec.querySelector('.slide.lead .n').textContent='Amenities — '+pad(sl.length); sl.forEach(function(s,i){ s.querySelector('.n').textContent=pad(i+1)+' — '+pad(sl.length); }); }
+  function numberHs(sec){ var sl=sec.querySelectorAll('.slide:not(.lead)'); sec.querySelector('.slide.lead .n').textContent='Amenities · '+pad(sl.length); sl.forEach(function(s,i){ s.querySelector('.n').textContent=pad(i+1)+' · '+pad(sl.length); }); }
 
   /* ---- preloader ---- */
   var pre=document.getElementById('pre'), preNum=document.getElementById('preNum'), preBar=document.getElementById('preBar'), pv=0;
@@ -1845,14 +1865,6 @@ main.view{display:none}main.view.on{display:block}
         if(sec.hasAttribute('data-hs')) buildHs(sec); else if(sec.hasAttribute('data-gal')) buildGal(sec); else buildDay(sec);
       });
       /* timeline: lateral movement on narrow screens (home) */
-      var tlwrap=root.querySelector('#tlwrap');
-      if(tlwrap){
-        gsap.matchMedia().add('(max-width: 900px)',function(){
-          var tl=root.querySelector('#tl');
-          gsap.to(tl,{x:function(){return -(tl.scrollWidth-window.innerWidth);},ease:'none',scrollTrigger:{trigger:tlwrap,pin:true,anticipatePin:1,start:'top 18%',end:function(){return '+='+Math.round(window.innerHeight*0.9);},scrub:.4,invalidateOnRefresh:true,onUpdate:function(st){tl.style.setProperty('--tlp',(Math.max(.06,st.progress)*100)+'%');}}});
-          return function(){ tl.style.removeProperty('--tlp'); };
-        });
-      }
       /* v2: split-word headline reveals */
       gsap.utils.toArray('.splt',root).forEach(function(el){ var ws=el.querySelectorAll('.w i'); if(!ws.length) return; gsap.set(ws,{y:'110%'}); onSee(el,function(){ gsap.to(ws,{y:0,duration:1.1,stagger:.045,ease:'expo.out'}); }); });
       /* v2: counters */
@@ -1957,6 +1969,34 @@ main.view{display:none}main.view.on{display:block}
   }
 
   document.querySelectorAll('a.up').forEach(function(a){ a.addEventListener('click',function(e){ var h=a.getAttribute('href'); var cur=location.hash||'#/'; if(cur===h||(h==='#/'&&cur==='#/')){ e.preventDefault(); window.scrollTo({top:0,behavior:'smooth'}); } }); });
+
+  /* ===== v3: header scrim theme (solid band behind the logo, fades below) ===== */
+  var hdrEl=document.getElementById('hdr'), brandEl=document.querySelector('.brand'), hdrRaf=false;
+  function hdrSize(){ var b=brandEl.getBoundingClientRect(); hdrEl.style.setProperty('--hdrh',Math.round(b.bottom+10)+'px'); }
+  function hdrTheme(){
+    hdrRaf=false;
+    if(menu.classList.contains('open')||document.getElementById('gv').classList.contains('open')||document.getElementById('sr').classList.contains('open')){ document.body.setAttribute('data-hdr','media'); return; }
+    var view=document.querySelector('main.view.on'); if(!view) return;
+    var y=parseFloat(getComputedStyle(hdrEl).getPropertyValue('--hdrh'))||150, t='dark', secs=view.children;
+    for(var i=0;i<secs.length;i++){ var r=secs[i].getBoundingClientRect(); if(r.top<=y&&r.bottom>y){ var e=secs[i]; if(e.matches('.hero,.phero,.intro,.hs,.gal,.day')) t='media'; else if(e.classList.contains('light')) t='light'; else t='dark'; break; } }
+    if(t==='dark'){ var s0=view.children[0]; if(s0&&s0.getBoundingClientRect().top>y) t='media'; }
+    document.body.setAttribute('data-hdr',t);
+  }
+  function hdrTick(){ if(!hdrRaf){ hdrRaf=true; requestAnimationFrame(hdrTheme); } }
+  window.addEventListener('scroll',hdrTick,{passive:true}); window.addEventListener('resize',function(){ hdrSize(); hdrTick(); });
+  hdrSize(); setTimeout(function(){ hdrSize(); hdrTheme(); },50); setInterval(hdrTheme,600);
+
+  /* ===== v3: virtual showrooms embedded ===== */
+  var sr=document.getElementById('sr'), srF=document.getElementById('srF'), srExt=document.getElementById('srExt'), srT=document.getElementById('srT');
+  function srOpen(url,title){ srF.src=url; srExt.href=url; srT.textContent=title||'Showroom virtual 3D'; sr.removeAttribute('inert'); sr.classList.add('open'); document.body.style.overflow='hidden'; hdrTick(); setTimeout(function(){ document.getElementById('srX').focus(); },400); }
+  function srClose(){ if(sr.contains(document.activeElement)) document.activeElement.blur(); sr.classList.remove('open'); sr.setAttribute('inert',''); document.body.style.overflow=''; setTimeout(function(){ if(!sr.classList.contains('open')) srF.src='about:blank'; },450); hdrTick(); }
+  document.getElementById('srX').addEventListener('click',srClose);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&sr.classList.contains('open')) srClose(); });
+  document.querySelectorAll('a[href*="urbania3d.app"]').forEach(function(a){ a.addEventListener('click',function(e){ e.preventDefault(); var ctxEl=a.closest('[data-ctx]'); var nm=ctxEl?ctxEl.getAttribute('data-ctx').split('|')[0]:''; srOpen(a.href,'Showroom virtual 3D'+(nm?' · '+nm:'')); }); });
+
+  /* ===== v3: timeline progress on mobile (native scroll) ===== */
+  (function(){ var w=document.getElementById('tlwrap'), tl=document.getElementById('tl'); if(!w||!tl) return; w.addEventListener('scroll',function(){ var m=w.scrollWidth-w.clientWidth; if(m>0) tl.style.setProperty('--tlp',Math.round(38+62*w.scrollLeft/m)+'%'); },{passive:true}); })();
+
   /* first route */
   route(true);
   if(reduce||!hasGsap){ pre.classList.add('off'); preDone=true; }
