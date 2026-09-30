@@ -1,0 +1,16 @@
+INMO Desarrollos — sitio web (v3)
+
+Contenido
+  index.html      página completa (una sola página con rutas #/…)
+  assets/         imágenes WebP (2x resolución) y favicons
+
+Cómo usarlo
+  - Descomprimí el ZIP en una carpeta y abrí index.html en el navegador.
+  - Para publicarlo: subí la carpeta completa (index.html + assets/) a tu hosting
+    (Netlify, Vercel, GitHub Pages, cPanel, etc.). Mantené la estructura de carpetas.
+  - Requiere internet para las fuentes (Google Fonts) y la librería de animación (GSAP, CDN).
+
+Notas
+  - Los heros usan fotos en alta resolución con movimiento lento (Ken Burns) porque los
+    videos disponibles eran de 820×462. Con videos originales en Full HD se pueden reponer.
+  - Si tenés las fotos originales, reemplazá los archivos de assets/ manteniendo el nombre.
