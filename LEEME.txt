@@ -1,4 +1,4 @@
-INMO Desarrollos · sitio web (v5)
+INMO Desarrollos · sitio web (v6)
 
 Contenido
   index.html      página completa (una sola página con rutas #/…)

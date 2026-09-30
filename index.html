@@ -585,9 +585,9 @@ ul,ol{margin:0;padding:0;list-style:none}
   .ten .txt{margin-top:0}
   .pill{margin-top:30px;gap:20px 22px}
   .partners{margin-top:40px;gap:10px}
-  .tlwrap{overflow-x:auto;overflow-y:hidden;min-height:0;display:block;padding-left:0;padding-right:0;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-top:clamp(40px,7vw,90px)}
+  .tlwrap{overflow-x:auto;overflow-y:hidden;min-height:0;display:block;padding-left:0;padding-right:0;scroll-snap-type:x mandatory;scroll-padding-left:var(--pad);overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-top:clamp(40px,7vw,90px)}
   .tlwrap::-webkit-scrollbar{display:none}
-  .tl{margin-top:0;display:flex;gap:0;width:max-content;padding:0 var(--pad);border-top:0;--tlp:38%}
+  .tl{margin-top:0;display:flex;gap:0;width:max-content;padding:0 calc(38vw - var(--pad)) 0 var(--pad);border-top:0;--tlp:38%}
   .tl::before{left:var(--pad);width:var(--tlp);transition:width .3s linear}
   .tl.on::before{width:var(--tlp)}
   .tl li{flex:0 0 62vw;padding-right:26px;padding-top:18px;scroll-snap-align:start}
@@ -829,6 +829,7 @@ body[data-hdr="light"] #hdr{--hbg:#fff;opacity:1}
   .menu .aside .t-body,.menu .aside{font-size:11px}
 }
 @media (hover:none){.menu li a:hover{transform:none;opacity:.92}.menu li a{transition:opacity .3s}}
+.menu .mcol,.gv,.sr iframe{overscroll-behavior:contain}
 </style>
 </head>
 <body>
@@ -2012,6 +2013,14 @@ body[data-hdr="light"] #hdr{--hbg:#fff;opacity:1}
   /* ===== v3: timeline progress on mobile (native scroll) ===== */
   (function(){ var w=document.getElementById('tlwrap'), tl=document.getElementById('tl'); if(!w||!tl) return; w.addEventListener('scroll',function(){ var m=w.scrollWidth-w.clientWidth; if(m>0) tl.style.setProperty('--tlp',Math.round(38+62*w.scrollLeft/m)+'%'); },{passive:true}); })();
 
+  /* iOS: block page scrolling behind open overlays (menu, gallery viewer, showroom) */
+  document.addEventListener('touchmove',function(e){
+    var open=menu.classList.contains('open')||document.getElementById('gv').classList.contains('open')||document.getElementById('sr').classList.contains('open');
+    if(!open) return;
+    var inner=e.target.closest&&e.target.closest('.gv,.sr iframe,.menu .mcol');
+    if(!inner){ e.preventDefault(); return; }
+    if(inner.classList.contains('mcol')&&inner.scrollHeight<=inner.clientHeight+1) e.preventDefault();
+  },{passive:false});
   /* first route */
   route(true);
   if(reduce||!hasGsap){ pre.classList.add('off'); preDone=true; }
