@@ -1,0 +1,74 @@
+---
+/**
+ * Elementos fijos del sitio: barra de progreso, scrim del header, logo, nav superior,
+ * menú, preloader, telón de transición, barra de contexto, cursor, visor de showroom 3D
+ * y visor de galería. Comportamiento en `src/scripts/main.js`.
+ */
+import { SITE } from '../config/site';
+import { menuItems } from '../data/projects';
+import { pictureHtml } from '../lib/images';
+
+const logoCtx = { sizes: '(max-width: 600px) 150px, 250px', widths: [300, 400, 600] } as const;
+const brandImg = await pictureHtml('logo_white.webp', logoCtx, { alt: 'INMO Desarrollos', loading: 'eager' });
+const preImg = await pictureHtml('logo_white.webp', { sizes: '120px', widths: [300, 400] }, { alt: '' });
+const menuImg = await pictureHtml(
+  'trinity2_exterior_2.webp',
+  { sizes: '55vw', widths: [768, 1080, 1440] },
+  { alt: '' },
+);
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<div id="sp" aria-hidden="true"><i></i></div>
+<div id="hdr" aria-hidden="true"></div>
+<header class="site-header">
+<a class="brand" href="/" aria-label="INMO Desarrollos, inicio" set:html={brandImg} />
+<div class="topnav">
+  <a class="t-label" href="/#proyectos">Elegí tu departamento</a>
+  <button class="burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu"><i></i><i></i></button>
+</div>
+</header>
+
+<nav class="menu" id="menu" aria-label="Principal">
+  <div class="mimg"><Fragment set:html={menuImg} /><div class="cap t-label">Departamentos grandes, en serio · Asunción</div></div>
+  <div class="mcol" data-lenis-prevent>
+    <ul>
+      {menuItems.map((item, i) => <li><a href={item.href}><small>{pad(i + 1)}</small>{item.label}</a></li>)}
+    </ul>
+    <div class="aside t-body">
+      <div><span class="mid t-label">WhatsApp</span><br /><a href={SITE.whatsapp} target="_blank" rel="noopener">{SITE.phoneDisplay}</a></div>
+      <div><span class="mid t-label">Correo</span><br /><a href={`mailto:${SITE.email}`}>{SITE.email}</a></div>
+      <div><span class="mid t-label">Oficinas</span><br />Av. Santa Teresa 2106, Torre 2, Piso 17<br />Torres del Paseo, Asunción</div>
+      <div class="row t-label">
+        <a href={SITE.social.instagram} target="_blank" rel="noopener">Instagram</a><a href={SITE.social.facebook} target="_blank" rel="noopener">Facebook</a><a href={SITE.social.tiktok} target="_blank" rel="noopener">TikTok</a><a href={SITE.social.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="pre" id="pre" aria-hidden="true">
+  <div class="lcard"><Fragment set:html={preImg} /><span>Departamentos<br />grandes, en serio</span></div>
+  <div class="num" id="preNum">00</div>
+  <div class="bar" id="preBar"></div>
+</div>
+<div class="trans" id="trans" aria-hidden="true">
+  <div class="lcard"><Fragment set:html={preImg} /><span id="transTxt">Departamentos<br />grandes, en serio</span></div>
+</div>
+<div class="ctx" id="ctx" aria-live="polite"><span class="nm" id="ctxNm"></span><span class="st" id="ctxSt"></span><a class="lnk" id="ctxLnk" href={SITE.whatsapp} target="_blank" rel="noopener">Consultar</a></div>
+<div class="cur" id="cur" aria-hidden="true"><span class="lbl">Deslizá</span></div>
+<div class="sr" id="sr" data-lenis-prevent inert>
+  <div class="srbar">
+    <span class="t-label" id="srT">Showroom virtual 3D</span>
+    <div class="srk">
+      <a class="lnk" id="srExt" href={SITE.whatsapp} target="_blank" rel="noopener">Abrir en pestaña nueva</a>
+      <button class="x t-label" type="button" id="srX" aria-label="Cerrar el showroom">Cerrar ×</button>
+    </div>
+  </div>
+  <iframe id="srF" title="Showroom virtual 3D" loading="lazy" allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; magnetometer" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  <p class="srhint t-label mid">Si el showroom no carga acá, abrilo en una pestaña nueva.</p>
+</div>
+<div class="gv" id="gv" data-lenis-prevent inert>
+  <div class="lab t-label">Galería</div>
+  <button class="x" id="gvX" type="button" aria-label="Cerrar">×</button>
+  <div class="col" id="gvCol"></div>
+</div>

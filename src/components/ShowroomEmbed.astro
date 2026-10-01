@@ -1,0 +1,143 @@
+---
+/**
+ * Showroom 3D embebido y abierto (iframe interactivo dentro de un marco tipo ventana de navegador).
+ * El iframe monta su `src` recién cuando el marco está a ~1 pantalla de distancia (IntersectionObserver);
+ * hasta entonces se ve la portada del proyecto. La altura se reserva con aspect-ratio (sin CLS).
+ */
+import type { Project } from '../data/projects';
+import { pictureHtml } from '../lib/images';
+
+export interface Props {
+  project: Project;
+  /** Fondo de la sección (igual al de la sección donde se inserta) */
+  theme?: 'light' | 'dark';
+  /** Nivel del encabezado: h2 en páginas de proyecto, h3 en la home (debajo del h2 del proyecto) */
+  level?: 2 | 3;
+  id: string;
+}
+const { project, theme = 'light', level = 2, id } = Astro.props;
+const url = project.showroom as string;
+const host = new URL(url).host;
+const H = `h${level}` as 'h2' | 'h3';
+const poster = await pictureHtml(
+  project.hero.image,
+  { sizes: '(max-width: 900px) 100vw, 1200px', widths: [480, 768, 1080, 1440] },
+  { alt: '' },
+);
+---
+
+<section class={`page ${theme} sre`} id={id} data-title={`${project.name} · Showroom 3D`}>
+  <div class="pad sre-in">
+    <div class="sre-head" data-r>
+      <span class="t-label mid">Showroom virtual 3D</span>
+      <H class="sre-h">Recorré {project.name} en 3D</H>
+      <p class="t-body">Explorá el showroom de {project.name} directamente acá, sin salir de la página.</p>
+    </div>
+    <div class="sre-frame" data-lenis-prevent data-sre data-src={url}>
+      <div class="sre-bar" aria-hidden="true">
+        <span class="sre-dots"><i></i><i></i><i></i></span>
+        <span class="sre-host">{host}</span>
+        <span class="sre-live"><b></b>En vivo</span>
+      </div>
+      <div class="sre-view">
+        <div class="sre-poster" aria-hidden="true">
+          <Fragment set:html={poster} />
+          <span class="sre-load t-label">Cargando showroom</span>
+        </div>
+        <iframe
+          title={`Showroom virtual 3D de ${project.name}`}
+          allow="fullscreen; xr-spatial-tracking; gyroscope; accelerometer"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+    <p class="sre-cap t-label">
+      <span class="mid">Showroom virtual 3D · Navegable</span>
+      <a class="lnk" href={url} target="_blank" rel="noopener" data-no-modal>Abrir en pestaña nueva ↗</a>
+    </p>
+  </div>
+</section>
+
+<script>
+  // Monta el iframe cuando el marco está cerca del viewport (~1 pantalla)
+  var frames = document.querySelectorAll<HTMLElement>('[data-sre]');
+  var cur = document.getElementById('cur');
+  function mount(fr: HTMLElement) {
+    var f = fr.querySelector('iframe');
+    var src = fr.getAttribute('data-src');
+    if (!f || !src || f.getAttribute('src')) return;
+    f.addEventListener('load', function () {
+      fr.classList.add('is-live');
+    });
+    f.setAttribute('src', src);
+    fr.classList.add('is-loading');
+    // si el evento load no llega (algunos móviles), no dejamos la portada/indicador encima
+    setTimeout(function () {
+      fr.classList.add('is-live');
+    }, 6000);
+  }
+  frames.forEach(function (fr) {
+    // el cursor personalizado se oculta al entrar al showroom (el iframe no emite mousemove a la página)
+    var view = fr.querySelector('.sre-view');
+    if (view && cur) {
+      var c = cur;
+      view.addEventListener('mouseenter', function () {
+        c.classList.add('off');
+      });
+    }
+  });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            mount(e.target as HTMLElement);
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { rootMargin: '100% 0px' },
+    );
+    frames.forEach(function (fr) {
+      io.observe(fr);
+    });
+  } else {
+    frames.forEach(mount);
+  }
+</script>
+
+<style is:global>
+  .sre-in{padding-top:clamp(40px,6vw,88px);padding-bottom:clamp(40px,6vw,88px)}
+  .sre-in>*{max-width:min(1080px,100%);margin-left:auto;margin-right:auto}
+  .sre-head{margin-bottom:clamp(20px,2.6vw,36px)}
+  .sre-head .t-body{max-width:62ch}
+  .sre-h{font-size:clamp(26px,3.6vw,54px);letter-spacing:-.005em;text-transform:uppercase;line-height:1.02;font-weight:500;margin:12px 0 0}
+  .sre-head .t-body{margin-top:16px}
+  .sre-frame{border-radius:14px;background:#0a0a0a;border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 70px -36px rgba(0,0,0,.55)}
+  .sre-bar{border-radius:13px 13px 0 0;display:flex;align-items:center;justify-content:space-between;gap:12px;height:38px;padding:0 14px;background:#0f0f0f;border-bottom:1px solid rgba(255,255,255,.12);color:#8a8a8a;white-space:nowrap}
+  .sre-dots{display:flex;gap:6px;flex:0 0 auto}
+  .sre-dots i{display:block;width:8px;height:8px;border-radius:50%;background:#3a3a3a}
+  .sre-host{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .sre-live{display:flex;align-items:center;gap:7px;flex:0 0 auto;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:#d8d8d8}
+  .sre-live b{display:block;width:6px;height:6px;border-radius:50%;background:var(--red);animation:sreLive 2s ease-in-out infinite}
+  @keyframes sreLive{50%{opacity:.35}}
+  .sre-view{position:relative;aspect-ratio:16/10;background:#111;border-radius:0 0 13px 13px}
+  .sre-view iframe{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;border:0;background:#111;border-radius:inherit;z-index:1;overscroll-behavior:contain}
+    .sre-poster{position:absolute;top:0;right:0;bottom:0;left:0;z-index:2;pointer-events:none;border-radius:inherit;overflow:hidden;background:#000;transition:opacity .6s var(--ease),visibility 0s .6s}
+  .sre-poster img{width:100%;height:100%;object-fit:cover;opacity:.55;filter:saturate(.8)}
+  .sre-frame.is-live .sre-poster{opacity:0;visibility:hidden}
+  .sre-load{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:14px;color:#fff;text-align:center}
+  .sre-load::after{content:"";display:block;width:74px;height:2px;background:linear-gradient(90deg,transparent,#fff,transparent);background-size:200% 100%;animation:sreBar 1.4s linear infinite}
+  @keyframes sreBar{from{background-position:200% 0}to{background-position:-200% 0}}
+  .sre-cap{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:12px;margin-bottom:0;flex-wrap:wrap}
+  .sre-cap .lnk{min-height:44px;display:inline-flex;align-items:center}
+  .lenis.lenis-smooth .sre iframe{pointer-events:auto}
+  @media (max-width:1000px){.sre-view{aspect-ratio:4/3}}
+  @media (max-width:700px){
+    .sre-view{aspect-ratio:4/5;max-height:75svh}
+    .sre-frame{border-radius:10px}
+    .sre-bar{border-radius:9px 9px 0 0}
+    .sre-view{border-radius:0 0 9px 9px}
+  }
+  @media (prefers-reduced-motion:reduce){.sre-live b,.sre-load::after{animation:none}}
+</style>

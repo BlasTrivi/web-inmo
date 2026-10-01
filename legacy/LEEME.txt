@@ -1,0 +1,16 @@
+INMO Desarrollos · sitio web (v6)
+
+Contenido
+  index.html      página completa (una sola página con rutas #/…)
+  assets/         imágenes WebP (2x resolución) y favicons
+
+Cómo usarlo
+  - Descomprimí el ZIP y subí la carpeta completa (index.html + assets/) a tu hosting
+    manteniendo la estructura, o abrí index.html en el navegador.
+  - Requiere internet para las fuentes (Google Fonts) y la librería de animación (GSAP, CDN).
+
+Notas
+  - Los showrooms 3D se abren embebidos dentro del sitio. Si el proveedor (urbania3d.app)
+    bloquea el embebido, el visor muestra el aviso y el botón "Abrir en pestaña nueva".
+  - Los heros usan fotos en alta resolución con movimiento lento porque los videos
+    disponibles eran de 820×462. Con videos originales en Full HD se pueden reponer.

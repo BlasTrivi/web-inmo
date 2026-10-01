@@ -1,0 +1,66 @@
+---
+import ShowroomEmbed from '../components/ShowroomEmbed.astro';
+import Base from '../layouts/Base.astro';
+import { SITE, absoluteUrl } from '../config/site';
+import { projects, projectBySlug } from '../data/projects';
+import { getFragments, processHtml } from '../lib/html';
+import {
+  ORG_ID,
+  breadcrumbSchema,
+  graph,
+  homeItemListSchema,
+  organizationSchema,
+  webPageSchema,
+  websiteSchema,
+} from '../lib/schema';
+
+const fragments = getFragments('home');
+const processed = await Promise.all(fragments.map((f) => processHtml(f.html)));
+const preloads = processed.flatMap((p) => p.preloads);
+
+const jsonLd = graph([
+  organizationSchema(),
+  websiteSchema(),
+  webPageSchema({
+    path: '/',
+    name: SITE.defaultTitle,
+    description: SITE.description,
+    image: absoluteUrl('/og/default.png'),
+    about: ORG_ID,
+  }),
+  breadcrumbSchema([{ name: 'Inicio', path: '/' }], '/'),
+  homeItemListSchema(),
+]);
+const slugs = projects.map((p) => p.slug);
+---
+
+<Base
+  title={SITE.defaultTitle}
+  description={SITE.description}
+  path="/"
+  ogImage="/og/default.png"
+  ogImageAlt="INMO Desarrollos · Departamentos grandes, en serio"
+  markdown="/index.md"
+  jsonLd={jsonLd}
+  preloads={preloads}
+  isHome
+>
+  <script slot="head" is:inline define:vars={{ slugs }}>
+    // Compatibilidad con los enlaces antiguos de la versión de una sola página (#/slug, #/slug/seccion, #/seccion)
+    (function () {
+      var h = location.hash;
+      if (h.indexOf('#/') !== 0) return;
+      var p = h.slice(2).split('/');
+      if (!p[0]) { location.replace('/'); return; }
+      if (slugs.indexOf(p[0]) > -1) location.replace('/' + p[0] + '/' + (p[1] ? '#' + p[1] : ''));
+      else location.replace('/#' + p[0]);
+    })();
+  </script>
+  {processed.map((p, i) => (
+    <>
+      <Fragment set:html={p.html} />
+      {fragments[i].id === 'trinity-2-home' && <ShowroomEmbed project={projectBySlug('trinity-2')} id="showroom-trinity-2" theme="light" level={3} />}
+      {fragments[i].id === 'president-tower-home' && <ShowroomEmbed project={projectBySlug('president-tower')} id="showroom-president-tower" theme="light" level={3} />}
+    </>
+  ))}
+</Base>

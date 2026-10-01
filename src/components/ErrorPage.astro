@@ -1,0 +1,52 @@
+---
+/** Plantilla compartida de 404 y 500 (on-brand, noindex). */
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config/site';
+import { projects, projectPath } from '../data/projects';
+import { pictureHtml } from '../lib/images';
+
+export interface Props {
+  code: '404' | '500';
+  title: string;
+  heading: string;
+  lead: string;
+  path: string;
+}
+const { code, title, heading, lead, path } = Astro.props;
+const groupLogo = await pictureHtml('logo_group_white.webp', { sizes: '100px', widths: [160, 320] }, { alt: 'INMOGROUP SA' });
+---
+
+<Base title={`${title} · ${SITE.titleSuffix}`} description={lead} path={path} noindex>
+  <section class="page dark err" id="error" data-title={title}>
+    <div class="pad err-in">
+      <span class="t-label mid">Error {code}</span>
+      <h1 class="t-big err-h">{heading}</h1>
+      <p class="t-lead err-lead">{lead}</p>
+      <div class="acts">
+        <a class="lnk big" href="/">Volver al inicio</a>
+        <a class="lnk" href="/#proyectos">Ver proyectos</a>
+        <a class="lnk" href={SITE.whatsapp} target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+      </div>
+      <nav class="err-nav" aria-label="Proyectos">
+        <h2 class="t-label mid">Proyectos</h2>
+        <ul class="done t-body">
+          {projects.map((p, i) => (
+            <li class="has">
+              <a href={projectPath(p.slug)}>
+                <span class="mid">{String(i + 1).padStart(2, '0')}</span>
+                <span class="nm">{p.name}</span>
+                <span class="mid">{p.loc.split(' · ').slice(-2)[0]}</span>
+                <span class="st go">{p.statusLabel}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+    <footer class="pad foot t-label">
+      <a class="up" href="/" aria-label="Ir al inicio">↑</a>
+      <div class="group">una marca de <Fragment set:html={groupLogo} /></div>
+      <div class="mid">© 2026 INMO Group SA · Asunción, Paraguay</div>
+    </footer>
+  </section>
+</Base>

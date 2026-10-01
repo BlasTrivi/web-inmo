@@ -1,0 +1,40 @@
+---
+/** Sección "Otros proyectos" + pie de página de cada proyecto. Generada desde `projects.ts`. */
+import { SITE } from '../config/site';
+import { projects, projectPath, type Project } from '../data/projects';
+import { CTX, pictureHtml } from '../lib/images';
+
+export interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const others = projects.filter((p) => p.slug !== project.slug);
+const cards = await Promise.all(
+  others.map(async (p) => ({
+    p,
+    img: await pictureHtml(p.cardImage, CTX.card, { alt: p.cardAlt }),
+  })),
+);
+const groupLogo = await pictureHtml(
+  'logo_group_white.webp',
+  { sizes: '100px', widths: [160, 320] },
+  { alt: 'INMOGROUP SA', attrs: { class: 'inv' } },
+);
+---
+
+<section class="page light pend" id="mas" data-title="Otros proyectos">
+  <div class="pad head"><h2 class="t-h" data-r>Otros proyectos</h2></div>
+  <div class="pad more" data-r>
+    {cards.map(({ p, img }) => (
+      <a href={projectPath(p.slug)}><Fragment set:html={img} /><span class="cap"><b>{p.name}</b><small>{p.statusLabel}</small></span></a>
+    ))}
+  </div>
+  <div class="pad acts" data-r>
+    <a class="lnk" href="/">Volver al inicio</a><a class="lnk" href="/#contacto">Contacto</a><a class="lnk" href="/#manifiesto">Manifiesto</a>
+  </div>
+  <footer class="pad foot t-label">
+    <a class="up" href={projectPath(project.slug)} aria-label="Volver arriba">↑</a>
+    <div class="group">una marca de <Fragment set:html={groupLogo} /></div>
+    <div class="mid">© 2026 INMO Group SA · Av. Santa Teresa 2106, Torre 2, Piso 17, Asunción · <a href={SITE.whatsapp} target="_blank" rel="noopener">{SITE.phoneDisplay}</a></div>
+  </footer>
+</section>

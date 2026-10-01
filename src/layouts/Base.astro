@@ -1,0 +1,82 @@
+---
+import '@fontsource-variable/host-grotesk/wght.css';
+import '../styles/global.css';
+import fontLatin from '@fontsource-variable/host-grotesk/files/host-grotesk-latin-wght-normal.woff2?url';
+import SEO from '../components/SEO.astro';
+import Chrome from '../components/Chrome.astro';
+import { SITE } from '../config/site';
+import { projects, homeSections } from '../data/projects';
+import type { PreloadInfo } from '../lib/images';
+
+export interface Props {
+  title: string;
+  description: string;
+  path: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  noindex?: boolean;
+  markdown?: string;
+  jsonLd?: string;
+  /** Imágenes LCP a precargar (AVIF) */
+  preloads?: PreloadInfo[];
+  isHome?: boolean;
+  /** Se usa en el menú/telón: título de cada ruta */
+  bodyClass?: string;
+}
+
+const { title, description, path, ogImage, ogImageAlt, noindex, markdown, jsonLd, preloads = [], isHome = false, bodyClass } =
+  Astro.props;
+
+// Mapa de títulos para el "telón" de transición entre páginas
+const routes: Record<string, string> = { '/': 'Inicio' };
+for (const p of projects) routes[`/${p.slug}/`] = p.name;
+for (const s of homeSections) routes[`/#${s.id}`] = s.title;
+---
+
+<!doctype html>
+<html lang={SITE.lang} data-page={isHome ? 'home' : 'page'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        var reduce = false;
+        try {
+          reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        } catch (e) {}
+        if (reduce) d.classList.add('reduce');
+        try {
+          var s = window.sessionStorage;
+          if (s.getItem('inmo-curtain')) d.classList.add('curtain-in');
+          else if (!reduce && d.getAttribute('data-page') === 'home' && !s.getItem('inmo-pre')) d.classList.add('pre-on');
+        } catch (e) {}
+      })();
+    </script>
+    <SEO {title} {description} {path} {ogImage} {ogImageAlt} {noindex} {markdown} {jsonLd} />
+    <link rel="preload" href={fontLatin} as="font" type="font/woff2" crossorigin />
+    {preloads.map((p) => <link rel="preload" as="image" type="image/avif" imagesrcset={p.avifSrcset} imagesizes={p.sizes} fetchpriority="high" />)}
+    <noscript>
+      <style>
+        [data-r],.hero .card,.hero .meta,.cards .c,.tl li,.phero .an{opacity:1!important;transform:none!important}
+        [data-r="clip"]{clip-path:none!important}[data-r="clip"] img{transform:none!important}
+        .hero .tag .l span{transform:none!important}
+        .tl::before{width:100%!important}
+        .pre{display:none!important}
+      </style>
+    </noscript>
+    <slot name="head" />
+  </head>
+  <body class={bodyClass} data-hdr="media" data-routes={JSON.stringify(routes)}>
+    <a class="skip" href="#main">Saltar al contenido</a>
+    <Chrome />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <script>
+      import '../scripts/main.js';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectHero from '../../components/ProjectHero.astro';
+import ShowroomEmbed from '../../components/ShowroomEmbed.astro';
+import MoreProjects from '../../components/MoreProjects.astro';
+import { SITE, absoluteUrl } from '../../config/site';
+import { projects, projectPath, type Project } from '../../data/projects';
+import { getFragments, processHtml } from '../../lib/html';
+import { CTX, preloadInfo } from '../../lib/images';
+import {
+  breadcrumbSchema,
+  graph,
+  organizationSchema,
+  projectId,
+  projectSchema,
+  webPageSchema,
+  websiteSchema,
+} from '../../lib/schema';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+const { project } = Astro.props as { project: Project };
+const path = projectPath(project.slug);
+const fragments = getFragments(`projects/${project.slug}`);
+const processed = await Promise.all(fragments.map((f) => processHtml(f.html)));
+const preloads = [await preloadInfo(project.hero.image, CTX.hero), ...processed.flatMap((p) => p.preloads)];
+const ogImage = `/og/${project.slug}.png`;
+const title = `${project.title} · ${SITE.titleSuffix}`;
+
+const jsonLd = graph([
+  organizationSchema(),
+  websiteSchema(),
+  webPageSchema({
+    path,
+    name: title,
+    description: project.description,
+    image: absoluteUrl(ogImage),
+    about: projectId(project),
+  }),
+  breadcrumbSchema(
+    [
+      { name: 'Inicio', path: '/' },
+      { name: 'Proyectos', path: '/#proyectos' },
+      { name: project.name, path },
+    ],
+    path,
+  ),
+  ...projectSchema(project, absoluteUrl(ogImage)),
+]);
+---
+
+<Base
+  title={title}
+  description={project.description}
+  path={path}
+  ogImage={ogImage}
+  ogImageAlt={`${project.name} · ${project.ogTagline}`}
+  markdown={`/${project.slug}.md`}
+  jsonLd={jsonLd}
+  preloads={preloads.slice(0, 1)}
+>
+  <ProjectHero project={project} />
+  {processed.map((p, i) => (
+    <>
+      <Fragment set:html={p.html} />
+      {project.showroom && fragments[i].id === 'proyecto' && <ShowroomEmbed project={project} id="showroom" theme="light" level={2} />}
+    </>
+  ))}
+  <MoreProjects project={project} />
+</Base>

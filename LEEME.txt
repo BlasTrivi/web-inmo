@@ -1,16 +1,77 @@
-INMO Desarrollos · sitio web (v6)
+INMO Desarrollos · sitio web (v7, Astro)
 
-Contenido
-  index.html      página completa (una sola página con rutas #/…)
-  assets/         imágenes WebP (2x resolución) y favicons
+Sitio estático hecho con Astro: una página de inicio y una página por proyecto
+(/trinity-2/, /the-address/, /president-tower/, /boston-842/, /trinity-3/, /laguna-club/, /infinity/),
+con SEO, Open Graph, datos estructurados y archivos para buscadores y asistentes de IA.
 
-Cómo usarlo
-  - Descomprimí el ZIP y subí la carpeta completa (index.html + assets/) a tu hosting
-    manteniendo la estructura, o abrí index.html en el navegador.
-  - Requiere internet para las fuentes (Google Fonts) y la librería de animación (GSAP, CDN).
+REQUISITOS
+  - Node.js 22.12 o superior (https://nodejs.org) y npm.
 
-Notas
+CÓMO USARLO
+  1) npm install            instala las dependencias (una sola vez)
+  2) npm run dev            servidor de desarrollo en http://localhost:4321
+  3) npm run build          genera el sitio final en la carpeta dist/
+  4) npm run preview        (opcional) sirve dist/ para probarlo antes de subirlo
+  5) npm run check          revisa tipos y errores (astro check)
+
+  Para publicar: el contenido de dist/ es el sitio final. El despliegue y la configuración del
+  servidor están detallados en ENTREGA.md. El primer build es lento porque convierte las fotos a
+  AVIF/WebP en varios tamaños; los siguientes usan caché.
+
+DÓNDE CAMBIAR EL DOMINIO
+  Editá UNA sola línea: SITE_URL en src/config/site.ts (hoy https://inmo.com.py).
+  De ahí salen astro.config.mjs, los canonical, el sitemap, robots.txt, llms.txt, las imágenes OG,
+  los datos estructurados y los archivos .md. En el mismo archivo están el correo, el WhatsApp, la
+  dirección y las redes sociales.
+
+QUÉ HAY EN CADA CARPETA
+  src/config/site.ts          datos de la empresa y dominio (punto único)
+  src/data/projects.ts        datos de los proyectos (nombre, estado, textos SEO, datos de ficha)
+  src/content/home/*.html     secciones de la página de inicio (texto tal cual el original)
+  src/content/projects/<slug>/*.html   secciones de cada proyecto
+  src/assets/img/             fotos originales (se optimizan solas al generar el sitio)
+  src/components, layouts/    piezas de la página (cabecera, menú, SEO, portada, pie)
+  src/pages/                  rutas: inicio, [slug], 404, 500 y los archivos generados (abajo)
+  src/scripts/main.js         comportamiento (menú, galerías, selector de tipologías, showroom 3D…)
+  src/scripts/motion.js       animaciones GSAP (se cargan aparte; respetan "reducir movimiento")
+  src/styles/global.css       estilos del diseño original
+  public/                     favicons
+  legacy/index.html           la versión anterior de una sola página (solo referencia, no se publica)
+
+PARA AGREGAR O EDITAR UN PROYECTO
+  1) Datos: src/data/projects.ts (copiá un bloque existente).
+  2) Contenido: carpeta src/content/projects/<slug>/ con un archivo .html por sección, numerados
+     (01-proyecto.html, 02-amenities.html…). Las imágenes se escriben como assets/nombre.webp y
+     deben estar en src/assets/img/.
+  3) La página, el sitemap, llms.txt, el .md y la imagen OG se crean solos.
+
+ARCHIVOS PARA SEO Y ASISTENTES DE IA (se generan solos)
+  /sitemap.xml                 mapa del sitio (también sitemap-index.xml del integrador oficial)
+  /robots.txt                  permite buscadores y bots de IA (GPTBot, ClaudeBot, PerplexityBot, etc.)
+  /llms.txt                    índice para modelos de lenguaje (formato llmstxt.org)
+  /llms-full.txt               todo el contenido del sitio en Markdown
+  /index.md y /<slug>.md       versión en Markdown de cada página
+  /og/default.png y /og/<slug>.png   imágenes para compartir (1200x630), se crean en el build
+  /manifest.webmanifest        ficha de la app instalable
+  /humans.txt                  créditos
+  /.well-known/security.txt    contacto de seguridad (renovar la fecha "Expires" una vez al año en
+                               src/config/site.ts)
+  404.html y 500.html          páginas de error con la marca
+
+ENLACES ANTIGUOS
+  Los enlaces de la versión anterior (#/trinity-2, #/trinity-2/amenities, #/manifiesto…) se
+  redirigen solos a las nuevas páginas (/trinity-2/, /trinity-2/#amenities, /#manifiesto).
+
+HOSTING
+  No se incluye configuración de plataforma: el despliegue lo realiza el equipo del cliente.
+  Ver ENTREGA.md (build, dominio, 404, caché, compresión, headers de seguridad y checklist).
+  Las URLs terminan en "/" (trailingSlash: always); el servidor debe redirigir las variantes
+  sin barra.
+
+NOTAS
   - Los showrooms 3D se abren embebidos dentro del sitio. Si el proveedor (urbania3d.app)
     bloquea el embebido, el visor muestra el aviso y el botón "Abrir en pestaña nueva".
   - Los heros usan fotos en alta resolución con movimiento lento porque los videos
-    disponibles eran de 820×462. Con videos originales en Full HD se pueden reponer.
+    disponibles eran de 820x462. Con videos originales en Full HD se pueden reponer.
+  - Las fuentes (Host Grotesk) y las animaciones (GSAP) ya vienen incluidas en el sitio: no se
+    usa Google Fonts ni CDN.

@@ -1,0 +1,32 @@
+---
+/** Portada de proyecto (.phero). El <img> es el candidato a LCP: eager + fetchpriority alto. */
+import type { Project } from '../data/projects';
+import { CTX, pictureHtml } from '../lib/images';
+
+export interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const img = await pictureHtml(project.hero.image, CTX.hero, {
+  alt: project.hero.alt,
+  attrs: project.hero.kenBurns ? { class: 'kb' } : {},
+});
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section class="phero" id="top" data-title={project.name}>
+  <Fragment set:html={img} />
+  <div class="in">
+    <div>
+      <span class="k an">{project.kicker}</span>
+      <h1 class="an">{project.name}</h1>
+      <p class="loc an">{project.loc}</p>
+    </div>
+    <nav aria-label={`Secciones de ${project.name}`}>
+      <ul class="idx">
+        {project.nav.map((n, i) => <li class="an"><a href={`#${n.id}`}><small>{pad(i + 1)}</small>{n.label}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+  <span class="cue" aria-hidden="true">↓</span>
+</section>
