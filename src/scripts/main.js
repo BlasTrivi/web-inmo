@@ -956,8 +956,9 @@ import { initSmooth, getLenis, scrollToY } from './smooth.js';
   function preTick() {
     if (preDone) return;
     pv = Math.min(pv + (96 - pv) * 0.06 + 0.2, 96);
-    preNum.textContent = pad(Math.round(pv));
-    preBar.style.width = pv + '%';
+    var shown = pad(Math.round(pv));
+    if (preNum.textContent !== shown) preNum.textContent = shown;
+    preBar.style.transform = 'scaleX(' + pv / 100 + ')';
     requestAnimationFrame(preTick);
   }
   function setReady() {
@@ -968,7 +969,7 @@ import { initSmooth, getLenis, scrollToY } from './smooth.js';
     if (preDone) return;
     preDone = true;
     preNum.textContent = '100';
-    preBar.style.width = '100%';
+    preBar.style.transform = 'scaleX(1)';
     store.set('inmo-pre', '1');
     setTimeout(function () {
       pre.classList.add('off');
@@ -1075,10 +1076,17 @@ import { initSmooth, getLenis, scrollToY } from './smooth.js';
     idle(
       function () {
         menu.classList.add('warm');
-        html.classList.add('snap-on');
       },
       { timeout: 3000 },
     );
+    setTimeout(function () {
+      idle(
+        function () {
+          html.classList.add('snap-on');
+        },
+        { timeout: 4000 },
+      );
+    }, 2500);
   });
   // enlace directo con ancla (sin GSAP): el navegador ya posiciona la página
 })();

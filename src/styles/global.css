@@ -393,7 +393,7 @@ ul,ol{margin:0;padding:0;list-style:none}
 .lcard img{width:120px}
 .lcard span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;line-height:1.6}
 .pre .num{position:absolute;right:var(--pad);bottom:calc(24px + env(safe-area-inset-bottom,0px));font-size:11px;letter-spacing:.14em}
-.pre .bar{position:absolute;left:0;bottom:0;height:2px;width:0;background:#fff}
+.pre .bar{position:absolute;left:0;bottom:0;height:2px;width:100%;transform:scaleX(0);transform-origin:0 50%;will-change:transform;background:#fff}
 .pre{display:none}
 .pre-on .pre{display:flex}
 .reduce .pre{display:none}
