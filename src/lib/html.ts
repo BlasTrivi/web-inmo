@@ -1,6 +1,6 @@
 /**
  * Procesamiento de los fragmentos HTML de `src/content/**`:
- *  - <img src="assets/x.webp"> → <picture> AVIF/WebP responsive con width/height (astro:assets)
+ *  - <img src="assets/x.webp"> → <picture> WebP responsive con width/height (astro:assets)
  *  - rel="noopener" en enlaces externos
  *  - conversión a Markdown (llms-full.txt y versiones .md)
  */

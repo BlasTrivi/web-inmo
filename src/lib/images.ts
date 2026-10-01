@@ -1,6 +1,6 @@
 /**
  * Utilidades de imágenes (astro:assets). Todas las fotos viven en `src/assets/img/`
- * y se sirven optimizadas (AVIF + WebP, varios anchos, width/height explícitos).
+ * y se sirven optimizadas (WebP, varios anchos, width/height explícitos).
  */
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -35,7 +35,7 @@ export interface ImageCtx {
   widths: readonly number[];
   /** Imagen LCP: carga inmediata, fetchpriority alto */
   eager?: boolean;
-  /** Calidad AVIF (por defecto 55) */
+  /** Calidad WebP (por defecto 72) */
   quality?: number;
 }
 
@@ -44,7 +44,6 @@ export interface PictureData {
   width: number;
   height: number;
   sizes: string;
-  avifSrcset: string;
   webpSrcset: string;
   /** URL de respaldo para <img src> (ancho intermedio, WebP) */
   fallback: string;
@@ -73,10 +72,7 @@ export function pictureData(name: string, ctx: ImageCtx): Promise<PictureData> {
 async function build(name: string, ctx: ImageCtx): Promise<PictureData> {
   const meta = getMeta(name);
   const widths = fitWidths(ctx.widths, meta.width);
-  const [avif, webp] = await Promise.all([
-    getImage({ src: meta, widths, sizes: ctx.sizes, format: 'avif', quality: ctx.quality ?? 55 }),
-    getImage({ src: meta, widths, sizes: ctx.sizes, format: 'webp', quality: 72 }),
-  ]);
+  const webp = await getImage({ src: meta, widths, sizes: ctx.sizes, format: 'webp', quality: ctx.quality ?? 72 });
   const values = webp.srcSet.values;
   const mid = values[Math.min(values.length - 1, Math.floor(values.length / 2))];
   const big = values.find((v) => /^(1[4-9]\d\d|2\d\d\d)w$/.test(v.descriptor ?? '')) ?? values[values.length - 1];
@@ -85,7 +81,6 @@ async function build(name: string, ctx: ImageCtx): Promise<PictureData> {
     width: meta.width,
     height: meta.height,
     sizes: ctx.sizes,
-    avifSrcset: avif.srcSet.attribute,
     webpSrcset: webp.srcSet.attribute,
     fallback: mid.url,
     full: big.url,
@@ -121,7 +116,6 @@ export async function pictureHtml(name: string, ctx: ImageCtx, opts: PictureHtml
   const sizes = `sizes="${escapeAttr(pd.sizes)}"`;
   return (
     `<picture${opts.pictureAttrs ? ' ' + opts.pictureAttrs : ''}>` +
-    `<source type="image/avif" srcset="${pd.avifSrcset}" ${sizes}>` +
     `<source type="image/webp" srcset="${pd.webpSrcset}" ${sizes}>` +
     `<img${extra ? ' ' + extra : ''} src="${pd.fallback}" width="${pd.width}" height="${pd.height}" alt="${escapeAttr(opts.alt)}" ${loading}${opts.full ? ` data-full="${pd.full}"` : ''}>` +
     `</picture>`
@@ -129,20 +123,20 @@ export async function pictureHtml(name: string, ctx: ImageCtx, opts: PictureHtml
 }
 
 export interface PreloadInfo {
-  avifSrcset: string;
+  webpSrcset: string;
   sizes: string;
 }
 
 export async function preloadInfo(name: string, ctx: ImageCtx): Promise<PreloadInfo> {
   const pd = await pictureData(name, ctx);
-  return { avifSrcset: pd.avifSrcset, sizes: pd.sizes };
+  return { webpSrcset: pd.webpSrcset, sizes: pd.sizes };
 }
 
 // ---------------------------------------------------------------------------------------------
 // Contextos de tamaño reutilizables
 // ---------------------------------------------------------------------------------------------
 export const CTX = {
-  hero: { sizes: '100vw', widths: [480, 750, 960, 1280, 1600, 1920, 2560], eager: true, quality: 38 },
+  hero: { sizes: '100vw', widths: [480, 750, 960, 1280, 1600, 1920, 2560], eager: true },
   full: { sizes: '100vw', widths: WIDTHS.lg },
   half: { sizes: '(max-width: 900px) 100vw, 55vw', widths: WIDTHS.md },
   card: { sizes: '(max-width: 700px) 50vw, 33vw', widths: WIDTHS.md },

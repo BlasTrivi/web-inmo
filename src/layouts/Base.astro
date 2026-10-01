@@ -17,7 +17,7 @@ export interface Props {
   noindex?: boolean;
   markdown?: string;
   jsonLd?: string;
-  /** Imágenes LCP a precargar (AVIF) */
+  /** Imágenes LCP a precargar (WebP) */
   preloads?: PreloadInfo[];
   isHome?: boolean;
   /** Se usa en el menú/telón: título de cada ruta */
@@ -57,7 +57,7 @@ for (const s of homeSections) routes[`/#${s.id}`] = s.title;
     </script>
     <SEO {title} {description} {path} {ogImage} {ogImageAlt} {noindex} {markdown} {jsonLd} />
     <link rel="preload" href={fontLatin} as="font" type="font/woff2" crossorigin />
-    {preloads.map((p) => <link rel="preload" as="image" type="image/avif" imagesrcset={p.avifSrcset} imagesizes={p.sizes} fetchpriority="high" />)}
+    {preloads.map((p) => <link rel="preload" as="image" type="image/webp" imagesrcset={p.webpSrcset} imagesizes={p.sizes} fetchpriority="high" />)}
     <noscript>
       <style>
         [data-r],.hero .card,.hero .meta,.cards .c,.tl li,.phero .an{opacity:1!important;transform:none!important}
