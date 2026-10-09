@@ -8,9 +8,10 @@ import { SITE } from '../config/site';
 import { menuItems } from '../data/projects';
 import { pictureHtml } from '../lib/images';
 
-const logoCtx = { sizes: '(max-width: 600px) 150px, 250px', widths: [300, 400, 600] } as const;
-const brandImg = await pictureHtml('logo_white.webp', logoCtx, { alt: 'INMO Desarrollos', loading: 'eager' });
-const preImg = await pictureHtml('logo_white.webp', { sizes: '120px', widths: [300, 400] }, { alt: '' });
+// Logos de marca (SVG del manual): fondo oscuro -> blanco + rojo; fondo claro -> gris + rojo
+const logoOnDark = '/brand/logo-white-red.svg';
+const logoOnLight = '/brand/logo-gray-red.svg';
+const preImg = `<img src="${logoOnDark}" width="179" height="75" alt="" decoding="async">`;
 const menuImg = await pictureHtml(
   'trinity2_exterior_2.webp',
   { sizes: '55vw', widths: [768, 1080, 1440] },
@@ -22,7 +23,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
 <div id="sp" aria-hidden="true"><i></i></div>
 <div id="hdr" aria-hidden="true"></div>
 <header class="site-header">
-<a class="brand" href="/" aria-label="INMO Desarrollos, inicio" set:html={brandImg} />
+<a class="brand" href="/" aria-label="INMO Desarrollos, inicio">
+  <img class="lg-dark" src={logoOnDark} width="179" height="75" alt="INMO Desarrollos" fetchpriority="high" decoding="async" />
+  <img class="lg-light" src={logoOnLight} width="179" height="75" alt="" aria-hidden="true" decoding="async" />
+</a>
 <div class="topnav">
   <a class="t-label" href="/#proyectos">Elegí tu departamento</a>
   <button class="burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu"><i></i><i></i></button>

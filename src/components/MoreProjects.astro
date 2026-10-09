@@ -15,11 +15,7 @@ const cards = await Promise.all(
     img: await pictureHtml(p.cardImage, CTX.card, { alt: p.cardAlt }),
   })),
 );
-const groupLogo = await pictureHtml(
-  'logo_group_white.webp',
-  { sizes: '100px', widths: [160, 320] },
-  { alt: 'INMOGROUP SA', attrs: { class: 'inv' } },
-);
+const groupLogo = '<img src="/brand/logo-group-gray-red.svg" width="346" height="40" alt="INMOGROUP SA" decoding="async">';
 ---
 
 <section class="page light pend" id="mas" data-title="Otros proyectos">

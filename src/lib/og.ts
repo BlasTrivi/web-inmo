@@ -62,7 +62,7 @@ export async function renderOg({ image, title, subtitle, footer }: OgOptions): P
     .toBuffer();
 
   const left = 64;
-  const name = textPath(title.toUpperCase(), 600, 104, -0.02, left, H - 150, W - left * 2);
+  const name = textPath(title, 600, 104, -0.02, left, H - 150, W - left * 2);
   const sub = textPath(subtitle.toUpperCase(), 500, 26, 0.12, left, H - 92, W - left * 2);
   const foot = textPath((footer ?? SITE.url.replace(/^https?:\/\//, '')).toUpperCase(), 500, 20, 0.14, left, H - 48, 700);
 
@@ -87,7 +87,7 @@ export async function renderOg({ image, title, subtitle, footer }: OgOptions): P
   <path d="${foot.d}" fill="#bdbdbd"/>
 </svg>`;
 
-  const logo = await sharp(path.join(root, 'src/assets/img/logo_white.webp')).resize({ width: 230 }).png().toBuffer();
+  const logo = await sharp(path.join(root, 'public/brand/logo-white-red.svg'), { density: 300 }).resize({ width: 190 }).png().toBuffer();
 
   return sharp(photo)
     .composite([

@@ -3,7 +3,6 @@
 import Base from '../layouts/Base.astro';
 import { SITE } from '../config/site';
 import { projects, projectPath } from '../data/projects';
-import { pictureHtml } from '../lib/images';
 
 export interface Props {
   code: '404' | '500';
@@ -13,7 +12,7 @@ export interface Props {
   path: string;
 }
 const { code, title, heading, lead, path } = Astro.props;
-const groupLogo = await pictureHtml('logo_group_white.webp', { sizes: '100px', widths: [160, 320] }, { alt: 'INMOGROUP SA' });
+const groupLogo = '<img src="/brand/logo-group-white-red.svg" width="346" height="40" alt="INMOGROUP SA" decoding="async">';
 ---
 
 <Base title={`${title} · ${SITE.titleSuffix}`} description={lead} path={path} noindex>
