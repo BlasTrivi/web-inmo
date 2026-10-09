@@ -1,15 +1,18 @@
 ---
 /** Sección "Otros proyectos" + pie de página de cada proyecto. Generada desde `projects.ts`. */
+import FootLinks from './FootLinks.astro';
 import { SITE } from '../config/site';
-import { projects, projectPath, type Project } from '../data/projects';
+import { relatedProjects, projectPath, type Project } from '../data/projects';
 import { CTX, pictureHtml } from '../lib/images';
+import { ribbonHtml } from '../lib/ribbon';
 import { nb } from '../lib/typo';
 
 export interface Props {
   project: Project;
 }
 const { project } = Astro.props;
-const others = projects.filter((p) => p.slug !== project.slug);
+// mismo segmento primero (con unidades antes que vendidos), luego el resto en el orden único
+const others = relatedProjects(project);
 const cards = await Promise.all(
   others.map(async (p) => ({
     p,
@@ -23,7 +26,7 @@ const groupLogo = '<img src="/brand/logo-group-gray-red.svg" width="346" height=
   <div class="pad head"><h2 class="t-h" data-r>Otros proyectos</h2></div>
   <div class="pad more" data-r>
     {cards.map(({ p, img }) => (
-      <a href={projectPath(p.slug)}><Fragment set:html={img} /><span class="cap"><b>{nb(p.name)}</b><small>{p.statusLabel}</small></span></a>
+      <a href={projectPath(p.slug)}><Fragment set:html={img} /><Fragment set:html={ribbonHtml(p)} /><span class="cap"><b>{nb(p.name)}</b></span></a>
     ))}
   </div>
   <div class="pad acts" data-r>
@@ -31,6 +34,7 @@ const groupLogo = '<img src="/brand/logo-group-gray-red.svg" width="346" height=
   </div>
   <footer class="pad foot t-label">
     <a class="up" href={projectPath(project.slug)} aria-label="Volver arriba">↑</a>
+    <FootLinks />
     <div class="group">una marca de <Fragment set:html={groupLogo} /></div>
     <div class="mid">© 2026 INMO Group SA · Av. Santa Teresa 2106, Torre 2, Piso 17, Asunción · <a href={SITE.whatsapp} target="_blank" rel="noopener">{SITE.phoneDisplay}</a></div>
   </footer>

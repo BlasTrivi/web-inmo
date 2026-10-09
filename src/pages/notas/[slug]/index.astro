@@ -1,0 +1,150 @@
+---
+import { render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import NoteCard from '../../../components/NoteCard.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import { SITE, absoluteUrl } from '../../../config/site';
+import { hasImage, pictureHtml, preloadInfo } from '../../../lib/images';
+import {
+  allNotas,
+  formatDate,
+  isoDate,
+  notaPath,
+  notaUrl,
+  readingMinutes,
+  relatedNotas,
+  visibleNotas,
+  type Nota,
+} from '../../../lib/notas';
+import { articleSchema, breadcrumbSchema, graph, organizationSchema, webPageSchema, websiteSchema } from '../../../lib/schema';
+
+export async function getStaticPaths() {
+  const notas = await allNotas();
+  return notas.map((nota) => ({ params: { slug: nota.id }, props: { nota } }));
+}
+
+const { nota } = Astro.props as { nota: Nota };
+const d = nota.data;
+const { Content } = await render(nota);
+const path = notaPath(nota);
+const url = notaUrl(nota);
+const minutes = readingMinutes(nota.body);
+const pool = await visibleNotas();
+const related = relatedNotas(nota, pool, 3);
+
+const heroCtx = { sizes: '(max-width: 1200px) 100vw, 1200px', widths: [768, 1080, 1440, 1920], eager: true };
+const cover = hasImage(d.cover) ? await pictureHtml(d.cover, heroCtx, { alt: d.coverAlt }) : '';
+const preloads = hasImage(d.cover) ? [await preloadInfo(d.cover, heroCtx)] : [];
+
+
+// OG propio solo para notas reales; los ejemplos usan la imagen general (y van noindex)
+const ogImage = d.ejemplo ? '/og/default.png' : `/og/notas/${nota.id}.png`;
+const title = `${d.title} · ${SITE.titleSuffix}`;
+const jsonLd = d.ejemplo
+  ? undefined
+  : graph([
+      organizationSchema(),
+      websiteSchema(),
+      webPageSchema({ path, name: title, description: d.description, image: absoluteUrl(ogImage), type: 'WebPage' }),
+      breadcrumbSchema(
+        [
+          { name: 'Inicio', path: '/' },
+          { name: 'Notas', path: '/notas/' },
+          { name: d.title, path },
+        ],
+        path,
+      ),
+      articleSchema({
+        path,
+        headline: d.title,
+        description: d.description,
+        image: absoluteUrl(ogImage),
+        datePublished: d.date,
+        author: d.author,
+        keywords: d.tags,
+      }),
+    ]);
+
+const enc = encodeURIComponent;
+const share = [
+  { name: 'WhatsApp', href: `https://wa.me/?text=${enc(`${d.title} ${url}`)}` },
+  { name: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}` },
+  { name: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}` },
+  { name: 'X', href: `https://x.com/intent/post?url=${enc(url)}&text=${enc(d.title)}` },
+];
+---
+
+<Base
+  title={title}
+  description={d.description}
+  path={path}
+  ogImage={ogImage}
+  ogImageAlt={d.coverAlt}
+  ogType="article"
+  noindex={d.ejemplo}
+  jsonLd={jsonLd}
+  preloads={preloads}
+>
+  <article class="page light nota" id="top" data-title={d.title}>
+    <header class="pad nota-head">
+      <nav class="nota-crumb t-label mid" aria-label="Ruta de navegación"><a href="/notas/">Notas</a><span aria-hidden="true"> / </span><span>{d.tags[0] ?? 'Nota'}</span></nav>
+      {d.ejemplo && <p class="nota-badge t-label">Nota de ejemplo</p>}
+      <h1 class="nota-h">{d.title}</h1>
+      <p class="t-lead nota-lead">{d.description}</p>
+      <p class="nota-meta t-label mid">
+        <span>{d.author}</span>
+        <span aria-hidden="true">·</span>
+        <time datetime={isoDate(d.date)}>{formatDate(d.date)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{minutes} min de lectura</span>
+      </p>
+    </header>
+    {cover && <figure class="nota-cover pad"><Fragment set:html={cover} /></figure>}
+    <div class="pad nota-wrap">
+      <div class="prose">
+        <Content />
+      </div>
+      {d.tags.length > 0 && (
+        <ul class="nota-tags t-label" aria-label="Etiquetas">
+          {d.tags.map((t) => <li>{t}</li>)}
+        </ul>
+      )}
+      <section class="nota-share" aria-labelledby="shareH">
+        <h2 class="t-label mid" id="shareH">Compartir</h2>
+        <ul class="t-label">
+          {share.map((s) => <li><a class="lnk" href={s.href} target="_blank" rel="noopener noreferrer">{s.name}</a></li>)}
+          <li><button type="button" class="lnk" id="copyLink" data-url={url}>Copiar enlace</button><span class="copied" id="copied" role="status"></span></li>
+        </ul>
+      </section>
+    </div>
+    {related.length > 0 && (
+      <section class="pad nota-rel" aria-labelledby="relH">
+        <h2 class="t-h" id="relH">Seguí leyendo</h2>
+        <div class="notas-grid">
+          {related.map((n) => <NoteCard nota={n} />)}
+        </div>
+      </section>
+    )}
+    <div class="pad acts nota-back"><a class="lnk" href="/notas/">Todas las notas</a><a class="lnk" href="/#contacto">Contacto</a></div>
+    <SiteFooter path={path} />
+  </article>
+</Base>
+
+<script>
+  // "Copiar enlace": usa el portapapeles si esta disponible
+  const copyBtn = document.getElementById('copyLink');
+  const copyMsg = document.getElementById('copied');
+  if (copyBtn && copyMsg) {
+    copyBtn.addEventListener('click', () => {
+      const u = copyBtn.getAttribute('data-url') || location.href;
+      const done = (ok: boolean) => {
+        copyMsg.textContent = ok ? 'Enlace copiado' : 'No se pudo copiar';
+        setTimeout(() => {
+          copyMsg.textContent = '';
+        }, 2200);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(u).then(() => done(true), () => done(false));
+      else done(false);
+    });
+  }
+</script>

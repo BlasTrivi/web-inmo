@@ -14,6 +14,21 @@ export type ProjectStatus =
   | 'delivered' // Entregado
   | 'sold-out'; // 100% vendido
 
+/**
+ * Stock comercial del edificio (alimenta la "fajita" de las tarjetas/portada y el detalle simple).
+ * TODO-CLIENTE: confirmar stock de cada edificio.
+ *  - 'disponible' : hay unidades (la fajita muestra la etiqueta de estado, ej. "Nuevo lanzamiento")
+ *  - 'ultimas'    : últimas unidades
+ *  - 'agotado'    : 100% vendido (la página se muestra en versión compacta)
+ */
+export type Stock = 'disponible' | 'ultimas' | 'agotado';
+
+/**
+ * Segmento comercial, para ordenar "Otros proyectos" (el mismo segmento va primero).
+ * TODO-CLIENTE: confirmar segmento de cada proyecto (asignación provisoria según el texto del sitio).
+ */
+export type Segment = 'premium' | 'residencial';
+
 export interface NavItem {
   /** id de la sección dentro de la página (ancla) */
   id: string;
@@ -26,6 +41,10 @@ export interface Project {
   /** Posición en el listado "Proyecto 0N" */
   order: number;
   status: ProjectStatus;
+  /** TODO-CLIENTE: confirmar stock de cada edificio */
+  stock: Stock;
+  /** TODO-CLIENTE: confirmar segmento */
+  segment: Segment;
   /** Etiqueta corta (tarjetas y "Otros proyectos") */
   statusLabel: string;
   /** Texto del kicker de la portada, tal cual el original */
@@ -64,6 +83,8 @@ const rawProjects: Project[] = [
     name: 'Trinity 2',
     order: 1,
     status: 'launch',
+    stock: 'disponible',
+    segment: 'residencial',
     statusLabel: 'Nuevo lanzamiento',
     kicker: 'Proyecto 01 · Nuevo lanzamiento',
     loc: 'Tte. Máximo Caballero esq. José Pappalardo · A 50 m del Club Internacional de Tenis · Asunción',
@@ -112,6 +133,8 @@ const rawProjects: Project[] = [
     name: 'The Address',
     order: 2,
     status: 'last-units',
+    stock: 'ultimas',
+    segment: 'premium',
     statusLabel: 'Últimas unidades',
     kicker: 'Proyecto 02 · Finalizado, últimas unidades',
     loc: 'Av. Santísima Trinidad · Barrio Mburucuyá · Asunción',
@@ -150,6 +173,8 @@ const rawProjects: Project[] = [
     name: 'President Tower',
     order: 3,
     status: 'upcoming',
+    stock: 'disponible',
+    segment: 'premium',
     statusLabel: 'Próximamente',
     kicker: 'Proyecto 03 · En preparación',
     loc: 'Luxury Residences · Un departamento por piso · Asunción',
@@ -195,6 +220,8 @@ const rawProjects: Project[] = [
     name: 'Boston 842',
     order: 4,
     status: 'finished',
+    stock: 'disponible',
+    segment: 'residencial',
     statusLabel: 'Terminado',
     kicker: 'Proyecto 04 · Terminado',
     loc: 'Juan de Salazar entre Washington y Padre Cardozo · Las Mercedes · Asunción',
@@ -231,6 +258,8 @@ const rawProjects: Project[] = [
     name: 'Trinity 3',
     order: 5,
     status: 'delivered',
+    stock: 'disponible',
+    segment: 'residencial',
     statusLabel: 'Entregado',
     kicker: 'Proyecto  · Entregado · Segunda etapa de Trinity Towers',
     loc: 'Tte. Máximo Caballero esq. Calle 4 · A 50 m del Club Internacional de Tenis',
@@ -262,6 +291,8 @@ const rawProjects: Project[] = [
     name: 'Laguna Club',
     order: 6,
     status: 'delivered',
+    stock: 'disponible',
+    segment: 'residencial',
     statusLabel: 'Entregado',
     kicker: 'Proyecto  · Entregado',
     loc: 'Apartments & Lofts · Máximo Caballero esq. José Pappalardo · A pasos del CIT',
@@ -294,6 +325,8 @@ const rawProjects: Project[] = [
     name: 'Infinity',
     order: 7,
     status: 'sold-out',
+    stock: 'agotado',
+    segment: 'residencial',
     statusLabel: '100% vendido',
     kicker: 'Proyecto  · Entregado · 100% vendido',
     loc: 'Apartments & Lofts · Av. Santísima Trinidad entre Julio Correa y Prof. Francisco Fernández',
@@ -365,6 +398,38 @@ export const projects: Project[] = rawProjects
     kicker: p.kicker.replace(/^Proyecto\s*\d*\s*·/, `Proyecto ${pad2(i + 1)} ·`),
   }));
 
+/**
+ * Fajita de stock: una sola fuente para tarjetas (slider, "Otros proyectos", Entregados) y portada.
+ *  agotado    -> "100% vendido" (banda roja)
+ *  ultimas    -> "Últimas unidades"
+ *  disponible -> la etiqueta de estado del proyecto (ej. "Nuevo lanzamiento")
+ */
+export type RibbonTone = 'sold' | 'last' | 'open';
+export function stockRibbon(p: Pick<Project, 'stock' | 'statusLabel'>): { text: string; tone: RibbonTone } {
+  if (p.stock === 'agotado') return { text: '100% vendido', tone: 'sold' };
+  if (p.stock === 'ultimas') return { text: 'Últimas unidades', tone: 'last' };
+  return { text: p.statusLabel, tone: 'open' };
+}
+
+/** Stock de edificios sin página propia que figuran en "Entregados" (el sitio dice "100% vendido"). */
+export const LEGACY_STOCK: Record<string, { stock: Stock; statusLabel: string }> = {
+  'trinity-1': { stock: 'agotado', statusLabel: 'Entregado' },
+};
+
+/**
+ * "Otros proyectos": excluye el actual; primero los del mismo segmento (con unidades antes que vendidos),
+ * después el resto según PROJECT_ORDER.
+ */
+export const relatedProjects = (current: Project): Project[] => {
+  const others = projects.filter((p) => p.slug !== current.slug);
+  const sold = (p: Project) => (p.stock === 'agotado' ? 1 : 0);
+  const same = others
+    .filter((p) => p.segment === current.segment)
+    .sort((a, b) => sold(a) - sold(b) || orderIndex(a.slug) - orderIndex(b.slug));
+  const rest = others.filter((p) => p.segment !== current.segment).sort((a, b) => orderIndex(a.slug) - orderIndex(b.slug));
+  return [...same, ...rest];
+};
+
 export const projectBySlug = (slug: string): Project => {
   const p = projects.find((x) => x.slug === slug);
   if (!p) throw new Error(`Proyecto desconocido: ${slug}`);
@@ -379,6 +444,7 @@ export const homeSections = [
   { id: 'proyectos', label: 'Proyectos', title: 'Proyectos' },
   { id: 'entregados', label: 'Entregados', title: 'Entregados' },
   { id: 'nosotros', label: 'Diez años', title: 'Diez años' },
+  { id: 'por-que-inmo', label: 'Por qué INMO', title: 'Por qué INMO' },
   { id: 'contacto', label: 'Contacto', title: 'Contacto' },
 ] as const;
 
@@ -390,5 +456,7 @@ export const menuItems: { label: string; href: string }[] = [
   ...projects.map((p) => ({ label: p.name, href: projectPath(p.slug) })),
   { label: 'Entregados', href: '/#entregados' },
   { label: 'Diez años', href: '/#nosotros' },
+  { label: 'Por qué INMO', href: '/#por-que-inmo' },
+  { label: 'Notas', href: '/notas/' },
   { label: 'Contacto', href: '/#contacto' },
 ];

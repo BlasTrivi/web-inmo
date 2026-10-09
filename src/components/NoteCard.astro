@@ -1,0 +1,38 @@
+---
+/** Tarjeta de una nota (listado y "relacionadas"). */
+import { CTX, pictureHtml, hasImage } from '../lib/images';
+import { formatDate, isoDate, notaPath, type Nota } from '../lib/notas';
+
+export interface Props {
+  nota: Nota;
+  /** Tarjeta destacada (más grande, horizontal en escritorio) */
+  featured?: boolean;
+}
+const { nota, featured = false } = Astro.props;
+const d = nota.data;
+const img = hasImage(d.cover)
+  ? await pictureHtml(
+      d.cover,
+      featured ? { sizes: '(max-width: 900px) 100vw, 58vw', widths: [768, 1080, 1440, 1920] } : CTX.card,
+      { alt: d.coverAlt },
+    )
+  : '';
+---
+
+<article class={`ncard${featured ? ' ncard--f' : ''}`}>
+  <a class="ncard-a" href={notaPath(nota)}>
+    <div class="ncard-img">
+      <Fragment set:html={img} />
+      {d.ejemplo && <span class="ncard-badge">Nota de ejemplo</span>}
+    </div>
+    <div class="ncard-txt">
+      <p class="ncard-meta t-label mid">
+        <time datetime={isoDate(d.date)}>{formatDate(d.date)}</time>
+        {d.tags.length > 0 && <span> · {d.tags.slice(0, 2).join(' · ')}</span>}
+      </p>
+      <h2 class="ncard-h">{d.title}</h2>
+      <p class="ncard-d t-body">{d.description}</p>
+      <span class="lnk ncard-go">Leer nota</span>
+    </div>
+  </a>
+</article>

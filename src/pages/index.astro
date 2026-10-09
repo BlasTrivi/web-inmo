@@ -2,7 +2,8 @@
 import ShowroomEmbed from '../components/ShowroomEmbed.astro';
 import Base from '../layouts/Base.astro';
 import { SITE, absoluteUrl } from '../config/site';
-import { projects, projectBySlug, orderIndex, projectPath } from '../data/projects';
+import { projects, projectBySlug, orderIndex, projectPath, LEGACY_STOCK } from '../data/projects';
+import { ribbonHtml } from '../lib/ribbon';
 import { renumber } from '../lib/typo';
 import { getFragments, processHtml } from '../lib/html';
 import {
@@ -34,7 +35,7 @@ const fragments = baseFragments.map((f, i) => {
 const sliderHtml = projects
   .map(
     (p) =>
-      `<a href="${projectPath(p.slug)}"><img src="assets/${p.cardImage}" alt="${p.cardAlt}" loading="lazy"><span class="cap"><b>${p.name}</b><small>${p.statusLabel}</small></span></a>`,
+      `<a href="${projectPath(p.slug)}"><img src="assets/${p.cardImage}" alt="${p.cardAlt}" loading="lazy">${ribbonHtml(p)}<span class="cap"><b>${p.name}</b></span></a>`,
   )
   .join(' ');
 const dotsHtml = projects.map((_, i) => (i === 0 ? '<i class="on"></i>' : '<i></i>')).join('');
@@ -53,8 +54,15 @@ function reorderDelivered(html: string): string {
   }
   if (!items.length) return html;
   items.sort((a, b) => orderIndex(a.key) - orderIndex(b.key));
+  // fajita de stock sobre la foto de la ficha (los que no tienen foto, como Marquis, no la llevan)
+  const withRibbon = (key: string, h: string): string => {
+    const src = projects.find((x) => x.slug === key) ?? LEGACY_STOCK[key];
+    return src ? h.replace('<div class="pic">', `<div class="pic">${ribbonHtml(src)}`) : h;
+  };
   const body = items
-    .map((it, i) => it.html.replace(/<span class="mid">\d\d<\/span>/, `<span class="mid">${String(i + 1).padStart(2, '0')}</span>`))
+    .map((it, i) =>
+      withRibbon(it.key, it.html).replace(/<span class="mid">\d\d<\/span>/, `<span class="mid">${String(i + 1).padStart(2, '0')}</span>`),
+    )
     .join('\n      ');
   return html.slice(0, first) + body + html.slice(last);
 }

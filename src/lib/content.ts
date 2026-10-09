@@ -5,6 +5,8 @@
 import { SITE, absoluteUrl } from '../config/site';
 import { projects, projectPath, type Project } from '../data/projects';
 import { getFragments, sectionToMarkdown } from './html';
+import { legalList } from '../data/legal';
+import { notaUrl, realNotas } from './notas';
 import { renumber } from './typo';
 
 export const mdPath = (slug?: string): string => (slug ? `/${slug}.md` : '/index.md');
@@ -70,7 +72,8 @@ export function projectMarkdown(p: Project): string {
   return parts.join('\n');
 }
 
-export function llmsTxt(): string {
+export async function llmsTxt(): Promise<string> {
+  const notas = await realNotas();
   const lines: string[] = [
     `# ${SITE.name}`,
     '',
@@ -86,11 +89,18 @@ export function llmsTxt(): string {
     '',
     ...projects.map((p) => `- [${p.name}](${absoluteUrl(mdPath(p.slug))}): ${p.statusLabel}. ${p.description}`),
     '',
+    ...(notas.length
+      ? ['## Notas', '', ...notas.map((n) => `- [${n.data.title}](${notaUrl(n)}): ${n.data.description}`), '']
+      : []),
     '## Contacto',
     '',
     `- WhatsApp: ${WA}`,
     `- Correo: ${SITE.email}`,
     `- Oficinas: Av. Santa Teresa 2106, Torre 2, Piso 17, Torres del Paseo, ${SITE.address.locality}`,
+    '',
+    '## Legal',
+    '',
+    ...legalList.map((d) => `- [${d.title}](${absoluteUrl(d.path)}): ${d.description}`),
     '',
     '## Optional',
     '',

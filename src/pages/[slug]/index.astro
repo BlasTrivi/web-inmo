@@ -6,6 +6,7 @@ import MoreProjects from '../../components/MoreProjects.astro';
 import { SITE, absoluteUrl } from '../../config/site';
 import { projects, projectPath, type Project } from '../../data/projects';
 import { getFragments, processHtml } from '../../lib/html';
+import { COMPACT_SECTIONS, compactFicha, compactGaleria, compactNav, compactProyecto } from '../../lib/compact';
 import { renumber } from '../../lib/typo';
 import { CTX, preloadInfo } from '../../lib/images';
 import {
@@ -24,10 +25,17 @@ export function getStaticPaths() {
 
 const { project } = Astro.props as { project: Project };
 const path = projectPath(project.slug);
-const fragments = getFragments(`projects/${project.slug}`);
-const processed = await Promise.all(
-  fragments.map((f) => processHtml(f.id === 'proyecto' ? renumber(f.html, project.order) : f.html)),
-);
+// Proyecto 100% vendido: versión compacta (portada, "El proyecto", galería chica, ficha, aviso y otros proyectos)
+const soldOut = project.stock === 'agotado';
+let fragments = getFragments(`projects/${project.slug}`);
+if (soldOut) fragments = fragments.filter((f) => (COMPACT_SECTIONS as readonly string[]).includes(f.id));
+const shape = (f: { id: string; html: string }): string => {
+  if (!soldOut) return f.id === 'proyecto' ? renumber(f.html, project.order) : f.html;
+  if (f.id === 'proyecto') return compactProyecto(renumber(f.html, project.order));
+  if (f.id === 'galeria') return compactGaleria(f.html);
+  return compactFicha(f.html);
+};
+const processed = await Promise.all(fragments.map((f) => processHtml(shape(f))));
 const preloads = [await preloadInfo(project.hero.image, CTX.hero), ...processed.flatMap((p) => p.preloads)];
 const ogImage = `/og/${project.slug}.png`;
 const title = `${project.title} · ${SITE.titleSuffix}`;
@@ -64,12 +72,25 @@ const jsonLd = graph([
   jsonLd={jsonLd}
   preloads={preloads.slice(0, 1)}
 >
-  <ProjectHero project={project} />
+  <ProjectHero project={project} nav={soldOut ? compactNav(project.nav) : project.nav} />
   {processed.map((p, i) => (
     <>
       <Fragment set:html={p.html} />
-      {project.showroom && fragments[i].id === 'proyecto' && <ShowroomEmbed project={project} id="showroom" theme="light" level={2} />}
+      {!soldOut && project.showroom && fragments[i].id === 'proyecto' && <ShowroomEmbed project={project} id="showroom" theme="light" level={2} />}
     </>
   ))}
+  {soldOut && (
+    <section class="page dark soldout" id="vendido" data-title="100% vendido">
+      <div class="pad so-in">
+        <div class="so-n" data-r aria-hidden="true">100%</div>
+        <div class="so-t">
+          <h2 class="t-h" data-r>{project.name} está 100% vendido</h2>
+          <p class="t-body" data-r>Todas las unidades de {project.name} ya tienen dueño. Si estás buscando un departamento, mirá los proyectos que hoy tienen unidades disponibles.</p>
+          <div class="acts" data-r><a class="lnk big" href="/#proyectos">Ver proyectos disponibles →</a></div>
+        </div>
+      </div>
+      <div class="tail"></div>
+    </section>
+  )}
   <MoreProjects project={project} />
 </Base>

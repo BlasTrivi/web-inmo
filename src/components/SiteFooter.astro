@@ -1,0 +1,19 @@
+---
+/** Pie de página para páginas que no son de proyecto ni la home (legales, Notas). */
+import FootLinks from './FootLinks.astro';
+import { SITE } from '../config/site';
+
+export interface Props {
+  /** Ruta actual (el botón "volver arriba" apunta a ella) */
+  path: string;
+}
+const { path } = Astro.props;
+const groupLogo = '<img src="/brand/logo-group-gray-red.svg" width="346" height="40" alt="INMOGROUP SA" decoding="async">';
+---
+
+<footer class="pad foot t-label">
+  <a class="up" href={path} aria-label="Volver arriba">↑</a>
+  <FootLinks />
+  <div class="group">una marca de <Fragment set:html={groupLogo} /></div>
+  <div class="mid">© 2026 INMO Group SA · Av. Santa Teresa 2106, Torre 2, Piso 17, Asunción · <a href={SITE.whatsapp} target="_blank" rel="noopener">{SITE.phoneDisplay}</a></div>
+</footer>

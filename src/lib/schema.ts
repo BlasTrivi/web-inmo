@@ -176,3 +176,30 @@ export function homeItemListSchema(): Json {
 export function graph(nodes: Json[]): string {
   return JSON.stringify({ '@context': 'https://schema.org', '@graph': nodes }).replace(/</g, '\\u003c');
 }
+
+/** JSON-LD `Article` para una nota. */
+export function articleSchema(opts: {
+  path: string;
+  headline: string;
+  description: string;
+  image: string;
+  datePublished: Date;
+  author: string;
+  keywords: string[];
+}): Json {
+  const url = absoluteUrl(opts.path);
+  return {
+    '@type': 'Article',
+    '@id': `${url}#article`,
+    headline: opts.headline,
+    description: opts.description,
+    image: opts.image,
+    datePublished: opts.datePublished.toISOString(),
+    dateModified: opts.datePublished.toISOString(),
+    inLanguage: SITE.lang,
+    author: opts.author === SITE.name ? { '@id': ORG_ID } : { '@type': 'Person', name: opts.author },
+    publisher: { '@id': ORG_ID },
+    mainEntityOfPage: { '@id': `${url}#webpage` },
+    ...(opts.keywords.length ? { keywords: opts.keywords.join(', ') } : {}),
+  };
+}

@@ -1,0 +1,41 @@
+---
+/**
+ * Aviso de cookies (toast abajo a la izquierda en escritorio, hoja inferior en móvil).
+ * Aceptar y Rechazar tienen el mismo peso visual. "Configurar" abre las categorías
+ * (necesarias siempre activas; analíticas y marketing apagadas por defecto).
+ * Lógica en `src/scripts/consent.js` (expone `window.inmoConsent` y el evento `consent-change`).
+ */
+---
+
+<div class="cb" id="cb" role="dialog" aria-labelledby="cbT" aria-describedby="cbD" hidden>
+  <div class="cb-main" id="cbMain">
+    <h2 class="cb-t" id="cbT">Tu privacidad</h2>
+    <p class="cb-d" id="cbD">Este sitio usa solo lo necesario para funcionar. Si sumamos herramientas de medición o publicidad, se activarán únicamente con tu permiso. Podés cambiarlo cuando quieras. <a href="/cookies/">Política de cookies</a></p>
+    <div class="cb-act">
+      <button type="button" class="cb-btn" data-cb="reject">Rechazar</button>
+      <button type="button" class="cb-btn" data-cb="accept">Aceptar</button>
+      <button type="button" class="cb-link" data-cb="config" aria-expanded="false" aria-controls="cbCfg">Configurar</button>
+    </div>
+  </div>
+  <form class="cb-cfg" id="cbCfg" hidden>
+    <fieldset>
+      <legend class="cb-t">Preferencias de cookies</legend>
+      <label class="cb-row">
+        <span class="cb-txt"><b>Necesarias</b><small>Recordar tu elección de cookies y que el sitio funcione. Siempre activas.</small></span>
+        <input class="cb-sw" type="checkbox" role="switch" checked disabled aria-label="Necesarias, siempre activas" />
+      </label>
+      <label class="cb-row">
+        <span class="cb-txt"><b>Analíticas</b><small>Medir cómo se usa el sitio para mejorarlo. Hoy no se usan.</small></span>
+        <input class="cb-sw" type="checkbox" role="switch" name="analytics" aria-label="Analíticas" />
+      </label>
+      <label class="cb-row">
+        <span class="cb-txt"><b>Marketing</b><small>Publicidad y medición de campañas. Hoy no se usan.</small></span>
+        <input class="cb-sw" type="checkbox" role="switch" name="marketing" aria-label="Marketing" />
+      </label>
+    </fieldset>
+    <div class="cb-act">
+      <button type="submit" class="cb-btn">Guardar preferencias</button>
+      <button type="button" class="cb-link" data-cb="back">Volver</button>
+    </div>
+  </form>
+</div>

@@ -41,6 +41,31 @@ export const SITE = {
   securityExpires: '2027-09-30T00:00:00.000Z',
 } as const;
 
+/**
+ * Mensajes del botón flotante de WhatsApp.
+ * TODO-CLIENTE: confirmar texto de los mensajes.
+ * `{proyecto}` se reemplaza por el nombre del proyecto de la página.
+ */
+export const WA_MESSAGES = {
+  home: 'Hola, estoy en la web de INMO Desarrollos y quiero hacer una consulta.',
+  project: 'Hola, estoy en la web de INMO Desarrollos mirando {proyecto} y quiero más información.',
+} as const;
+
+export function waLink(text: string): string {
+  return `${SITE.whatsapp}?text=${encodeURIComponent(text)}`;
+}
+
+/** Textos legales y de consentimiento. */
+export const LEGAL = {
+  /** Fecha de la versión vigente de los textos legales. */
+  updated: '2026-10-09',
+  updatedLabel: '9 de octubre de 2026',
+  /** Versión del consentimiento de cookies: subirla vuelve a pedir la elección a todos los visitantes. */
+  consentVersion: 1,
+  /** Meses que se recuerda la elección de cookies antes de volver a preguntar. */
+  consentMonths: 12,
+} as const;
+
 /** Convierte una ruta ("/trinity-2/") en URL absoluta. */
 export function absoluteUrl(path = '/'): string {
   return new URL(path, SITE_URL).toString();

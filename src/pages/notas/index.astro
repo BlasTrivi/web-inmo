@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import NoteCard from '../../components/NoteCard.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { SITE, absoluteUrl } from '../../config/site';
+import { realNotas, visibleNotas } from '../../lib/notas';
+import { breadcrumbSchema, graph, organizationSchema, webPageSchema, websiteSchema } from '../../lib/schema';
+
+const notas = await visibleNotas();
+const hasReal = (await realNotas()).length > 0;
+// con solo notas de ejemplo no hay nada que indexar: la página también va noindex
+const noindex = !hasReal;
+const path = '/notas/';
+const title = `Notas · ${SITE.titleSuffix}`;
+const description =
+  'Notas de INMO Desarrollos: guías para elegir y comprar un departamento, novedades de los proyectos y la mirada de quienes los desarrollan, en Asunción.';
+const [first, ...rest] = notas;
+
+const jsonLd = graph([
+  organizationSchema(),
+  websiteSchema(),
+  webPageSchema({ path, name: title, description, image: absoluteUrl('/og/default.png'), type: 'CollectionPage' }),
+  breadcrumbSchema(
+    [
+      { name: 'Inicio', path: '/' },
+      { name: 'Notas', path },
+    ],
+    path,
+  ),
+]);
+---
+
+<Base title={title} description={description} path={path} jsonLd={jsonLd} noindex={noindex}>
+  <section class="page light notas" id="top" data-title="Notas">
+    <div class="pad notas-head">
+      <span class="t-label mid" data-r>Notas</span>
+      <h1 class="notas-h" data-r>Ideas, guías y novedades</h1>
+      <p class="t-lead" data-r>
+        {hasReal
+          ? 'Lo que aprendemos desarrollando departamentos en Asunción, para que decidas con más información.'
+          : 'Próximamente: guías para elegir un departamento, novedades de los proyectos y la mirada del equipo. Mientras tanto, mirá cómo se van a ver las notas.'}
+      </p>
+    </div>
+    <div class="pad notas-body">
+      {!hasReal && (
+        <p class="notas-soon t-label"><span>Próximamente</span> Las notas de abajo son ejemplos del formato.</p>
+      )}
+      {first && <NoteCard nota={first} featured />}
+      {rest.length > 0 && (
+        <div class="notas-grid">
+          {rest.map((n) => <NoteCard nota={n} />)}
+        </div>
+      )}
+      <p class="notas-rss t-label"><a class="lnk" href="/notas/rss.xml">Suscribirse por RSS</a></p>
+    </div>
+    <div class="tail"></div>
+    <SiteFooter path={path} />
+  </section>
+</Base>

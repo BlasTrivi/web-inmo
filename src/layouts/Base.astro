@@ -5,7 +5,7 @@ import fontLatin from '@fontsource-variable/host-grotesk/files/host-grotesk-lati
 import SEO from '../components/SEO.astro';
 import Chrome from '../components/Chrome.astro';
 import { SITE } from '../config/site';
-import { projects, homeSections } from '../data/projects';
+import { projects, homeSections, projectPath } from '../data/projects';
 import type { PreloadInfo } from '../lib/images';
 
 export interface Props {
@@ -20,16 +20,26 @@ export interface Props {
   /** Imágenes LCP a precargar (WebP) */
   preloads?: PreloadInfo[];
   isHome?: boolean;
+  /** og:type (artículos de Notas usan 'article') */
+  ogType?: 'website' | 'article';
   /** Se usa en el menú/telón: título de cada ruta */
   bodyClass?: string;
 }
 
-const { title, description, path, ogImage, ogImageAlt, noindex, markdown, jsonLd, preloads = [], isHome = false, bodyClass } =
+const { title, description, path, ogImage, ogImageAlt, noindex, markdown, jsonLd, preloads = [], isHome = false, bodyClass, ogType } =
   Astro.props;
 
 // Mapa de títulos para el "telón" de transición entre páginas
 const routes: Record<string, string> = { '/': 'Inicio' };
 for (const p of projects) routes[`/${p.slug}/`] = p.name;
+Object.assign(routes, {
+  '/notas/': 'Notas',
+  '/terminos/': 'Términos y condiciones',
+  '/privacidad/': 'Política de privacidad',
+  '/cookies/': 'Política de cookies',
+});
+// nombre del proyecto de la página (mensaje del botón flotante de WhatsApp)
+const waProject = projects.find((p) => projectPath(p.slug) === path)?.name;
 for (const s of homeSections) routes[`/#${s.id}`] = s.title;
 ---
 
@@ -55,7 +65,7 @@ for (const s of homeSections) routes[`/#${s.id}`] = s.title;
         } catch (e) {}
       })();
     </script>
-    <SEO {title} {description} {path} {ogImage} {ogImageAlt} {noindex} {markdown} {jsonLd} />
+    <SEO {title} {description} {path} {ogImage} {ogImageAlt} {noindex} {markdown} {jsonLd} type={ogType} />
     <link rel="preload" href={fontLatin} as="font" type="font/woff2" crossorigin />
     {preloads.map((p) => <link rel="preload" as="image" type="image/webp" imagesrcset={p.webpSrcset} imagesizes={p.sizes} fetchpriority="high" />)}
     <noscript>
@@ -71,7 +81,7 @@ for (const s of homeSections) routes[`/#${s.id}`] = s.title;
   </head>
   <body class={bodyClass} data-hdr="media" data-routes={JSON.stringify(routes)}>
     <a class="skip" href="#main">Saltar al contenido</a>
-    <Chrome />
+    <Chrome waProject={waProject} />
     <main id="main" tabindex="-1">
       <slot />
     </main>

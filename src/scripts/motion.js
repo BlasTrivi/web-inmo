@@ -361,9 +361,9 @@ export async function initMotion(a) {
         gsap.to(f, { x: 0, opacity: 1, duration: 1.2, stagger: 0.08, ease: 'expo.out' });
       });
     });
-    /* otros proyectos + socios: entrada escalonada */
-    gsap.utils.toArray('.more,.partners', root).forEach(function (g) {
-      var f = g.querySelectorAll(g.classList.contains('more') ? 'a' : 'figure');
+    /* otros proyectos: entrada escalonada */
+    gsap.utils.toArray('.more', root).forEach(function (g) {
+      var f = g.querySelectorAll('a');
       if (!f.length) return;
       gsap.set(f, { y: 60, opacity: 0 });
       onSee(g, function () {

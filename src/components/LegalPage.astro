@@ -1,0 +1,71 @@
+---
+/**
+ * Plantilla de las páginas legales: columna de lectura de 65ch, índice con anclas y fecha de actualización.
+ * El contenido sale de `src/data/legal.ts`.
+ */
+import Base from '../layouts/Base.astro';
+import SiteFooter from './SiteFooter.astro';
+import { SITE, LEGAL, absoluteUrl } from '../config/site';
+import type { LegalDoc } from '../data/legal';
+import { breadcrumbSchema, graph, organizationSchema, webPageSchema, websiteSchema } from '../lib/schema';
+
+export interface Props {
+  doc: LegalDoc;
+}
+const { doc } = Astro.props;
+const title = `${doc.seoTitle} · ${SITE.titleSuffix}`;
+const jsonLd = graph([
+  organizationSchema(),
+  websiteSchema(),
+  webPageSchema({ path: doc.path, name: title, description: doc.description, image: absoluteUrl('/og/default.png') }),
+  breadcrumbSchema(
+    [
+      { name: 'Inicio', path: '/' },
+      { name: doc.title, path: doc.path },
+    ],
+    doc.path,
+  ),
+]);
+---
+
+<Base title={title} description={doc.description} path={doc.path} jsonLd={jsonLd}>
+  {/* Borrador — debe revisarlo un abogado antes de publicar. Texto base en src/data/legal.ts */}
+  <Fragment set:html={"<!-- Borrador — debe revisarlo un abogado antes de publicar (texto base en src/data/legal.ts) -->"} />
+  <section class="page light legal" id="top" data-title={doc.title}>
+    <div class="pad legal-in">
+      <header class="legal-head">
+        <span class="t-label mid">Legal</span>
+        <h1>{doc.title}</h1>
+        <p class="t-lead legal-lead">{doc.lead}</p>
+        <p class="t-label mid">Última actualización: <time datetime={LEGAL.updated}>{LEGAL.updatedLabel}</time></p>
+      </header>
+      <div class="legal-grid">
+        <nav class="legal-toc" aria-label="Contenido de esta página">
+          <details open>
+            <summary class="t-label mid">Contenido</summary>
+            <ol>
+              {doc.sections.map((s) => <li><a href={`#${s.id}`}>{s.title}</a></li>)}
+            </ol>
+          </details>
+        </nav>
+        <article class="legal-body">
+          {doc.sections.map((s, i) => (
+            <section id={s.id} aria-labelledby={`${s.id}-h`}>
+              <h2 id={`${s.id}-h`}><small>{String(i + 1).padStart(2, '0')}</small>{s.title}</h2>
+              <Fragment set:html={s.html} />
+            </section>
+          ))}
+        </article>
+      </div>
+    </div>
+    <SiteFooter path={doc.path} />
+  </section>
+</Base>
+
+<script is:inline>
+  // en pantallas chicas el índice arranca plegado para que el texto quede a la vista
+  if (window.matchMedia('(max-width:900px)').matches) {
+    var d = document.querySelector('.legal-toc details');
+    if (d) d.removeAttribute('open');
+  }
+</script>

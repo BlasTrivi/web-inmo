@@ -9,6 +9,8 @@
  *   con el LCP. Con `prefers-reduced-motion` no se descargan.
  */
 import { initSmooth, getLenis, scrollToY } from './smooth.js';
+import { initPlans } from './plans.js';
+import './consent.js';
 
 (function () {
   var html = document.documentElement;
@@ -35,6 +37,7 @@ import { initSmooth, getLenis, scrollToY } from './smooth.js';
       (menu && menu.classList.contains('open')) ||
       document.getElementById('gv').classList.contains('open') ||
       document.getElementById('sr').classList.contains('open') ||
+      (document.getElementById('pd') && document.getElementById('pd').open) ||
       html.classList.contains('pre-on')
     );
   }
@@ -664,6 +667,38 @@ import { initSmooth, getLenis, scrollToY } from './smooth.js';
     go(0);
   });
 
+  /* ---- planos en modal (<dialog>) ---- */
+  initPlans({ lock: lenisLock });
+
+  /* ---- botón flotante de WhatsApp: entra suave cuando terminó el preloader / telón ---- */
+  (function () {
+    var wa = document.getElementById('wa');
+    if (!wa) return;
+    var tries = 0;
+    function enter() {
+      if ((html.classList.contains('pre-on') || html.classList.contains('curtain-in')) && tries++ < 20) {
+        setTimeout(enter, 400);
+        return;
+      }
+      wa.classList.add('on');
+    }
+    // en la home el botón queda por encima de las tarjetas de la portada mientras estas se ven abajo
+    var heroEl = document.querySelector('.hero');
+    if (heroEl) {
+      var lift = function () {
+        wa.classList.toggle('wa-hero', heroEl.getBoundingClientRect().bottom > window.innerHeight - 24);
+      };
+      window.addEventListener('scroll', lift, { passive: true });
+      window.addEventListener('resize', lift);
+      lift();
+    }
+    var go = function () {
+      setTimeout(enter, reduce ? 0 : 900);
+    };
+    if (document.readyState === 'complete') go();
+    else window.addEventListener('load', go);
+  })();
+
   /* ---- línea de tiempo ---- */
   var tlEl = document.getElementById('tl');
   if (tlEl) {
@@ -691,24 +726,51 @@ import { initSmooth, getLenis, scrollToY } from './smooth.js';
       );
   }
 
-  /* ---- formulario → WhatsApp ---- */
+  /* ---- formulario → WhatsApp (validación en línea, sin alert) ---- */
   var form = document.getElementById('form');
-  if (form)
+  if (form) {
+    var setInvalid = function (input, errId, bad) {
+      input.setAttribute('aria-invalid', bad ? 'true' : 'false');
+      var el = document.getElementById(errId);
+      if (el) el.hidden = !bad;
+    };
+    var checkName = function () {
+      var bad = !form.nombre.value.trim();
+      setInvalid(form.nombre, 'fNombreErr', bad);
+      return !bad;
+    };
+    var checkPriv = function () {
+      var bad = !form.priv.checked;
+      setInvalid(form.priv, 'fPrivErr', bad);
+      return !bad;
+    };
+    form.nombre.addEventListener('input', function () {
+      if (form.nombre.getAttribute('aria-invalid') === 'true') checkName();
+    });
+    form.priv.addEventListener('change', function () {
+      if (form.priv.getAttribute('aria-invalid') === 'true') checkPriv();
+    });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var f = e.target,
-        n = f.nombre.value.trim(),
+        okName = checkName(),
+        okPriv = checkPriv();
+      if (!okName) {
+        f.nombre.focus();
+        return;
+      }
+      if (!okPriv) {
+        f.priv.focus();
+        return;
+      }
+      var n = f.nombre.value.trim(),
         t = f.tel.value.trim(),
         p = f.proyecto.value,
         m = f.msg.value.trim();
-      if (!n) {
-        f.nombre.focus();
-        f.nombre.style.borderBottomColor = '#ff0006';
-        return;
-      }
       var txt = 'Hola, soy ' + n + (t ? ' (' + t + ')' : '') + '. Me interesa ' + p + '.' + (m ? ' ' + m : '');
       window.open('https://wa.me/595981044061?text=' + encodeURIComponent(txt), '_blank', 'noopener');
     });
+  }
 
   /* ---- numeración de amenities (sin GSAP) ---- */
   function numberHs(sec) {

@@ -70,7 +70,6 @@ function ctxFor(img: HTMLElement): ImageCtx {
   if (has(up, 'layer')) return { sizes: '(max-width: 700px) 82vw, 45vw', widths: WIDTHS.md };
   if (has(up, 'mpic')) return { sizes: '(max-width: 900px) 70vw, 45vw', widths: WIDTHS.md };
   if (has(up, 'mats')) return { sizes: '(max-width: 700px) 46vw, 30vw', widths: WIDTHS.sm };
-  if (has(up, 'partners')) return { sizes: '(max-width: 900px) 50vw, 210px', widths: WIDTHS.sm };
   if (has(up, 'pane')) return { sizes: '(max-width: 900px) 84vw, 45vw', widths: WIDTHS.md };
   if (has(up, 'fx')) return { sizes: '(max-width: 900px) 100vw, 55vw', widths: WIDTHS.md };
   if (has(up, 'typo')) return { sizes: '(max-width: 900px) 100vw, 50vw', widths: WIDTHS.md };
@@ -85,9 +84,16 @@ export interface ProcessResult {
 
 const FILE_RE = /([A-Za-z0-9_\-]+\.(?:webp|png|jpg))$/;
 
-/** Los <img> que están dentro de contenedores que el visor de galería abre. */
+/**
+ * Los <img> que abren una vista ampliada: contenedores del visor de galería y planos de niveles/tipologías
+ * (modal de planos). A estos se les agrega `data-full` con la versión grande.
+ */
 function isGalleryImage(img: HTMLElement): boolean {
-  return ancestors(img).some((el) => el.hasAttribute && el.hasAttribute('data-gallery'));
+  const up = ancestors(img);
+  if (up.some((el) => el.hasAttribute && el.hasAttribute('data-gallery'))) return true;
+  const inPane = up.some((el) => el.classList && el.classList.contains('pane'));
+  const inPlan = up.some((el) => el.tagName?.toLowerCase() === 'figure' && el.classList.contains('plan'));
+  return inPane && inPlan;
 }
 
 export async function processHtml(html: string): Promise<ProcessResult> {
@@ -179,6 +185,8 @@ function inline(node: Node): string {
   if (tag === 'br') return ' ';
   const text = node.childNodes.map(inline).join('');
   // separar nodos hijos "pegados" (<b>16</b>niveles)
+  // títulos dentro de un bloque inline (ej. <li><h3>…</h3><p>…</p></li>): en negrita y separados del texto
+  if (/^h[1-6]$/.test(tag)) return text.trim() ? ` **${text.trim().replace(/[.:]$/, '')}.** ` : '';
   if (tag === 'a') {
     const href = node.getAttribute('href');
     const t = text.replace(/\s+/g, ' ').trim();
