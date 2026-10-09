@@ -6,6 +6,7 @@ import MoreProjects from '../../components/MoreProjects.astro';
 import { SITE, absoluteUrl } from '../../config/site';
 import { projects, projectPath, type Project } from '../../data/projects';
 import { getFragments, processHtml } from '../../lib/html';
+import { renumber } from '../../lib/typo';
 import { CTX, preloadInfo } from '../../lib/images';
 import {
   breadcrumbSchema,
@@ -24,7 +25,9 @@ export function getStaticPaths() {
 const { project } = Astro.props as { project: Project };
 const path = projectPath(project.slug);
 const fragments = getFragments(`projects/${project.slug}`);
-const processed = await Promise.all(fragments.map((f) => processHtml(f.html)));
+const processed = await Promise.all(
+  fragments.map((f) => processHtml(f.id === 'proyecto' ? renumber(f.html, project.order) : f.html)),
+);
 const preloads = [await preloadInfo(project.hero.image, CTX.hero), ...processed.flatMap((p) => p.preloads)];
 const ogImage = `/og/${project.slug}.png`;
 const title = `${project.title} · ${SITE.titleSuffix}`;

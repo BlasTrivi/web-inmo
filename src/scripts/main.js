@@ -264,6 +264,15 @@ import { initSmooth, getLenis, scrollToY } from './smooth.js';
         cur.classList.remove('drag', 'grabbing');
       });
     });
+    document.querySelectorAll('.sre-shield').forEach(function (el) {
+      el.addEventListener('mouseenter', function () {
+        lbl.textContent = 'Explorar 3D';
+        cur.classList.add('drag');
+      });
+      el.addEventListener('mouseleave', function () {
+        cur.classList.remove('drag', 'grabbing');
+      });
+    });
     document.querySelectorAll('.hs,.gal,.day').forEach(function (el) {
       el.addEventListener('mouseenter', function () {
         lbl.textContent = 'Scroll ↓';
@@ -279,6 +288,15 @@ import { initSmooth, getLenis, scrollToY } from './smooth.js';
     document.addEventListener('pointerup', function () {
       cur.classList.remove('grabbing');
     });
+    // soltar fuera de la ventana / cancelar / perder el foco no dispara pointerup: no dejamos el cursor "agarrando"
+    ['pointercancel', 'blur'].forEach(function (ev) {
+      window.addEventListener(ev, function () {
+        cur.classList.remove('grabbing');
+      });
+    });
+    document.documentElement.addEventListener('mouseleave', function () {
+      cur.classList.remove('grabbing', 'drag', 'big');
+    });
   }
 
   /* ---- arrastrar para desplazar: slider de proyectos + tiras ---- */
@@ -286,29 +304,43 @@ import { initSmooth, getLenis, scrollToY } from './smooth.js';
     var down = false,
       sx = 0,
       sl = 0,
-      moved = false;
+      moved = false,
+      endTimer = 0,
+      pid = null;
     el.addEventListener('dragstart', function (e) {
       e.preventDefault();
     });
     el.addEventListener('pointerdown', function (e) {
-      if (e.button !== 0) return;
+      // solo mouse: en táctil/lápiz el navegador ya hace el scroll nativo (arrastrar a mano duplicaría el movimiento)
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
       down = true;
       moved = false;
+      pid = e.pointerId;
       sx = e.clientX;
       sl = el.scrollLeft;
-      el.classList.add('dragging');
+      clearTimeout(endTimer);
       cur.classList.add('grabbing');
     });
     window.addEventListener('pointermove', function (e) {
       if (!down) return;
       var dx = e.clientX - sx;
-      if (Math.abs(dx) > 4) moved = true;
-      el.scrollLeft = sl - dx;
+      if (!moved && Math.abs(dx) > 4) {
+        moved = true;
+        // recién al superar el umbral es un arrastre: se apaga el hover de las tarjetas (sin parpadeos)
+        el.classList.add('dragging');
+        try {
+          el.setPointerCapture(pid);
+        } catch (_) {}
+      }
+      if (moved) el.scrollLeft = sl - dx;
     });
-    window.addEventListener('pointerup', function () {
+    function end() {
       if (!down) return;
       down = false;
       cur.classList.remove('grabbing');
+      try {
+        el.releasePointerCapture(pid);
+      } catch (_) {}
       if (snap && moved) {
         var a = el.querySelector('a,figure');
         var step = a.getBoundingClientRect().width + 10;
@@ -319,10 +351,17 @@ import { initSmooth, getLenis, scrollToY } from './smooth.js';
         i = Math.max(0, Math.min(n - 1, i));
         el.scrollTo({ left: i * step, behavior: 'smooth' });
       }
-      setTimeout(function () {
+      // el estado "arrastrando" (sin hover, sin snap) dura lo que tarda el scroll suave; luego se limpia todo,
+      // incluido `moved`, para que un clic o Enter posterior no se ignore
+      endTimer = setTimeout(function () {
         el.classList.remove('dragging');
+        moved = false;
       }, 750);
-    });
+    }
+    window.addEventListener('pointerup', end);
+    window.addEventListener('pointercancel', end);
+    window.addEventListener('blur', end);
+    document.documentElement.addEventListener('mouseleave', end);
     el.addEventListener(
       'click',
       function (e) {
@@ -456,7 +495,7 @@ import { initSmooth, getLenis, scrollToY } from './smooth.js';
     clearTimeout(ctxTimer);
     if (keys.length) {
       var parts = keys[0].split('|');
-      ctxNm.textContent = parts[0];
+      ctxNm.textContent = parts[0].replace(/ (?=\d)/g, '\u00a0'); // "Trinity 2": el número no se separa del nombre
       ctxSt.textContent = parts[1];
       ctxLnk.href = 'https://wa.me/595981044061?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20' + parts[2];
       ctx.classList.add('on');
@@ -465,6 +504,31 @@ import { initSmooth, getLenis, scrollToY } from './smooth.js';
         ctx.classList.remove('on');
       }, 150);
     }
+  }
+  /* la barra se aparta (se oculta) cuando taparía el final de la lista de niveles/tipologías o su pista */
+  var dodgeEls = document.querySelectorAll('.tsel .tabs li:last-child, .tsel .hint');
+  var dodgeRaf = 0;
+  function ctxDodge() {
+    dodgeRaf = 0;
+    if (!ctx || !dodgeEls.length) return;
+    var bottom = parseFloat(getComputedStyle(ctx).bottom) || 0;
+    var top = window.innerHeight - bottom - ctx.offsetHeight - 14;
+    var left = ctx.offsetLeft,
+      right = ctx.offsetLeft + ctx.offsetWidth + 14;
+    var hit = false;
+    dodgeEls.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      if (r.bottom > top && r.top < window.innerHeight && r.right > left && r.left < right) hit = true;
+    });
+    ctx.classList.toggle('dodge', hit);
+  }
+  function ctxDodgeSoon() {
+    if (!dodgeRaf) dodgeRaf = requestAnimationFrame(ctxDodge);
+  }
+  if (dodgeEls.length) {
+    window.addEventListener('scroll', ctxDodgeSoon, { passive: true });
+    window.addEventListener('resize', ctxDodgeSoon);
+    ctxDodgeSoon();
   }
   (function () {
     var els = document.querySelectorAll('[data-ctx]');

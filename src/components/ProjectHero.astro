@@ -2,6 +2,7 @@
 /** Portada de proyecto (.phero). El <img> es el candidato a LCP: eager + fetchpriority alto. */
 import type { Project } from '../data/projects';
 import { CTX, pictureHtml } from '../lib/images';
+import { nb } from '../lib/typo';
 
 export interface Props {
   project: Project;
@@ -19,7 +20,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   <div class="in">
     <div>
       <span class="k an">{project.kicker}</span>
-      <h1 class="an">{project.name}</h1>
+      <h1 class="an">{nb(project.name)}</h1>
       <p class="loc an">{project.loc}</p>
     </div>
     <nav aria-label={`Secciones de ${project.name}`}>

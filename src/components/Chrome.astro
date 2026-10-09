@@ -7,6 +7,7 @@
 import { SITE } from '../config/site';
 import { menuItems } from '../data/projects';
 import { pictureHtml } from '../lib/images';
+import { nb } from '../lib/typo';
 
 // Logos de marca (SVG del manual): fondo oscuro -> blanco + rojo; fondo claro -> gris + rojo
 const logoOnDark = '/brand/logo-white-red.svg';
@@ -37,7 +38,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
   <div class="mimg"><Fragment set:html={menuImg} /><div class="cap t-label">Departamentos grandes, en serio · Asunción</div></div>
   <div class="mcol" data-lenis-prevent>
     <ul>
-      {menuItems.map((item, i) => <li><a href={item.href}><small>{pad(i + 1)}</small>{item.label}</a></li>)}
+      {menuItems.map((item, i) => <li><a href={item.href}><small>{pad(i + 1)}</small>{nb(item.label)}</a></li>)}
     </ul>
     <div class="aside t-body">
       <div><span class="mid t-label">WhatsApp</span><br /><a href={SITE.whatsapp} target="_blank" rel="noopener">{SITE.phoneDisplay}</a></div>

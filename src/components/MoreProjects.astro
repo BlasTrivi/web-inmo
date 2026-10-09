@@ -3,6 +3,7 @@
 import { SITE } from '../config/site';
 import { projects, projectPath, type Project } from '../data/projects';
 import { CTX, pictureHtml } from '../lib/images';
+import { nb } from '../lib/typo';
 
 export interface Props {
   project: Project;
@@ -22,7 +23,7 @@ const groupLogo = '<img src="/brand/logo-group-gray-red.svg" width="346" height=
   <div class="pad head"><h2 class="t-h" data-r>Otros proyectos</h2></div>
   <div class="pad more" data-r>
     {cards.map(({ p, img }) => (
-      <a href={projectPath(p.slug)}><Fragment set:html={img} /><span class="cap"><b>{p.name}</b><small>{p.statusLabel}</small></span></a>
+      <a href={projectPath(p.slug)}><Fragment set:html={img} /><span class="cap"><b>{nb(p.name)}</b><small>{p.statusLabel}</small></span></a>
     ))}
   </div>
   <div class="pad acts" data-r>

@@ -5,6 +5,7 @@
 import { SITE, absoluteUrl } from '../config/site';
 import { projects, projectPath, type Project } from '../data/projects';
 import { getFragments, sectionToMarkdown } from './html';
+import { renumber } from './typo';
 
 export const mdPath = (slug?: string): string => (slug ? `/${slug}.md` : '/index.md');
 
@@ -61,7 +62,7 @@ export function projectMarkdown(p: Project): string {
     '',
   ];
   for (const f of getFragments(`projects/${p.slug}`)) {
-    const md = sectionToMarkdown(f.html, 1);
+    const md = sectionToMarkdown(renumber(f.html, p.order), 1);
     if (md) parts.push(md, '');
   }
   parts.push('## Amenities (resumen)', '', ...p.amenities.map((a) => `- ${a}`), '');

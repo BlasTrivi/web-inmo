@@ -58,7 +58,7 @@ export interface Project {
   numberOfUnits?: number;
 }
 
-export const projects: Project[] = [
+const rawProjects: Project[] = [
   {
     slug: 'trinity-2',
     name: 'Trinity 2',
@@ -327,6 +327,44 @@ export const projects: Project[] = [
   },
 ];
 
+/**
+ * ORDEN ÚNICO DE LOS EDIFICIOS.
+ * Es la única fuente del orden: slider "Proyectos" de la home, bloques verticales de cada proyecto
+ * en la home, lista "Entregados", menú, "Otros proyectos", numeración "Proyecto 0N", sitemap,
+ * llms.txt y JSON-LD. Para reordenar o cambiar la lógica de aparición, tocar SOLO este arreglo.
+ * Los slugs sin página propia (hoy `trinity-1` y `marquis`, que solo existen en "Entregados")
+ * pueden listarse acá para ubicarlos; los que no figuren van al final.
+ */
+export const PROJECT_ORDER: string[] = [
+  'trinity-2',
+  'the-address',
+  'president-tower',
+  'boston-842',
+  'trinity-3',
+  'laguna-club',
+  'infinity',
+  'trinity-1',
+  'marquis',
+];
+
+/** Posición de un slug en el orden único (los desconocidos van al final, estables). */
+export const orderIndex = (slug: string): number => {
+  const i = PROJECT_ORDER.indexOf(slug);
+  return i === -1 ? PROJECT_ORDER.length : i;
+};
+
+const pad2 = (n: number) => String(n).padStart(2, '0');
+
+export const projects: Project[] = rawProjects
+  .slice()
+  .sort((a, b) => orderIndex(a.slug) - orderIndex(b.slug))
+  .map((p, i) => ({
+    ...p,
+    order: i + 1,
+    // el número del kicker sale del orden único ("Proyecto 03 · …")
+    kicker: p.kicker.replace(/^Proyecto\s*\d*\s*·/, `Proyecto ${pad2(i + 1)} ·`),
+  }));
+
 export const projectBySlug = (slug: string): Project => {
   const p = projects.find((x) => x.slug === slug);
   if (!p) throw new Error(`Proyecto desconocido: ${slug}`);
@@ -344,15 +382,12 @@ export const homeSections = [
   { id: 'contacto', label: 'Contacto', title: 'Contacto' },
 ] as const;
 
-/** Entradas del menú principal, en orden. */
+/** Entradas del menú principal: secciones fijas + todos los proyectos en el orden único. */
 export const menuItems: { label: string; href: string }[] = [
   { label: 'Inicio', href: '/' },
   { label: 'Manifiesto', href: '/#manifiesto' },
   { label: 'Proyectos', href: '/#proyectos' },
-  { label: 'Trinity 2', href: '/trinity-2/' },
-  { label: 'The Address', href: '/the-address/' },
-  { label: 'President Tower', href: '/president-tower/' },
-  { label: 'Boston 842', href: '/boston-842/' },
+  ...projects.map((p) => ({ label: p.name, href: projectPath(p.slug) })),
   { label: 'Entregados', href: '/#entregados' },
   { label: 'Diez años', href: '/#nosotros' },
   { label: 'Contacto', href: '/#contacto' },

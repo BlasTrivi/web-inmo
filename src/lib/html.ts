@@ -6,6 +6,7 @@
  */
 import { parse, HTMLElement, TextNode, type Node } from 'node-html-parser';
 import { SITE_URL } from '../config/site';
+import { nb } from './typo';
 import {
   CTX,
   WIDTHS,
@@ -123,6 +124,19 @@ export async function processHtml(html: string): Promise<ProcessResult> {
     rel.add('noopener');
     a.setAttribute('rel', [...rel].join(' '));
   }
+  // espacios duros entre nombre y número (solo nodos de texto)
+  const walk = (n: Node) => {
+    if (n instanceof TextNode) {
+      const t = n.rawText;
+      const r = nb(t);
+      if (r !== t) n.rawText = r;
+    } else if (n instanceof HTMLElement) {
+      const tag = n.tagName?.toLowerCase();
+      if (tag === 'script' || tag === 'style') return;
+      n.childNodes.forEach(walk);
+    }
+  };
+  root.childNodes.forEach(walk);
   return { html: root.toString(), preloads };
 }
 

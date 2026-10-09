@@ -2,7 +2,8 @@
 import ShowroomEmbed from '../components/ShowroomEmbed.astro';
 import Base from '../layouts/Base.astro';
 import { SITE, absoluteUrl } from '../config/site';
-import { projects, projectBySlug } from '../data/projects';
+import { projects, projectBySlug, orderIndex, projectPath } from '../data/projects';
+import { renumber } from '../lib/typo';
 import { getFragments, processHtml } from '../lib/html';
 import {
   ORG_ID,
@@ -14,8 +15,57 @@ import {
   websiteSchema,
 } from '../lib/schema';
 
-const fragments = getFragments('home');
-const processed = await Promise.all(fragments.map((f) => processHtml(f.html)));
+// --- Orden único de edificios (projects.ts → PROJECT_ORDER) ---
+// 1) bloques verticales "<slug>-home": se reubican en los mismos huecos, ordenados por PROJECT_ORDER
+const baseFragments = getFragments('home');
+const slotIdx = baseFragments.map((f, i) => (/-home$/.test(f.id) ? i : -1)).filter((i) => i >= 0);
+const sortedHome = slotIdx
+  .map((i) => baseFragments[i])
+  .sort((a, b) => orderIndex(a.id.replace(/-home$/, '')) - orderIndex(b.id.replace(/-home$/, '')));
+const fragments = baseFragments.map((f, i) => {
+  const k = slotIdx.indexOf(i);
+  if (k === -1) return f;
+  const slug = sortedHome[k].id.replace(/-home$/, '');
+  const p = projects.find((x) => x.slug === slug);
+  return { ...sortedHome[k], html: p ? renumber(sortedHome[k].html, p.order) : sortedHome[k].html };
+});
+
+// 2) slider "Proyectos": las tarjetas salen de projects.ts (todos los proyectos, en orden)
+const sliderHtml = projects
+  .map(
+    (p) =>
+      `<a href="${projectPath(p.slug)}"><img src="assets/${p.cardImage}" alt="${p.cardAlt}" loading="lazy"><span class="cap"><b>${p.name}</b><small>${p.statusLabel}</small></span></a>`,
+  )
+  .join(' ');
+const dotsHtml = projects.map((_, i) => (i === 0 ? '<i class="on"></i>' : '<i></i>')).join('');
+
+// 3) "Entregados": los <li> siguen el mismo orden y se renumeran
+function reorderDelivered(html: string): string {
+  const re = /<li class="ex" data-key="([^"]+)"[\s\S]*?<\/li>/g;
+  const items: { key: string; html: string }[] = [];
+  let first = -1;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(html))) {
+    if (first < 0) first = m.index;
+    last = m.index + m[0].length;
+    items.push({ key: m[1], html: m[0] });
+  }
+  if (!items.length) return html;
+  items.sort((a, b) => orderIndex(a.key) - orderIndex(b.key));
+  const body = items
+    .map((it, i) => it.html.replace(/<span class="mid">\d\d<\/span>/, `<span class="mid">${String(i + 1).padStart(2, '0')}</span>`))
+    .join('\n      ');
+  return html.slice(0, first) + body + html.slice(last);
+}
+const processed = await Promise.all(
+  fragments.map((f) => {
+    let h = f.html;
+    if (f.id === 'proyectos') h = h.replace('{{PSLIDER}}', sliderHtml).replace('{{PSDOTS}}', dotsHtml);
+    if (f.id === 'entregados') h = reorderDelivered(h);
+    return processHtml(h);
+  }),
+);
 const preloads = processed.flatMap((p) => p.preloads);
 
 const jsonLd = graph([

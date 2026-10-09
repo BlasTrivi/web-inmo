@@ -3,9 +3,15 @@
  * Showroom 3D embebido y abierto (iframe interactivo dentro de un marco tipo ventana de navegador).
  * El iframe monta su `src` recién cuando el marco está a ~1 pantalla de distancia (IntersectionObserver);
  * hasta entonces se ve la portada del proyecto. La altura se reserva con aspect-ratio (sin CLS).
+ *
+ * Patrón "clic para interactuar": por defecto un botón transparente (`.sre-shield`) cubre el iframe,
+ * así la rueda / el deslizamiento táctil siguen moviendo la página (y Lenis sigue funcionando). Un clic
+ * o toque lo quita y habilita el 3D; al salir con el mouse, al scrollear la página lejos (< 30 % visible),
+ * con Esc o con "Salir del 3D" vuelve a cubrirlo.
  */
 import type { Project } from '../data/projects';
 import { pictureHtml } from '../lib/images';
+import { nb } from '../lib/typo';
 
 export interface Props {
   project: Project;
@@ -30,10 +36,10 @@ const poster = await pictureHtml(
   <div class="pad sre-in">
     <div class="sre-head" data-r>
       <span class="t-label mid">Showroom virtual 3D</span>
-      <H class="sre-h">Recorré {project.name} en 3D</H>
+      <H class="sre-h">Recorré {nb(project.name)} en{'\u00a0'}3D</H>
       <p class="t-body">Explorá el showroom de {project.name} directamente acá, sin salir de la página.</p>
     </div>
-    <div class="sre-frame" data-lenis-prevent data-sre data-src={url}>
+    <div class="sre-frame" data-sre data-src={url}>
       <div class="sre-bar" aria-hidden="true">
         <span class="sre-dots"><i></i><i></i><i></i></span>
         <span class="sre-host">{host}</span>
@@ -44,11 +50,16 @@ const poster = await pictureHtml(
           <Fragment set:html={poster} />
           <span class="sre-load t-label">Cargando showroom</span>
         </div>
+        <button type="button" class="sre-exit" hidden>Salir del 3D <span aria-hidden="true">×</span></button>
         <iframe
+          inert
           title={`Showroom virtual 3D de ${project.name}`}
           allow="fullscreen; xr-spatial-tracking; gyroscope; accelerometer"
           allowfullscreen
           referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <button type="button" class="sre-shield">
+          <span class="sre-hint t-label"><span class="d">Hacé clic para explorar en 3D</span><span class="t">Tocá para explorar</span></span>
+        </button>
       </div>
     </div>
     <p class="sre-cap t-label">
@@ -59,7 +70,7 @@ const poster = await pictureHtml(
 </section>
 
 <script>
-  // Monta el iframe cuando el marco está cerca del viewport (~1 pantalla)
+  // Monta el iframe cuando el marco está cerca del viewport (~1 pantalla) y maneja el "escudo" de interacción
   var frames = document.querySelectorAll<HTMLElement>('[data-sre]');
   var cur = document.getElementById('cur');
   function mount(fr: HTMLElement) {
@@ -77,13 +88,53 @@ const poster = await pictureHtml(
     }, 6000);
   }
   frames.forEach(function (fr) {
-    // el cursor personalizado se oculta al entrar al showroom (el iframe no emite mousemove a la página)
-    var view = fr.querySelector('.sre-view');
-    if (view && cur) {
-      var c = cur;
-      view.addEventListener('mouseenter', function () {
-        c.classList.add('off');
-      });
+    var view = fr.querySelector<HTMLElement>('.sre-view');
+    var shield = fr.querySelector<HTMLButtonElement>('.sre-shield');
+    var exit = fr.querySelector<HTMLButtonElement>('.sre-exit');
+    var f = fr.querySelector<HTMLIFrameElement>('iframe');
+    if (!view || !shield || !exit || !f) return;
+    var frame = f;
+    var exitBtn = exit;
+    var shieldBtn = shield;
+    function activate() {
+      if (fr.classList.contains('is-active')) return;
+      mount(fr); // por si el clic llega antes que el observer
+      fr.classList.add('is-active');
+      fr.setAttribute('data-lenis-prevent', ''); // Lenis no intercepta la rueda mientras el 3D está activo
+      frame.inert = false;
+      exitBtn.hidden = false;
+      if (cur) cur.classList.add('off'); // el iframe no emite mousemove a la página
+      frame.focus({ preventScroll: true });
+    }
+    function deactivate(refocus?: boolean) {
+      if (!fr.classList.contains('is-active')) return;
+      fr.classList.remove('is-active');
+      fr.removeAttribute('data-lenis-prevent');
+      frame.inert = true;
+      exitBtn.hidden = true;
+      if (refocus) shieldBtn.focus({ preventScroll: true });
+    }
+    shield.addEventListener('click', activate);
+    exit.addEventListener('click', function () {
+      deactivate(true);
+    });
+    // desktop: al sacar el mouse del marco vuelve el escudo (la rueda de nuevo mueve la página)
+    view.addEventListener('pointerleave', function (e) {
+      if (e.pointerType === 'mouse') deactivate();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && fr.classList.contains('is-active')) deactivate(true);
+    });
+    // al alejarse con el scroll (< 30 % visible) se vuelve a cubrir
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (en) {
+            if (!en.isIntersecting || en.intersectionRatio < 0.3) deactivate();
+          });
+        },
+        { threshold: [0, 0.3] },
+      ).observe(fr);
     }
   });
   if ('IntersectionObserver' in window) {
@@ -114,10 +165,10 @@ const poster = await pictureHtml(
   .sre-h{font-size:var(--fs-h2);letter-spacing:-.03em;text-transform:none;line-height:1.04;font-weight:600;text-wrap:balance;margin:12px 0 0}
   .sre-head .t-body{margin-top:16px}
   .sre-frame{border-radius:14px;background:var(--dark);border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 70px -36px rgba(0,0,0,.55)}
-  .sre-bar{border-radius:13px 13px 0 0;display:flex;align-items:center;justify-content:space-between;gap:12px;height:38px;padding:0 14px;background:var(--dark);border-bottom:1px solid rgba(255,255,255,.12);color:var(--mid);white-space:nowrap}
+  .sre-bar{border-radius:13px 13px 0 0;display:flex;align-items:center;justify-content:space-between;gap:12px;height:38px;padding:0 14px;background:var(--dark);border-bottom:1px solid rgba(255,255,255,.12);color:rgba(240,240,240,.62);white-space:nowrap}
   .sre-dots{display:flex;gap:6px;flex:0 0 auto}
-  .sre-dots i{display:block;width:8px;height:8px;border-radius:50%;background:#5a5a5a}
-  .sre-host{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--fs-label);letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .sre-dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(240,240,240,.28)}
+  .sre-host{flex:1 1 0;text-align:center;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--fs-label);letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;min-width:0}
   .sre-live{display:flex;align-items:center;gap:7px;flex:0 0 auto;font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--light)}
   .sre-live b{display:block;width:6px;height:6px;border-radius:50%;background:var(--red);animation:sreLive 2s ease-in-out infinite}
   @keyframes sreLive{50%{opacity:.35}}
@@ -126,12 +177,24 @@ const poster = await pictureHtml(
     .sre-poster{position:absolute;top:0;right:0;bottom:0;left:0;z-index:2;pointer-events:none;border-radius:inherit;overflow:hidden;background:var(--dark);transition:opacity .6s var(--ease),visibility 0s .6s}
   .sre-poster img{width:100%;height:100%;object-fit:cover;opacity:.55;filter:saturate(.8)}
   .sre-frame.is-live .sre-poster{opacity:0;visibility:hidden}
-  .sre-load{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:14px;color:var(--light);text-align:center}
+  .sre-load{position:absolute;left:50%;bottom:clamp(16px,4%,34px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:14px;color:var(--light);text-align:center}
   .sre-load::after{content:"";display:block;width:74px;height:2px;background:linear-gradient(90deg,transparent,#fff,transparent);background-size:200% 100%;animation:sreBar 1.4s linear infinite}
   @keyframes sreBar{from{background-position:200% 0}to{background-position:-200% 0}}
   .sre-cap{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:12px;margin-bottom:0;flex-wrap:wrap}
   .sre-cap .lnk{min-height:44px;display:inline-flex;align-items:center}
   .lenis.lenis-smooth .sre iframe{pointer-events:auto}
+  /* escudo "clic para interactuar": transparente, recibe rueda y toques (la página sigue scrolleando) */
+  .sre-shield{position:absolute;top:0;right:0;bottom:0;left:0;z-index:3;display:flex;align-items:flex-start;justify-content:center;padding-top:clamp(16px,2.4vw,28px);width:100%;margin:0;border:0;border-radius:inherit;background:transparent;color:var(--light);font:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  .sre-hint{display:block;max-width:calc(100% - 40px);padding:14px 22px;text-align:center;background:rgba(10,10,10,.74);border:1px solid rgba(255,255,255,.4);color:var(--light);text-wrap:balance;transition:transform .4s var(--ease),background .3s}
+  .sre-hint .t{display:none}
+  .sre-shield:hover .sre-hint{transform:scale(1.04);background:rgba(10,10,10,.88)}
+  .sre-shield:focus-visible{outline:2px solid #fff;outline-offset:-4px;box-shadow:inset 0 0 0 5px var(--red)}
+  .sre-frame.is-active .sre-shield{display:none}
+  .sre-exit{position:absolute;top:12px;right:12px;z-index:4;min-height:44px;padding:0 16px;display:inline-flex;align-items:center;gap:8px;background:rgba(10,10,10,.82);color:var(--light);border:1px solid rgba(255,255,255,.4);font:inherit;font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;font-weight:600;cursor:pointer}
+  .sre-exit[hidden]{display:none}
+  .sre-exit:hover{background:var(--light);color:var(--gray)}
+  .sre-exit:focus-visible{outline:2px solid #fff;outline-offset:2px;box-shadow:0 0 0 4px var(--red)}
+  @media (hover:none),(pointer:coarse){.sre-hint .d{display:none}.sre-hint .t{display:inline}}
   @media (max-width:1000px){.sre-view{aspect-ratio:4/3}}
   @media (max-width:700px){
     .sre-view{aspect-ratio:4/5;max-height:75svh}
@@ -139,5 +202,5 @@ const poster = await pictureHtml(
     .sre-bar{border-radius:9px 9px 0 0}
     .sre-view{border-radius:0 0 9px 9px}
   }
-  @media (prefers-reduced-motion:reduce){.sre-live b,.sre-load::after{animation:none}}
+  @media (prefers-reduced-motion:reduce){.sre-live b,.sre-load::after{animation:none}.sre-hint{transition:none}}
 </style>
