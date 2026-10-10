@@ -60,8 +60,11 @@ export const LEGAL = {
   /** Fecha de la versión vigente de los textos legales. */
   updated: '2026-10-09',
   updatedLabel: '9 de octubre de 2026',
-  /** Versión del consentimiento de cookies: subirla vuelve a pedir la elección a todos los visitantes. */
-  consentVersion: 1,
+  /**
+   * Versión del consentimiento de cookies: subirla vuelve a pedir la elección a todos los visitantes,
+   * salvo que consent.js sepa migrar la versión anterior (hoy: v1 -> v2 agrega `embeds`, se migra sin preguntar).
+   */
+  consentVersion: 2,
   /** Meses que se recuerda la elección de cookies antes de volver a preguntar. */
   consentMonths: 12,
 } as const;

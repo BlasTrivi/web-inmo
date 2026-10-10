@@ -5,8 +5,11 @@
  * - La elección se guarda en localStorage (`inmo-consent`) con versión y fecha. Si cambia la versión
  *   (LEGAL.consentVersion) o pasan LEGAL.consentMonths meses, se vuelve a preguntar.
  * - API pública para código futuro (analítica, píxeles, etc.):
- *     window.inmoConsent.has('analytics' | 'marketing')  -> boolean (las 'necessary' siempre true)
- *     window.inmoConsent.get()                            -> { v, ts, necessary, analytics, marketing } | null
+ *     window.inmoConsent.has('analytics' | 'marketing' | 'embeds')  -> boolean (las 'necessary' siempre true)
+ *     window.inmoConsent.get()                            -> { v, ts, necessary, analytics, marketing, embeds } | null
+ *     window.inmoConsent.grant('embeds') / .revoke('embeds') -> activa/desactiva una categoría conservando las demás
+ *   Cualquier elemento con `data-embeds-grant` concede 'embeds' al hacer clic (botón "Cargar showroom 3D").
+ *   'embeds' = contenido de terceros (showrooms 3D de Urbania3D): sus iframes NO se cargan sin este permiso.
  *     window.inmoConsent.open()                           -> reabre el panel de preferencias
  *     window.addEventListener('consent-change', e => e.detail.consent)
  *   Regla: NO cargar ningún script de terceros que use cookies/identificadores sin comprobar `has()`
@@ -33,10 +36,20 @@ import { LEGAL } from '../config/site';
       var raw = window.localStorage.getItem(KEY);
       if (!raw) return null;
       var o = JSON.parse(raw);
-      if (!o || o.v !== LEGAL.consentVersion || !o.ts) return null;
+      if (!o || !o.ts) return null;
+      var migrated = false;
+      if (o.v === 1 && LEGAL.consentVersion === 2) {
+        // migración v1 -> v2 (sin volver a preguntar): "aceptó todo" -> embeds activo; "rechazó"/parcial -> apagado
+        o.embeds = !!(o.analytics && o.marketing);
+        o.v = 2;
+        migrated = true;
+      }
+      if (o.v !== LEGAL.consentVersion) return null;
       var age = Date.now() - new Date(o.ts).getTime();
       if (!(age >= 0) || age > LEGAL.consentMonths * 30.5 * 864e5) return null;
-      return { v: o.v, ts: o.ts, necessary: true, analytics: !!o.analytics, marketing: !!o.marketing };
+      var res = { v: o.v, ts: o.ts, necessary: true, analytics: !!o.analytics, marketing: !!o.marketing, embeds: !!o.embeds };
+      if (migrated) write(res); // conserva la fecha original: el plazo de 12 meses no se reinicia
+      return res;
     } catch (e) {
       return null;
     }
@@ -47,7 +60,7 @@ import { LEGAL } from '../config/site';
     } catch (e) {}
   }
   function copy(o) {
-    return o ? { v: o.v, ts: o.ts, necessary: true, analytics: !!o.analytics, marketing: !!o.marketing } : null;
+    return o ? { v: o.v, ts: o.ts, necessary: true, analytics: !!o.analytics, marketing: !!o.marketing, embeds: !!o.embeds } : null;
   }
   function emit(source) {
     window.dispatchEvent(new CustomEvent('consent-change', { detail: { consent: copy(state), source: source } }));
@@ -61,9 +74,10 @@ import { LEGAL } from '../config/site';
     main.hidden = cfgOn;
     cfgBtn.setAttribute('aria-expanded', cfgOn ? 'true' : 'false');
     if (cfgOn) {
-      var cur = state || { analytics: false, marketing: false };
+      var cur = state || { analytics: false, marketing: false, embeds: false };
       cfg.elements.analytics.checked = !!cur.analytics;
       cfg.elements.marketing.checked = !!cur.marketing;
+      cfg.elements.embeds.checked = !!cur.embeds;
     }
     measure();
   }
@@ -107,6 +121,7 @@ import { LEGAL } from '../config/site';
       necessary: true,
       analytics: !!(prefs && prefs.analytics),
       marketing: !!(prefs && prefs.marketing),
+      embeds: !!(prefs && prefs.embeds),
     };
     write(state);
     hide(true);
@@ -130,13 +145,33 @@ import { LEGAL } from '../config/site';
     set: function (prefs) {
       set(prefs, 'api');
     },
+    grant: function (cat) {
+      toggle(cat, true);
+    },
+    revoke: function (cat) {
+      toggle(cat, false);
+    },
     acceptAll: function () {
-      set({ analytics: true, marketing: true }, 'accept');
+      set({ analytics: true, marketing: true, embeds: true }, 'accept');
     },
     rejectAll: function () {
-      set({ analytics: false, marketing: false }, 'reject');
+      set({ analytics: false, marketing: false, embeds: false }, 'reject');
     },
   };
+  // activa/desactiva una sola categoría conservando el resto de la elección (si aún no había, las demás quedan apagadas)
+  function toggle(cat, on) {
+    if (cat !== 'analytics' && cat !== 'marketing' && cat !== 'embeds') return;
+    var p = { analytics: !!(state && state.analytics), marketing: !!(state && state.marketing), embeds: !!(state && state.embeds) };
+    p[cat] = on;
+    set(p, on ? 'grant' : 'revoke');
+  }
+  // botones "Cargar showroom 3D" (inline y modal): conceden el permiso de contenido de terceros
+  document.addEventListener('click', function (e) {
+    var g = e.target.closest && e.target.closest('[data-embeds-grant]');
+    if (!g) return;
+    e.preventDefault();
+    window.inmoConsent.grant('embeds');
+  });
 
   box.addEventListener('click', function (e) {
     var b = e.target.closest && e.target.closest('[data-cb]');
@@ -154,7 +189,7 @@ import { LEGAL } from '../config/site';
   });
   cfg.addEventListener('submit', function (e) {
     e.preventDefault();
-    set({ analytics: cfg.elements.analytics.checked, marketing: cfg.elements.marketing.checked }, 'config');
+    set({ analytics: cfg.elements.analytics.checked, marketing: cfg.elements.marketing.checked, embeds: cfg.elements.embeds.checked }, 'config');
   });
   // Esc cierra el panel solo si ya hay una elección guardada (si no, el aviso queda hasta decidir)
   box.addEventListener('keydown', function (e) {

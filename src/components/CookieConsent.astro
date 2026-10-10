@@ -2,7 +2,7 @@
 /**
  * Aviso de cookies (toast abajo a la izquierda en escritorio, hoja inferior en móvil).
  * Aceptar y Rechazar tienen el mismo peso visual. "Configurar" abre las categorías
- * (necesarias siempre activas; analíticas y marketing apagadas por defecto).
+ * (necesarias siempre activas; analíticas, contenido de terceros y marketing apagadas por defecto).
  * Lógica en `src/scripts/consent.js` (expone `window.inmoConsent` y el evento `consent-change`).
  */
 ---
@@ -10,7 +10,7 @@
 <div class="cb" id="cb" role="dialog" aria-labelledby="cbT" aria-describedby="cbD" hidden>
   <div class="cb-main" id="cbMain">
     <h2 class="cb-t" id="cbT">Tu privacidad</h2>
-    <p class="cb-d" id="cbD">Este sitio usa solo lo necesario para funcionar. Si sumamos herramientas de medición o publicidad, se activarán únicamente con tu permiso. Podés cambiarlo cuando quieras. <a href="/cookies/">Política de cookies</a></p>
+    <p class="cb-d" id="cbD">Este sitio usa solo lo necesario para funcionar. Los showrooms 3D de terceros y cualquier herramienta de medición o publicidad se activan únicamente con tu permiso. Podés cambiarlo cuando quieras. <a href="/cookies/">Política de cookies</a></p>
     <div class="cb-act">
       <button type="button" class="cb-btn" data-cb="reject">Rechazar</button>
       <button type="button" class="cb-btn" data-cb="accept">Aceptar</button>
@@ -27,6 +27,10 @@
       <label class="cb-row">
         <span class="cb-txt"><b>Analíticas</b><small>Medir cómo se usa el sitio para mejorarlo. Hoy no se usan.</small></span>
         <input class="cb-sw" type="checkbox" role="switch" name="analytics" aria-label="Analíticas" />
+      </label>
+      <label class="cb-row">
+        <span class="cb-txt"><b>Contenido de terceros</b><small>Showrooms 3D de Urbania3D y otros contenidos externos que pueden usar sus propias cookies.</small></span>
+        <input class="cb-sw" type="checkbox" role="switch" name="embeds" aria-label="Contenido de terceros" />
       </label>
       <label class="cb-row">
         <span class="cb-txt"><b>Marketing</b><small>Publicidad y medición de campañas. Hoy no se usan.</small></span>

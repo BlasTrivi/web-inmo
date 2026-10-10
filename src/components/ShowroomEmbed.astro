@@ -50,6 +50,12 @@ const poster = await pictureHtml(
           <Fragment set:html={poster} />
           <span class="sre-load t-label">Cargando showroom</span>
         </div>
+        <div class="emb-consent" hidden>
+          <p class="emb-t">Para ver el showroom 3D necesitamos tu permiso para cargar contenido de Urbania3D, que puede usar cookies propias.</p>
+          <button type="button" class="emb-btn" data-embeds-grant>Cargar showroom 3D</button>
+          <a class="emb-lnk" href={url} target="_blank" rel="noopener" data-no-modal>Abrir en pestaña nueva ↗</a>
+          <a class="emb-sm" href="/cookies/">Ver política de cookies</a>
+        </div>
         <button type="button" class="sre-exit" hidden>Salir del 3D <span aria-hidden="true">×</span></button>
         <iframe
           inert
@@ -73,20 +79,53 @@ const poster = await pictureHtml(
   // Monta el iframe cuando el marco está cerca del viewport (~1 pantalla) y maneja el "escudo" de interacción
   var frames = document.querySelectorAll<HTMLElement>('[data-sre]');
   var cur = document.getElementById('cur');
+  var near = new WeakSet<HTMLElement>();
+  var timers = new WeakMap<HTMLElement, number>();
+  // Contenido de terceros (Urbania3D): el iframe solo se carga con el permiso 'embeds' (window.inmoConsent)
+  function allowed() {
+    var c = (window as any).inmoConsent;
+    return !!(c && c.has('embeds'));
+  }
   function mount(fr: HTMLElement) {
     var f = fr.querySelector('iframe');
     var src = fr.getAttribute('data-src');
-    if (!f || !src || f.getAttribute('src')) return;
-    f.addEventListener('load', function () {
-      fr.classList.add('is-live');
-    });
+    if (!f || !src || fr.hasAttribute('data-mounted') || !allowed()) return;
+    fr.setAttribute('data-mounted', '');
     f.setAttribute('src', src);
     fr.classList.add('is-loading');
     // si el evento load no llega (algunos móviles), no dejamos la portada/indicador encima
-    setTimeout(function () {
-      fr.classList.add('is-live');
-    }, 6000);
+    timers.set(
+      fr,
+      window.setTimeout(function () {
+        if (fr.hasAttribute('data-mounted')) fr.classList.add('is-live');
+      }, 6000),
+    );
   }
+  // al revocar el permiso: se descarga el iframe y vuelve la portada con el aviso
+  function unmount(fr: HTMLElement) {
+    var f = fr.querySelector('iframe');
+    if (!f || !fr.hasAttribute('data-mounted')) return;
+    fr.dispatchEvent(new Event('sre-reset'));
+    window.clearTimeout(timers.get(fr));
+    fr.removeAttribute('data-mounted');
+    fr.classList.remove('is-live', 'is-loading');
+    f.setAttribute('src', 'about:blank');
+  }
+  function sync() {
+    var ok = allowed();
+    frames.forEach(function (fr) {
+      var panel = fr.querySelector<HTMLElement>('.emb-consent');
+      fr.classList.toggle('is-blocked', !ok);
+      if (panel) panel.hidden = ok;
+      if (ok) {
+        if (near.has(fr)) mount(fr);
+      } else unmount(fr);
+    });
+  }
+  window.addEventListener('consent-change', sync);
+  window.addEventListener('load', sync);
+  document.addEventListener('DOMContentLoaded', sync);
+  sync();
   frames.forEach(function (fr) {
     var view = fr.querySelector<HTMLElement>('.sre-view');
     var shield = fr.querySelector<HTMLButtonElement>('.sre-shield');
@@ -94,10 +133,17 @@ const poster = await pictureHtml(
     var f = fr.querySelector<HTMLIFrameElement>('iframe');
     if (!view || !shield || !exit || !f) return;
     var frame = f;
+    f.addEventListener('load', function () {
+      if (fr.hasAttribute('data-mounted')) fr.classList.add('is-live');
+    });
+    fr.addEventListener('sre-reset', function () {
+      deactivate();
+    });
     var exitBtn = exit;
     var shieldBtn = shield;
     function activate() {
       if (fr.classList.contains('is-active')) return;
+      near.add(fr);
       mount(fr); // por si el clic llega antes que el observer
       fr.classList.add('is-active');
       fr.setAttribute('data-lenis-prevent', ''); // Lenis no intercepta la rueda mientras el 3D está activo
@@ -142,8 +188,9 @@ const poster = await pictureHtml(
       function (entries) {
         entries.forEach(function (e) {
           if (e.isIntersecting) {
+            near.add(e.target as HTMLElement);
             mount(e.target as HTMLElement);
-            io.unobserve(e.target);
+            if (allowed()) io.unobserve(e.target);
           }
         });
       },
@@ -153,7 +200,10 @@ const poster = await pictureHtml(
       io.observe(fr);
     });
   } else {
-    frames.forEach(mount);
+    frames.forEach(function (fr) {
+      near.add(fr);
+      mount(fr);
+    });
   }
 </script>
 
@@ -190,6 +240,8 @@ const poster = await pictureHtml(
   .sre-shield:hover .sre-hint{transform:scale(1.04);background:rgba(10,10,10,.88)}
   .sre-shield:focus-visible{outline:2px solid #fff;outline-offset:-4px;box-shadow:inset 0 0 0 5px var(--red)}
   .sre-frame.is-active .sre-shield{display:none}
+  .sre-frame.is-blocked .sre-shield,.sre-frame.is-blocked .sre-load{display:none}
+  .sre-frame.is-blocked iframe{visibility:hidden}
   .sre-exit{position:absolute;top:12px;right:12px;z-index:4;min-height:44px;padding:0 16px;display:inline-flex;align-items:center;gap:8px;background:rgba(10,10,10,.82);color:var(--light);border:1px solid rgba(255,255,255,.4);font:inherit;font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;font-weight:600;cursor:pointer}
   .sre-exit[hidden]{display:none}
   .sre-exit:hover{background:var(--light);color:var(--gray)}

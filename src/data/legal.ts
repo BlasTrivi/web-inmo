@@ -213,7 +213,7 @@ const privacidad: LegalDoc = {
 <ul>
 <li><strong>WhatsApp (Meta Platforms).</strong> Cuando nos escribís por WhatsApp, Meta procesa el mensaje según sus propias condiciones. Nosotros no controlamos ese tratamiento.</li>
 <li><strong>Proveedor de hosting y de red de distribución del sitio.</strong> Para que el sitio esté disponible.</li>
-<li><strong>Urbania3D (urbania3d.app).</strong> Proveedor del showroom virtual 3D; al cargarse su contenido en tu navegador puede recibir datos técnicos como tu dirección IP.</li>
+<li><strong>Urbania3D (urbania3d.app).</strong> Proveedor del showroom virtual 3D. Su contenido se carga en tu navegador solo si lo permitís (categoría “Contenido de terceros”); en ese caso puede recibir datos técnicos como tu dirección IP.</li>
 <li><strong>Asesores profesionales</strong> (legales, contables) y <strong>autoridades</strong> cuando la ley lo exija.</li>
 <li><strong>Personal y colaboradores de ${SITE.name}</strong> que gestionan tu consulta, sujetos a deber de confidencialidad.</li>
 </ul>`,
@@ -263,7 +263,7 @@ const privacidad: LegalDoc = {
     {
       id: 'cookies',
       title: 'Cookies y tecnologías similares',
-      html: `<p>El sitio no carga herramientas de analítica ni de publicidad de terceros. Guarda en tu navegador solo lo necesario para funcionar y recordar tu elección de cookies. Encontrás el detalle, y cómo cambiar tus preferencias, en la <a href="/cookies/">Política de cookies</a>.</p>`,
+      html: `<p>El sitio no carga herramientas de analítica ni de publicidad de terceros, y los showrooms 3D de terceros solo se cargan con tu permiso. Guarda en tu navegador solo lo necesario para funcionar y recordar tu elección de cookies. Encontrás el detalle, y cómo cambiar tus preferencias, en la <a href="/cookies/">Política de cookies</a>.</p>`,
     },
     {
       id: 'enlaces',
@@ -307,12 +307,12 @@ const cookies: LegalDoc = {
     {
       id: 'que-usa-el-sitio',
       title: 'Qué usa este sitio hoy',
-      html: `<p>Este sitio <strong>no carga herramientas de analítica, publicidad ni seguimiento de terceros</strong> y no instala cookies de seguimiento propias. Solo usa el almacenamiento de tu navegador para lo siguiente:</p>
+      html: `<p>Este sitio <strong>no carga herramientas de analítica ni de publicidad</strong>, no instala cookies de seguimiento propias y solo carga contenido de terceros (el showroom 3D) con tu permiso. Para funcionar usa el almacenamiento de tu navegador para lo siguiente (lo que cargue Urbania3D, si lo permitís, se explica más abajo):</p>
 <table>
 <caption class="vh">Elementos guardados en tu navegador</caption>
 <thead><tr><th scope="col">Nombre</th><th scope="col">Tipo</th><th scope="col">Para qué sirve</th><th scope="col">Duración</th></tr></thead>
 <tbody>
-<tr><th scope="row"><code>inmo-consent</code></th><td>Necesaria · localStorage</td><td>Recordar tu elección sobre cookies (versión, fecha y categorías aceptadas).</td><td>Hasta ${LEGAL.consentMonths} meses o hasta que la cambies.</td></tr>
+<tr><th scope="row"><code>inmo-consent</code></th><td>Necesaria · localStorage</td><td>Recordar tu elección sobre cookies (versión, fecha y categorías aceptadas, incluida la de contenido de terceros).</td><td>Hasta ${LEGAL.consentMonths} meses o hasta que la cambies.</td></tr>
 <tr><th scope="row"><code>inmo-pre</code></th><td>Necesaria · sessionStorage</td><td>Saber que ya viste la animación de entrada de la página de inicio, para no repetirla.</td><td>Hasta que cerrás la pestaña.</td></tr>
 <tr><th scope="row"><code>inmo-curtain</code></th><td>Necesaria · sessionStorage</td><td>Continuar la transición visual al pasar de una página a otra del sitio.</td><td>Hasta que cerrás la pestaña.</td></tr>
 </tbody></table>`,
@@ -321,7 +321,7 @@ const cookies: LegalDoc = {
       id: 'terceros',
       title: 'Terceros',
       html: `<ul>
-<li><strong>Showroom virtual 3D.</strong> Algunas páginas muestran un recorrido 3D alojado por Urbania3D (<em>urbania3d.app</em>). Al cargarse, ese proveedor puede recibir datos técnicos (como tu dirección IP) y establecer sus propias cookies, regidas por su política.</li>
+<li><strong>Showroom virtual 3D.</strong> Algunas páginas muestran un recorrido 3D alojado por Urbania3D (<em>urbania3d.app</em>). <strong>No se carga hasta que lo permitís</strong>: mientras no aceptes la categoría “Contenido de terceros”, en su lugar ves un aviso con el botón “Cargar showroom 3D” y un enlace para abrirlo en una pestaña nueva. Una vez cargado, ese proveedor puede recibir datos técnicos (como tu dirección IP) y establecer sus propias cookies, regidas por su política.</li>
 <li><strong>Enlaces externos.</strong> WhatsApp, redes sociales y mapas se abren en sitios de terceros solo cuando hacés clic en un enlace.</li>
 </ul>`,
     },
@@ -331,15 +331,16 @@ const cookies: LegalDoc = {
       html: `<p>Al ingresar te mostramos un aviso para que elijas. Las categorías son:</p>
 <ul>
 <li><strong>Necesarias:</strong> imprescindibles para el funcionamiento del sitio. Están siempre activas.</li>
+<li><strong>Contenido de terceros:</strong> showrooms 3D de Urbania3D y otros contenidos externos que pueden usar sus propias cookies. Solo se cargan si activás esta categoría o tocás “Cargar showroom 3D”; podés desactivarla cuando quieras y el contenido se descarga.</li>
 <li><strong>Analíticas:</strong> servirían para medir cómo se usa el sitio y mejorarlo. <em>Hoy no hay ninguna instalada.</em></li>
 <li><strong>Marketing:</strong> servirían para publicidad y medición de campañas. <em>Hoy no hay ninguna instalada.</em></li>
 </ul>
-<p>Las categorías analíticas y de marketing están desactivadas por defecto. Si en el futuro incorporamos alguna herramienta, solo se activará si la aceptás, y actualizaremos esta política. Rechazar es tan fácil como aceptar y no limita el uso del sitio.</p>`,
+<p>Las categorías de contenido de terceros, analíticas y de marketing están desactivadas por defecto. “Aceptar” activa todas las categorías (incluido el contenido de terceros) y “Rechazar” las deja todas apagadas. Si en el futuro incorporamos alguna herramienta, solo se activará si la aceptás, y actualizaremos esta política. Rechazar es tan fácil como aceptar y no limita el uso del sitio.</p>`,
     },
     {
       id: 'cambiar-eleccion',
       title: 'Cómo cambiar tu elección',
-      html: `<p>Podés cambiar o retirar tu consentimiento cuando quieras desde el enlace <strong>Preferencias de cookies</strong> que está al pie de todas las páginas, o con este botón:</p>
+      html: `<p>Podés cambiar o retirar tu consentimiento cuando quieras desde el enlace <strong>Preferencias de cookies</strong> que está al pie de todas las páginas, o con este botón (ahí podés activar o desactivar “Contenido de terceros”, lo que carga o descarga los showrooms 3D):</p>
 <p><button type="button" class="legal-btn" data-cookie-prefs>Abrir preferencias de cookies</button></p>
 <p>También podés borrar los datos del sitio desde la configuración de tu navegador. Si lo hacés, volveremos a preguntarte tu elección.</p>`,
     },

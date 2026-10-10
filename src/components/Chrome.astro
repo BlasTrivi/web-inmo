@@ -80,6 +80,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <button class="x t-label" type="button" id="srX" aria-label="Cerrar el showroom">Cerrar ×</button>
     </div>
   </div>
+  <div class="emb-consent" id="srC" hidden>
+    <p class="emb-t">Para ver el showroom 3D necesitamos tu permiso para cargar contenido de Urbania3D, que puede usar cookies propias.</p>
+    <button type="button" class="emb-btn" data-embeds-grant>Cargar showroom 3D</button>
+    <a class="emb-lnk" id="srCExt" href="#" target="_blank" rel="noopener">Abrir en pestaña nueva ↗</a>
+    <a class="emb-sm" href="/cookies/">Ver política de cookies</a>
+  </div>
   <iframe id="srF" title="Showroom virtual 3D" loading="lazy" allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope; magnetometer" referrerpolicy="no-referrer-when-downgrade"></iframe>
   <p class="srhint t-label mid">Si el showroom no carga acá, abrilo en una pestaña nueva.</p>
 </div>

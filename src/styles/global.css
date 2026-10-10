@@ -842,6 +842,20 @@ body[data-hdr="light"] #hdr{--hbg:var(--light);opacity:1}
 .sr .x{background:transparent;border:0;color:var(--light);font:inherit;cursor:pointer;padding:8px 0;min-height:44px;letter-spacing:.08em;text-transform:uppercase}
 .sr iframe{flex:1;width:100%;border:0;background:var(--dark);min-height:0}
 .sr .srhint{padding:10px var(--pad) calc(10px + env(safe-area-inset-bottom,0px));font-size:var(--fs-label);border-top:1px solid var(--line)}
+/* ---------- permiso para contenido de terceros (showroom 3D): panel sobre la portada / dentro del modal ---------- */
+.emb-consent{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px var(--pad);text-align:center;color:var(--light);background:rgba(10,10,10,.68);overflow:auto}
+.emb-consent[hidden]{display:none}
+.sre-view .emb-consent{position:absolute;top:0;right:0;bottom:0;left:0;z-index:5;border-radius:inherit;background:rgba(10,10,10,.74)}
+.sr .emb-consent{flex:1 1 auto;min-height:0;background:var(--dark)}
+.sr.sr-blocked iframe,.sr.sr-blocked .srhint{display:none}
+.emb-t{max-width:46ch;margin:0;font-size:var(--fs-body,1rem);line-height:1.5;text-wrap:balance}
+.emb-btn{min-height:48px;padding:12px 26px;border:1px solid var(--light);background:var(--light);color:var(--gray);font:inherit;font-size:var(--fs-label);font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background-color .25s}
+@media (hover:hover){.emb-btn:hover{background:#fff}}
+.emb-lnk,.emb-sm{color:var(--light);text-decoration:underline;text-underline-offset:.25em;text-decoration-color:var(--red);display:inline-flex;align-items:center;min-height:44px}
+.emb-lnk{font-size:var(--fs-label);font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.emb-sm{font-size:var(--fs-small);min-height:32px;opacity:.85}
+.emb-btn:focus-visible,.emb-lnk:focus-visible,.emb-sm:focus-visible{outline:2px solid #fff;outline-offset:3px;box-shadow:0 0 0 5px var(--red)}
+@media (max-width:700px){.emb-consent{gap:8px;padding:16px var(--pad)}.emb-t{font-size:var(--fs-small)}}
 @media (max-width:900px){
   .form input,.form select,.form textarea,.sel .sel-btn{}
   .sr .srk .lnk{font-size:var(--fs-label)}

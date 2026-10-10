@@ -1012,14 +1012,40 @@ import './consent.js';
     srF = document.getElementById('srF'),
     srExt = document.getElementById('srExt'),
     srT = document.getElementById('srT'),
+    srC = document.getElementById('srC'),
+    srCExt = document.getElementById('srCExt'),
+    srUrl = '',
     srOpener = null;
+  // contenido de terceros: el iframe del modal solo se carga con el permiso 'embeds'
+  function srAllowed() {
+    return !!(window.inmoConsent && window.inmoConsent.has('embeds'));
+  }
+  function srApply() {
+    var ok = srAllowed();
+    sr.classList.toggle('sr-blocked', !ok);
+    srC.hidden = ok;
+    if (!sr.classList.contains('open')) return;
+    if (ok) {
+      if (srUrl && srF.getAttribute('src') !== srUrl) srF.src = srUrl;
+    } else if (srF.getAttribute('src') !== 'about:blank') {
+      srF.src = 'about:blank';
+    }
+  }
+  window.addEventListener('consent-change', function () {
+    var wasBlocked = sr.classList.contains('sr-blocked');
+    srApply();
+    // el botón "Cargar showroom 3D" desaparece: devolvemos el foco al modal
+    if (wasBlocked && srAllowed() && sr.classList.contains('open')) document.getElementById('srX').focus({ preventScroll: true });
+  });
   function srOpen(url, title) {
-    srF.src = url;
+    srUrl = url;
     srExt.href = url;
+    srCExt.href = url;
     srT.textContent = title || 'Showroom virtual 3D';
     srF.title = title || 'Showroom virtual 3D';
     sr.removeAttribute('inert');
     sr.classList.add('open');
+    srApply();
     cur.classList.add('off');
     body.style.overflow = 'hidden';
     lenisLock(true);
@@ -1035,7 +1061,10 @@ import './consent.js';
     body.style.overflow = '';
     lenisLock(false);
     setTimeout(function () {
-      if (!sr.classList.contains('open')) srF.src = 'about:blank';
+      if (!sr.classList.contains('open')) {
+        srF.src = 'about:blank';
+        srUrl = '';
+      }
     }, 450);
     hdrTick();
     if (srOpener && srOpener.focus) srOpener.focus({ preventScroll: true });
