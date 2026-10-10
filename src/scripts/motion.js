@@ -102,7 +102,7 @@ export async function initMotion(a) {
 
   /* botones magnéticos (escritorio) */
   if (window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
-    document.querySelectorAll('.lnk,.arrows button,.burger,.tsel .tabs li,.card,.sel-btn').forEach(function (el) {
+    document.querySelectorAll('.lnk,.arrows button,.burger,.tsel .tabs li').forEach(function (el) {
       el.classList.add('mag');
       var qx = gsap.quickTo(el, 'x', { duration: 0.5, ease: 'power3' }),
         qy = gsap.quickTo(el, 'y', { duration: 0.5, ease: 'power3' });

@@ -3,7 +3,7 @@
  * de cada página. Todo sale de `site.ts`, `projects.ts` y los fragmentos HTML de `src/content`.
  */
 import { SITE, absoluteUrl } from '../config/site';
-import { projects, projectPath, type Project } from '../data/projects';
+import { projects, projectPath, buildingsIntro, type Project } from '../data/projects';
 import { getFragments, sectionToMarkdown } from './html';
 import { legalList } from '../data/legal';
 import { notaUrl, realNotas } from './notas';
@@ -39,7 +39,7 @@ export function homeMarkdown(): string {
   for (const f of getFragments('home')) {
     if (f.id === 'contacto') continue; // el formulario no aporta; se resume abajo
     if (/-home$/.test(f.id)) continue; // teasers de proyectos: el detalle va en cada página
-    const md = sectionToMarkdown(f.html, 1);
+    const md = sectionToMarkdown(f.html.replace('{{PINTRO}}', buildingsIntro).replace('{{MQ}}', ''), 1);
     if (md) parts.push(md, '');
   }
   parts.push('## Lista de proyectos', '');

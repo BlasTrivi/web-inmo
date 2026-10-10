@@ -2,7 +2,7 @@
 import ShowroomEmbed from '../components/ShowroomEmbed.astro';
 import Base from '../layouts/Base.astro';
 import { SITE, absoluteUrl } from '../config/site';
-import { projects, projectBySlug, orderIndex, projectPath, LEGACY_STOCK } from '../data/projects';
+import { projects, buildings, buildingNames as names, listEs, buildingsIntro as introHtml, projectBySlug, orderIndex, LEGACY_STOCK } from '../data/projects';
 import { ribbonHtml } from '../lib/ribbon';
 import { renumber } from '../lib/typo';
 import { getFragments, processHtml } from '../lib/html';
@@ -31,14 +31,20 @@ const fragments = baseFragments.map((f, i) => {
   return { ...sortedHome[k], html: p ? renumber(sortedHome[k].html, p.order) : sortedHome[k].html };
 });
 
-// 2) slider "Proyectos": las tarjetas salen de projects.ts (todos los proyectos, en orden)
-const sliderHtml = projects
-  .map(
-    (p) =>
-      `<a href="${projectPath(p.slug)}"><img src="assets/${p.cardImage}" alt="${p.cardAlt}" loading="lazy">${ribbonHtml(p)}<span class="cap"><b>${p.name}</b></span></a>`,
-  )
+// 2) slider "Proyectos": las tarjetas salen de projects.ts (todos los edificios de PROJECT_ORDER).
+//    Los que no tienen página propia (Trinity 1, Marquis) apuntan a su ficha en "Entregados", nunca a un 404.
+const sliderHtml = buildings
+  .map((b) => {
+    const img = b.image ? `<img src="assets/${b.image}" alt="${b.alt}" loading="lazy">` : '';
+    return `<a href="${b.href}"${b.image ? '' : ' class="noimg"'}>${img}${ribbonHtml(b)}<span class="cap"><b>${b.name}</b></span></a>`;
+  })
   .join(' ');
-const dotsHtml = projects.map((_, i) => (i === 0 ? '<i class="on"></i>' : '<i></i>')).join('');
+const dotsHtml = buildings.map((_, i) => (i === 0 ? '<i class="on"></i>' : '<i></i>')).join('');
+// cinta del manifiesto: todos los nombres, dos veces para el bucle (la copia va oculta; el listado accesible es estático)
+const mqSpans = names.map((n) => `<span>${n}</span>`).join('');
+const mqHtml = `<p class="vh">Edificios de INMO: ${listEs(names)}.</p><div class="mq" aria-hidden="true"><div class="in">${mqSpans}${mqSpans.replace(/<span>/g, '<span class="dup">')}</div></div>`;
+// select del formulario: un <option> por edificio + asesoramiento (el valor sigue siendo el nombre, como lee el envío por WhatsApp)
+const optsHtml = [...names, 'Asesoramiento para invertir'].map((n) => `<option>${n}</option>`).join('');
 
 // 3) "Entregados": los <li> siguen el mismo orden y se renumeran
 function reorderDelivered(html: string): string {
@@ -69,7 +75,9 @@ function reorderDelivered(html: string): string {
 const processed = await Promise.all(
   fragments.map((f) => {
     let h = f.html;
-    if (f.id === 'proyectos') h = h.replace('{{PSLIDER}}', sliderHtml).replace('{{PSDOTS}}', dotsHtml);
+    if (f.id === 'proyectos') h = h.replace('{{PSLIDER}}', sliderHtml).replace('{{PSDOTS}}', dotsHtml).replace('{{PINTRO}}', introHtml);
+    if (f.id === 'manifiesto') h = h.replace('{{MQ}}', mqHtml);
+    if (f.id === 'contacto') h = h.replace('{{POPTS}}', optsHtml);
     if (f.id === 'entregados') h = reorderDelivered(h);
     return processHtml(h);
   }),

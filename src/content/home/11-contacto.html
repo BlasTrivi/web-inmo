@@ -17,7 +17,7 @@
     <form class="form" id="form" novalidate data-r>
       <label><span class="t-label mid">Nombre</span><input name="nombre" id="fNombre" type="text" autocomplete="name" required aria-describedby="fNombreErr"><span class="ferr t-label" id="fNombreErr" role="alert" hidden>Escribí tu nombre para que podamos responderte.</span></label>
       <label><span class="t-label mid">Teléfono</span><input name="tel" type="tel" autocomplete="tel"></label>
-      <label class="sel-wrap"><span class="t-label mid">Proyecto de interés</span><select name="proyecto" data-custom><option>Trinity 2</option><option>The Address</option><option>President Tower</option><option>Boston 842</option><option>Trinity 3</option><option>Laguna Club</option><option>Marquis</option><option>Asesoramiento para invertir</option></select></label>
+      <label class="sel-wrap"><span class="t-label mid">Proyecto de interés</span><select name="proyecto" data-custom>{{POPTS}}</select></label>
       <label><span class="t-label mid">Mensaje</span><textarea name="msg" placeholder="Contanos qué estás buscando"></textarea></label>
       <div class="chk">
         <label class="chk-l"><input type="checkbox" name="priv" id="fPriv" required aria-describedby="fPrivErr"><span class="chk-t t-small">Leí y acepto la <a href="/privacidad/" target="_blank" rel="noopener">Política de privacidad</a></span></label>

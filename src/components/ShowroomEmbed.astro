@@ -45,6 +45,7 @@ const poster = await pictureHtml(
         <span class="sre-host">{host}</span>
         <span class="sre-live"><b></b>En vivo</span>
       </div>
+      <button type="button" class="sre-exit" hidden>Salir del 3D <span aria-hidden="true">×</span></button>
       <div class="sre-view">
         <div class="sre-poster" aria-hidden="true">
           <Fragment set:html={poster} />
@@ -56,7 +57,6 @@ const poster = await pictureHtml(
           <a class="emb-lnk" href={url} target="_blank" rel="noopener" data-no-modal>Abrir en pestaña nueva ↗</a>
           <a class="emb-sm" href="/cookies/">Ver política de cookies</a>
         </div>
-        <button type="button" class="sre-exit" hidden>Salir del 3D <span aria-hidden="true">×</span></button>
         <iframe
           inert
           title={`Showroom virtual 3D de ${project.name}`}
@@ -165,7 +165,7 @@ const poster = await pictureHtml(
       deactivate(true);
     });
     // desktop: al sacar el mouse del marco vuelve el escudo (la rueda de nuevo mueve la página)
-    view.addEventListener('pointerleave', function (e) {
+    fr.addEventListener('pointerleave', function (e) {
       if (e.pointerType === 'mouse') deactivate();
     });
     document.addEventListener('keydown', function (e) {
@@ -214,7 +214,7 @@ const poster = await pictureHtml(
   .sre-head .t-body{max-width:62ch}
   .sre-h{font-size:var(--fs-h2);letter-spacing:-.03em;text-transform:none;line-height:1.04;font-weight:600;text-wrap:balance;margin:12px 0 0}
   .sre-head .t-body{margin-top:16px}
-  .sre-frame{border-radius:14px;background:var(--dark);border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 70px -36px rgba(0,0,0,.55)}
+  .sre-frame{position:relative;border-radius:14px;background:var(--dark);border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 70px -36px rgba(0,0,0,.55)}
   .sre-bar{border-radius:13px 13px 0 0;display:flex;align-items:center;justify-content:space-between;gap:12px;height:38px;padding:0 14px;background:var(--dark);border-bottom:1px solid rgba(255,255,255,.12);color:rgba(240,240,240,.62);white-space:nowrap}
   .sre-dots{display:flex;gap:6px;flex:0 0 auto}
   .sre-dots i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(240,240,240,.28)}
@@ -242,16 +242,19 @@ const poster = await pictureHtml(
   .sre-frame.is-active .sre-shield{display:none}
   .sre-frame.is-blocked .sre-shield,.sre-frame.is-blocked .sre-load{display:none}
   .sre-frame.is-blocked iframe{visibility:hidden}
-  .sre-exit{position:absolute;top:12px;right:12px;z-index:4;min-height:44px;padding:0 16px;display:inline-flex;align-items:center;gap:8px;background:rgba(10,10,10,.82);color:var(--light);border:1px solid rgba(255,255,255,.4);font:inherit;font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;font-weight:600;cursor:pointer}
+  /* "Salir del 3D" vive en la barra del marco (no sobre el iframe): así no tapa los controles propios del showroom (pantalla completa, etc.) */
+  .sre-exit{position:absolute;top:0;right:0;z-index:4;height:38px;padding:0 14px;display:inline-flex;align-items:center;gap:8px;background:var(--light);color:var(--gray);border:0;border-radius:0 13px 0 0;font:inherit;font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .25s,color .25s}
+  .sre-frame.is-active .sre-live{visibility:hidden}
   .sre-exit[hidden]{display:none}
-  .sre-exit:hover{background:var(--light);color:var(--gray)}
-  .sre-exit:focus-visible{outline:2px solid #fff;outline-offset:2px;box-shadow:0 0 0 4px var(--red)}
+  .sre-exit:hover{background:var(--red);color:#fff}
+  .sre-exit:focus-visible{outline:2px solid var(--red);outline-offset:-4px}
   @media (hover:none),(pointer:coarse){.sre-hint .d{display:none}.sre-hint .t{display:inline}}
   @media (max-width:1000px){.sre-view{aspect-ratio:4/3}}
   @media (max-width:700px){
     .sre-view{aspect-ratio:4/5;max-height:75svh}
     .sre-frame{border-radius:10px}
     .sre-bar{border-radius:9px 9px 0 0}
+    .sre-exit{border-radius:0 9px 0 0}
     .sre-view{border-radius:0 0 9px 9px}
   }
   @media (prefers-reduced-motion:reduce){.sre-live b,.sre-load::after{animation:none}.sre-hint{transition:none}}

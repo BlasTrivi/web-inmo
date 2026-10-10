@@ -438,6 +438,42 @@ export const projectBySlug = (slug: string): Project => {
 
 export const projectPath = (slug: string): string => `/${slug}/`;
 
+/**
+ * Edificios sin página propia (solo figuran en "Entregados"). Datos tomados de ese bloque de la home.
+ * `image` vacío = tarjeta tipográfica (sin foto).
+ */
+const LEGACY_BUILDINGS: Record<string, { name: string; stock: Stock; statusLabel: string; image?: string; alt?: string }> = {
+  'trinity-1': { name: 'Trinity 1', stock: 'agotado', statusLabel: 'Entregado', image: 'trinity2_exterior.webp', alt: 'Complejo Trinity Towers junto al CIT' },
+  marquis: { name: 'Marquis', stock: 'ultimas', statusLabel: 'Últimas unidades' },
+};
+
+export interface Building {
+  slug: string;
+  name: string;
+  stock: Stock;
+  statusLabel: string;
+  /** Destino de la tarjeta: página propia, o la sección "Entregados" si no tiene */
+  href: string;
+  hasPage: boolean;
+  image?: string;
+  alt?: string;
+}
+
+/** Todos los edificios, en el orden único (PROJECT_ORDER), con o sin página propia. */
+export const buildings: Building[] = PROJECT_ORDER.flatMap((slug): Building[] => {
+  const p = projects.find((x) => x.slug === slug);
+  if (p) return [{ slug, name: p.name, stock: p.stock, statusLabel: p.statusLabel, href: projectPath(slug), hasPage: true, image: p.cardImage, alt: p.cardAlt }];
+  const l = LEGACY_BUILDINGS[slug];
+  if (l) return [{ slug, name: l.name, stock: l.stock, statusLabel: l.statusLabel, href: '/#entregados', hasPage: false, image: l.image, alt: l.alt }];
+  return [];
+});
+
+/** "A, B y C" */
+export const listEs = (a: string[]): string => (a.length > 1 ? `${a.slice(0, -1).join(', ')} y ${a[a.length - 1]}` : a.join(''));
+export const buildingNames: string[] = buildings.map((b) => b.name);
+/** Texto bajo el slider "Proyectos": sale de los datos, sin cifras ni hechos propios. */
+export const buildingsIntro = `${buildings.length} edificios, una misma idea: ${listEs(buildingNames)}. Departamentos grandes, en ubicaciones que valen, construidos para décadas.`;
+
 /** Secciones de la home (para el menú y el mapa de títulos del "telón" de transición). */
 export const homeSections = [
   { id: 'manifiesto', label: 'Manifiesto', title: 'Manifiesto' },

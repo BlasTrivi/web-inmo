@@ -1,10 +1,10 @@
 :root{
   /* ---- paleta del manual de marca (rojo / gris / claro) ---- */
   --red:#ff0006; --gray:#3c3c3c; --light:#f0f0f0;
-  --dark:var(--gray);          /* superficie oscura: el manual usa #3c3c3c como fondo oscuro */
+  --dark:#000;                 /* superficie oscura: negro, como el diseño original (decisión del cliente) */
   --light-2:#e4e4e4;           /* neutro claro secundario (planos, placeholders) */
   --white:#fff; --ink:var(--gray);
-  --mid:#bcbcbc;               /* texto secundario sobre oscuro (AA sobre #3c3c3c) */
+  --mid:#bcbcbc;               /* texto secundario sobre oscuro (AA sobre negro) */
   --red-text:#d10005;          /* rojo oscurecido SOLO para texto chico sobre claro (AA 4.5:1) */
   --line:rgba(240,240,240,.24); --line-d:rgba(60,60,60,.2);
   --bg:var(--light); --fg:var(--gray);
@@ -133,6 +133,11 @@ body[data-hdr="light"] .topnav{color:var(--gray);text-shadow:none}
 .hero .card .t-label{display:block;min-width:0;overflow-wrap:anywhere;hyphens:manual;text-wrap:balance}
 .hero .card .ttl{font-size:var(--fs-body);letter-spacing:0;text-transform:none;font-weight:500;line-height:1.2;text-align:center}
 .hero .card .go{font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid currentColor;align-self:flex-end}
+/* hover sutil: solo color y la flecha de "Leer / Ver" (sin mover ni redimensionar la tarjeta: nada de transform) */
+.hero .card{transition:background-color .35s var(--ease),color .35s var(--ease)}
+.hero .card .go::after{content:" →";display:inline-block;opacity:0;transform:translateX(-6px);transition:opacity .3s var(--ease),transform .35s var(--ease)}
+@media (hover:hover) and (pointer:fine){.hero .card.k:hover{background:#1c1c1c}.hero .card.w:hover{background:#fff}.hero .card:hover .go::after{opacity:1;transform:none}}
+.hero .card:focus-visible{outline:2px solid var(--red);outline-offset:-4px}
 .hero .meta{position:absolute;left:var(--pad);bottom:calc(22px + env(safe-area-inset-bottom,0px));z-index:2;opacity:0}
 @media (max-width:700px){.hero .cards{right:0;left:0;justify-content:stretch}.hero .card{flex:1;height:auto;min-height:72px;flex-direction:row;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px}.hero .card .t-label{display:none}.hero .card .ttl{text-align:left;font-size:var(--fs-body)}.hero .meta{display:none}.hero .tag{top:44%}}
 
@@ -173,6 +178,9 @@ body[data-hdr="light"] .topnav{color:var(--gray);text-shadow:none}
 .pslider.dragging a{pointer-events:none}
 .pslider a:focus-visible{outline:2px solid var(--red);outline-offset:-4px}
 .pslider a:focus-visible img{transform:scale(1.04)}
+/* edificios sin foto (Marquis): tarjeta tipográfica */
+.pslider a.noimg{background:var(--dark);box-shadow:inset 0 0 0 1px var(--line)}
+.pslider a.noimg .cap{left:18px;top:auto}
 .pslider .cap{position:absolute;left:18px;bottom:16px;right:18px;color:var(--light);display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .pslider .cap b{font-size:var(--fs-h3);letter-spacing:-.01em;text-transform:none;font-weight:500;text-shadow:0 2px 20px rgba(0,0,0,.5)}
 .pslider .cap small{font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;text-shadow:0 2px 12px rgba(0,0,0,.5)}
@@ -784,12 +792,12 @@ body[data-hdr="light"] .topnav{color:var(--gray);text-shadow:none}
 .sel-wrap select[data-custom]{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;overflow:hidden}
 .sel .sel-btn{display:flex;justify-content:space-between;align-items:center;width:100%;font:inherit;color:var(--light);background:transparent;border:0;border-bottom:1px solid var(--line);padding:12px 0;min-height:46px;letter-spacing:0;text-transform:none;font-size:var(--fs-body);cursor:pointer;text-align:left;border-radius:0}
 .sel.open .sel-btn,.sel .sel-btn:focus-visible{border-bottom-color:var(--light);outline:none}
-.sel .sel-btn i{width:9px;height:9px;border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:rotate(45deg) translateY(-3px);transition:transform .5s var(--ease);flex:none;margin-left:12px}
+.sel .sel-btn i{width:9px;height:9px;border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:rotate(45deg) translateY(-3px);transition:transform .22s var(--ease);flex:none;margin-left:12px}
 .sel.open .sel-btn i{transform:rotate(225deg) translateY(-2px)}
-.sel .sel-list{position:absolute;left:0;right:0;top:100%;z-index:20;background:var(--dark);border:1px solid var(--line);border-top:0;margin:0;padding:6px 0;list-style:none;max-height:0;overflow:hidden;opacity:0;transform:translateY(-6px);transition:max-height .5s var(--ease),opacity .3s,transform .5s var(--ease);pointer-events:none}
-.sel.open .sel-list{max-height:400px;opacity:1;transform:none;pointer-events:auto}
-.sel .sel-list li{padding:11px 16px;font-size:var(--fs-body);letter-spacing:0;text-transform:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .25s,padding-left .35s var(--ease)}
-.sel .sel-list li:hover,.sel .sel-list li.hl{background:#4a4a4a;padding-left:22px}
+.sel .sel-list{position:absolute;left:0;right:0;top:100%;z-index:20;background:var(--dark);border:1px solid var(--line);border-top:0;margin:0;padding:6px 0;list-style:none;max-height:min(320px,50svh);overflow-y:auto;overscroll-behavior:contain;visibility:hidden;opacity:0;transform:translateY(-4px);transform-origin:top;transition:opacity .18s ease-out,transform .22s var(--ease),visibility 0s .22s;pointer-events:none}
+.sel.open .sel-list{visibility:visible;opacity:1;transform:none;transition-delay:0s;pointer-events:auto}
+.sel .sel-list li{padding:11px 16px;font-size:var(--fs-body);letter-spacing:0;text-transform:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .15s}
+.sel .sel-list li:hover,.sel .sel-list li.hl{background:#2a2a2a}
 .sel .sel-list li.on{color:var(--light)}
 .sel .sel-list li.on::after{content:"";width:6px;height:6px;background:var(--red);border-radius:50%}
 .pair-hint{display:none}
@@ -804,11 +812,14 @@ body[data-hdr="light"] .topnav{color:var(--gray);text-shadow:none}
   .pair-hint{display:block;margin-top:10px;font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--mid)}
 }
 .mq{overflow:hidden;white-space:nowrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:clamp(14px,2vw,26px) 0;margin:clamp(40px,6vw,90px) 0 0}
-.mq .in{display:inline-flex;will-change:transform;animation:mq 42s linear infinite}
+.mq .in{display:inline-flex;will-change:transform;animation:mq 90s linear infinite}
 .mq span{font-size:var(--fs-h2);text-transform:none;letter-spacing:-.02em;font-weight:500;line-height:1;padding:0 .6em}
+.mq span::after{content:"";display:inline-block;width:.32em;height:.32em;margin-left:1.2em;border-radius:50%;background:var(--red);vertical-align:.12em}
 .mq span em{font-style:normal;color:var(--red)}
 @keyframes mq{to{transform:translateX(-50%)}}
-.reduce .mq .in{animation:none}
+.reduce .mq .in{animation:none;flex-wrap:wrap;row-gap:.4em;white-space:normal}
+.reduce .mq .dup{display:none}
+@media (prefers-reduced-motion:reduce){.mq .in{animation:none;flex-wrap:wrap;row-gap:.4em;white-space:normal}.mq .dup{display:none}}
 .mf .mpic{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(12px,1.6vw,28px);align-items:end}
 .mf .mpic figure{overflow:hidden;margin:0;background:var(--dark)}
 .mf .mpic figure img{width:100%;height:100%;object-fit:cover;display:block}
