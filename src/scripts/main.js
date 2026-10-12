@@ -89,10 +89,51 @@ import './consent.js';
     body.style.overflow = open ? 'hidden' : '';
     lenisLock(open);
     if (open) menu.classList.add('warm');
-    burger.children[0].style.transform = open ? 'translateY(3.75px) rotate(45deg)' : '';
-    burger.children[1].style.transform = open ? 'translateY(-3.75px) rotate(-45deg)' : '';
-    burger.children[1].style.width = open ? '26px' : '';
+    else showMenuImg(null);
+    var bars = burger.querySelectorAll('i');
+    bars[0].style.transform = open ? 'translateY(3.75px) rotate(45deg)' : '';
+    bars[1].style.transform = open ? 'translateY(-3.75px) rotate(-45deg)' : '';
+    bars[1].style.width = open ? '26px' : '';
+    burger.querySelector('.bl').textContent = open ? 'Cerrar' : 'Menú';
+    if (open) loadMenuImgs();
   }
+  /* foto del panel lateral: cambia según el edificio con hover/foco; las capas se cargan al abrir el menú por primera vez (solo en pantallas anchas) */
+  var mCap = document.getElementById('menuCap');
+  var mLayers = menu.querySelectorAll('.mimg .ml');
+  var mWide = window.matchMedia('(min-width:901px)');
+  var mLoaded = false;
+  var mCur = '0';
+  function loadMenuImgs() {
+    if (mLoaded || !mWide.matches) return;
+    mLoaded = true;
+    mLayers.forEach(function (im) {
+      if (im.dataset.srcset) im.srcset = im.dataset.srcset;
+    });
+  }
+  function showMenuImg(a) {
+    var k = a && a.dataset.k && menu.querySelector('.mimg .ml[data-k="' + a.dataset.k + '"]') ? a.dataset.k : '0';
+    if (k === mCur) return;
+    mCur = k;
+    loadMenuImgs();
+    mLayers.forEach(function (im) {
+      im.classList.toggle('on', im.dataset.k === k);
+    });
+    mCap.textContent = (k !== '0' && a.dataset.cap) || mCap.dataset.def;
+  }
+  menu.querySelectorAll('ul a').forEach(function (a) {
+    a.addEventListener('mouseenter', function () {
+      showMenuImg(a);
+    });
+    a.addEventListener('focus', function () {
+      if (a.matches(':focus-visible')) showMenuImg(a);
+    });
+  });
+  menu.querySelector('ul').addEventListener('mouseleave', function () {
+    showMenuImg(null);
+  });
+  menu.querySelector('ul').addEventListener('focusout', function (e) {
+    if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) showMenuImg(null);
+  });
   burger.addEventListener('click', function () {
     setMenu(!menu.classList.contains('open'));
   });

@@ -7,7 +7,7 @@
 import CookieConsent from './CookieConsent.astro';
 import { SITE, WA_MESSAGES, waLink } from '../config/site';
 import { menuItems } from '../data/projects';
-import { pictureHtml } from '../lib/images';
+import { pictureData, pictureHtml } from '../lib/images';
 import { nb } from '../lib/typo';
 
 // Logos de marca (SVG del manual): fondo oscuro -> blanco + rojo; fondo claro -> gris + rojo
@@ -17,7 +17,15 @@ const preImg = `<img src="${logoOnDark}" width="179" height="75" alt="" decoding
 const menuImg = await pictureHtml(
   'trinity2_exterior_2.webp',
   { sizes: '55vw', widths: [768, 1080, 1440] },
-  { alt: '' },
+  { alt: '', attrs: { class: 'ml on', 'data-k': '0' } },
+);
+// Fotos del panel del menú: una capa por edificio (sin src; main.js las carga la primera vez que se abre el menú)
+const menuLayers = await Promise.all(
+  menuItems.map(async (item, i) => {
+    if (!item.image) return null;
+    const pd = await pictureData(item.image, { sizes: '(min-width: 901px) 52vw, 0px', widths: [768, 1080, 1440] });
+    return { k: i + 1, srcset: pd.webpSrcset, sizes: pd.sizes, alt: item.alt ?? '', w: pd.width, h: pd.height };
+  }),
 );
 export interface Props {
   /** Nombre del proyecto de la página (para el mensaje del botón de WhatsApp); sin él, mensaje general */
@@ -38,15 +46,19 @@ const pad = (n: number) => String(n).padStart(2, '0');
 </a>
 <div class="topnav">
   <a class="t-label" href="/#proyectos">Elegí tu departamento</a>
-  <button class="burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu"><i></i><i></i></button>
+  <button class="burger" id="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu"><span class="bl" aria-hidden="true">Menú</span><span class="bi" aria-hidden="true"><i></i><i></i></span></button>
 </div>
 </header>
 
 <nav class="menu" id="menu" aria-label="Principal">
-  <div class="mimg"><Fragment set:html={menuImg} /><div class="cap t-label">Departamentos grandes, en serio · Asunción</div></div>
+  <div class="mimg" aria-hidden="true">
+    <Fragment set:html={menuImg} />
+    {menuLayers.map((l) => l && <img class="ml" data-k={l.k} data-srcset={l.srcset} sizes={l.sizes} width={l.w} height={l.h} alt="" decoding="async" />)}
+    <div class="cap t-label" id="menuCap" data-def="Departamentos grandes, en serio · Asunción">Departamentos grandes, en serio · Asunción</div>
+  </div>
   <div class="mcol" data-lenis-prevent>
     <ul>
-      {menuItems.map((item, i) => <li><a href={item.href}><small>{pad(i + 1)}</small>{nb(item.label)}</a></li>)}
+      {menuItems.map((item, i) => <li><a href={item.href} data-k={item.image ? i + 1 : undefined} data-cap={item.status ? `${item.label} · ${item.status}` : undefined}><small>{pad(i + 1)}</small>{nb(item.label)}</a></li>)}
     </ul>
     <div class="aside t-body">
       <div><span class="mid t-label">WhatsApp</span><br /><a href={SITE.whatsapp} target="_blank" rel="noopener">{SITE.phoneDisplay}</a></div>

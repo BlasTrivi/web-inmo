@@ -485,11 +485,11 @@ export const homeSections = [
 ] as const;
 
 /** Entradas del menú principal: secciones fijas + todos los proyectos en el orden único. */
-export const menuItems: { label: string; href: string }[] = [
+export const menuItems: { label: string; href: string; /** foto (hero) y estado: alimentan el panel de imagen del menú */ image?: string; alt?: string; status?: string }[] = [
   { label: 'Inicio', href: '/' },
   { label: 'Manifiesto', href: '/#manifiesto' },
   { label: 'Proyectos', href: '/#proyectos' },
-  ...projects.map((p) => ({ label: p.name, href: projectPath(p.slug) })),
+  ...projects.map((p) => ({ label: p.name, href: projectPath(p.slug), image: p.hero.image, alt: p.hero.alt, status: p.statusLabel })),
   { label: 'Entregados', href: '/#entregados' },
   { label: 'Diez años', href: '/#nosotros' },
   { label: 'Por qué INMO', href: '/#por-que-inmo' },
