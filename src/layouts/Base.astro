@@ -58,6 +58,8 @@ for (const s of homeSections) routes[`/#${s.id}`] = s.title;
           reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         } catch (e) {}
         if (reduce) d.classList.add('reduce');
+        // primer layout barato: las secciones bajo el pliegue se omiten hasta que main.js quita `cv` (tras el load)
+        if (!location.hash) d.classList.add('cv');
         try {
           var s = window.sessionStorage;
           if (s.getItem('inmo-curtain')) d.classList.add('curtain-in');

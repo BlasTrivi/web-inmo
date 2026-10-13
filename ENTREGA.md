@@ -170,14 +170,14 @@ Medido sobre el build final (`dist/` servido en local, Lighthouse CLI, Chrome he
 
 | Página | Móvil (P/A/BP/SEO) | Escritorio (P/A/BP/SEO) |
 |---|---|---|
-| Home `/` | 94 / 100 / 100 / 100 (mediana de 3) | 99 / 100 / 100 / 100 |
-| `/trinity-2/` | 92 / 100 / 100 / 100 (mediana de 3; 95 en corrida previa) | 100 / 100 / 100 / 100 |
+| Home `/` | 96 / 100 / 100 / 100 (mediana de 3: 96, 94, 98) | 99 / 100 / 100 / 100 |
+| `/trinity-2/` | 98 / 100 / 100 / 100 (mediana de 3: 98, 92, 98) | 100 / 100 / 100 / 100 |
 | `/the-address/` | 99 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
 | `/president-tower/` | 99 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
-| `/boston-842/` | 95 / 100 / 100 / 100 (mediana de 3) | 100 / 100 / 100 / 100 |
+| `/boston-842/` | 95 / 100 / 100 / 100 (1 corrida; antes mediana 95) | 100 / 100 / 100 / 100 |
 | `/trinity-3/` | 98 / 100 / 100 / 100 | 99 / 100 / 100 / 100 |
 | `/laguna-club/` | 96 / 100 / 100 / 100 | 99 / 100 / 100 / 100 |
-| `/infinity/` | 99 / 100 / 100 / 100 (mediana de 3) | 100 / 100 / 100 / 100 |
+| `/infinity/` | 97 / 100 / 100 / 100 (1 corrida; antes 92-99) | 100 / 100 / 100 / 100 |
 | `/trinity-1/` | 97 / 100 / 100 / 100 | 99 / 100 / 100 / 100 |
 | `/notas/` | 99 / 100 / 100 / 66 | 100 / 100 / 100 / 66 |
 | `/notas/<nota de ejemplo>/` | 99 / 100 / 100 / 66 | 100 / 100 / 100 / 66 |
@@ -185,6 +185,6 @@ Medido sobre el build final (`dist/` servido en local, Lighthouse CLI, Chrome he
 
 Notas:
 - SEO 66 en `/notas/` y en las notas de ejemplo es **intencional**: llevan `noindex` mientras no haya notas reales (falla solo la auditoría `is-crawlable`). Al publicar una nota real sin `ejemplo: true`, `/notas/` y esa nota pasan a 100.
-- El Performance móvil varía 90-99 entre corridas de la misma página (TBT de 16 a 330 ms; el sitio carga GSAP/Lenis en un chunk aparte tras el `load`). En un hosting real con CDN y compresión Brotli el resultado suele ser mejor que en el servidor local de prueba. Accesibilidad, Buenas prácticas y SEO: 100 en todas las páginas indexables.
+- El Performance móvil varía 90-99 entre corridas de la misma página (TBT de 0 a ~300 ms; el sitio carga GSAP/Lenis en un chunk aparte tras el `load`, y las secciones bajo el pliegue usan `content-visibility:auto` hasta ese momento para abaratar el primer layout). En un hosting real con CDN y compresión Brotli el resultado suele ser mejor que en el servidor local de prueba. Accesibilidad, Buenas prácticas y SEO: 100 en todas las páginas indexables.
 - `/404.html` no se audita con Lighthouse (responde con status 404).
 

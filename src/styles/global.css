@@ -1351,3 +1351,6 @@ html.cb-open:has(#cbCfg:not([hidden])) .wa{opacity:0;visibility:hidden;pointer-e
 
 /* QA: en móvil vertical la descripción de cada amenity no pasa por debajo del botón de WhatsApp */
 @media (max-width:900px) and (orientation:portrait){.hs .slide .l .desc{padding-right:66px;box-sizing:border-box}}
+
+/* primer layout barato: secciones bajo el pliegue sin renderizar hasta que main.js quita .cv (idle tras el load / primera interaccion) */
+.cv #main>section:not(.hero):not(.phero):not([data-hs]):not([data-gal]):not([data-day]):not(:first-child):not(.cvx),.cv .foot:not(.cvx){content-visibility:auto;contain-intrinsic-size:auto 900px}

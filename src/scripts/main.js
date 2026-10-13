@@ -1273,9 +1273,39 @@ import './consent.js';
 
   /* ---- animaciones (GSAP) en un chunk aparte, sin competir con el LCP ---- */
   var started = false;
+  // content-visibility: se libera sección por sección (un cuadro cada una) para que el layout completo
+  // no caiga en una única tarea larga; al terminar se quita `cv` y todo queda como siempre.
+  var cvP = null;
+  function cvOff() {
+    if (cvP) return cvP;
+    if (!html.classList.contains('cv')) return (cvP = Promise.resolve());
+    var secs = Array.prototype.slice.call(document.querySelectorAll('#main>section,.foot'));
+    var frame = function () {
+      return new Promise(function (res) {
+        requestAnimationFrame(function () {
+          setTimeout(res, 0);
+        });
+        setTimeout(res, 150); // pestaña en segundo plano: rAF no corre
+      });
+    };
+    cvP = secs
+      .reduce(function (p, sec) {
+        return p.then(function () {
+          sec.classList.add('cvx');
+          return frame();
+        });
+      }, Promise.resolve())
+      .then(function () {
+        html.classList.remove('cv');
+      });
+    return cvP;
+  }
   function startMotion() {
     if (started || reduce) return;
     started = true;
+    cvOff().then(loadMotion);
+  }
+  function loadMotion() {
     ensureLenis();
     import('./motion.js')
       .then(function (m) {
@@ -1313,6 +1343,14 @@ import './consent.js';
     function (cb) {
       return setTimeout(cb, 200);
     };
+  if (reduce) {
+    window.addEventListener('load', function () {
+      idle(cvOff, { timeout: 1500 });
+    });
+    ['pointerdown', 'keydown', 'wheel', 'touchstart', 'scroll'].forEach(function (ev) {
+      window.addEventListener(ev, cvOff, { once: true, passive: true });
+    });
+  }
   if (!reduce) {
     var kick = function () {
       idle(startMotion, { timeout: 1200 });
