@@ -202,6 +202,9 @@ const rawProjects: Project[] = [
     showroom: 'https://president-tower.urbania3d.app/',
     facts: [
       { name: 'Concepto', value: 'Luxury residences: un departamento por piso con ascensor privado' },
+      { name: 'Torre', value: '28 pisos' },
+      { name: 'Unidades', value: 'Planta tipo de 4 dormitorios (pisos 5 al 25) y dúplex en el piso 26' },
+      { name: 'Superficie planta tipo', value: '429,42 m² totales' },
       { name: 'Ubicación', value: 'A confirmar en el lanzamiento' },
       { name: 'Estado', value: 'En preparación' },
     ],
