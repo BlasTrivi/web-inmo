@@ -48,7 +48,7 @@ export default defineConfig({
     }),
   ],
   image: {
-    // Las fotos originales ya vienen a 2x; el resize/AVIF/WebP se hace en build.
+    // Las fotos originales ya vienen a 2x; el resize y la conversión a WebP se hacen en build.
     service: { entrypoint: 'astro/assets/services/sharp', config: { limitInputPixels: false } },
   },
 });

@@ -1,8 +1,9 @@
 INMO Desarrollos · sitio web (v7, Astro)
 
-Sitio estático hecho con Astro: una página de inicio y una página por proyecto
-(/trinity-2/, /the-address/, /president-tower/, /boston-842/, /trinity-3/, /laguna-club/, /infinity/),
-con SEO, Open Graph, datos estructurados y archivos para buscadores y asistentes de IA.
+Sitio estático hecho con Astro: una página de inicio, una página por proyecto
+(/trinity-2/, /the-address/, /president-tower/, /boston-842/, /trinity-3/, /laguna-club/, /infinity/,
+/trinity-1/), la sección de notas (/notas/, /notas/<slug>/, /notas/rss.xml) y las páginas legales
+(/terminos/, /privacidad/, /cookies/), con SEO, Open Graph, datos estructurados y archivos para buscadores y asistentes de IA.
 
 REQUISITOS
   - Node.js 22.12 o superior (https://nodejs.org) y npm.
@@ -16,7 +17,7 @@ CÓMO USARLO
 
   Para publicar: el contenido de dist/ es el sitio final. El despliegue y la configuración del
   servidor están detallados en ENTREGA.md. El primer build es lento porque convierte las fotos a
-  AVIF/WebP en varios tamaños; los siguientes usan caché.
+  WebP en varios tamaños; los siguientes usan caché.
 
 DÓNDE CAMBIAR EL DOMINIO
   Editá UNA sola línea: SITE_URL en src/config/site.ts (hoy https://inmo.com.py).
@@ -26,7 +27,9 @@ DÓNDE CAMBIAR EL DOMINIO
 
 QUÉ HAY EN CADA CARPETA
   src/config/site.ts          datos de la empresa y dominio (punto único)
-  src/data/projects.ts        datos de los proyectos (nombre, estado, textos SEO, datos de ficha)
+  src/data/projects.ts        datos de los proyectos (nombre, estado, textos SEO, ficha, orden, stock)
+  src/data/legal.ts           textos legales (borrador: requiere revisión de un abogado)
+  src/content/notas/*.md      notas (blog); frontmatter en src/content.config.ts
   src/content/home/*.html     secciones de la página de inicio (texto tal cual el original)
   src/content/projects/<slug>/*.html   secciones de cada proyecto
   src/assets/img/             fotos originales (se optimizan solas al generar el sitio)
@@ -35,7 +38,7 @@ QUÉ HAY EN CADA CARPETA
   src/scripts/main.js         comportamiento (menú, galerías, selector de tipologías, showroom 3D…)
   src/scripts/motion.js       animaciones GSAP (se cargan aparte; respetan "reducir movimiento")
   src/styles/global.css       estilos del diseño original
-  public/                     favicons
+  public/                     favicons y logos
   legacy/index.html           la versión anterior de una sola página (solo referencia, no se publica)
 
 PARA AGREGAR O EDITAR UN PROYECTO
