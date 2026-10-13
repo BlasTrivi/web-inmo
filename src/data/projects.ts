@@ -149,7 +149,7 @@ const rawProjects: Project[] = [
       { id: 'proyecto', label: 'El proyecto' },
       { id: 'amenities', label: 'Amenities' },
       { id: 'tipologias', label: 'Residencias y dúplex' },
-      { id: 'galeria', label: 'Galería nocturna' },
+      { id: 'galeria', label: 'Galería' },
       { id: 'ficha', label: 'Ficha y ubicación' },
     ],
     title: 'The Address · Residencias y dúplex en Mburucuyá',
