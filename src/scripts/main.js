@@ -845,6 +845,63 @@ import './consent.js';
     });
   })();
 
+  /* ---- misión / visión / valores (hover en desktop, tap/teclado en el resto) ---- */
+  (function () {
+    var root = document.getElementById('mvv');
+    if (!root) return;
+    var items = root.querySelectorAll('.mvv-item');
+    // hover solo con mouse y layout de 2 columnas; en apilado (<=900px) los paneles que colapsan arriba
+    // desplazarían los encabezados bajo el puntero y encadenarían aperturas, así que ahí solo tap/click
+    var hoverMq = window.matchMedia('(hover:hover) and (pointer:fine) and (min-width:901px)');
+    function setOpen(it, open) {
+      it.classList.toggle('open', open);
+      it.querySelector('.mvv-b').setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    function openOnly(it) {
+      if (it.classList.contains('open')) return;
+      lockUntil = Date.now() + 700;
+      items.forEach(function (o) {
+        setOpen(o, o === it);
+      });
+      var n = 0;
+      var t = setInterval(function () {
+        var l = getLenis();
+        if (l && l.resize) l.resize();
+        if (++n > 8) {
+          clearInterval(t);
+          rf();
+        }
+      }, 70);
+    }
+    root.classList.add('on');
+    var timer = 0,
+      lastX = -1,
+      lastY = -1,
+      lockUntil = 0;
+    items.forEach(function (it) {
+      var b = it.querySelector('.mvv-b');
+      b.addEventListener('click', function () {
+        clearTimeout(timer);
+        openOnly(it);
+      });
+      // hover: solo con movimiento real del mouse (no por el reflujo del layout al abrir/cerrar paneles)
+      b.addEventListener('pointermove', function (e) {
+        if (!hoverMq.matches || e.pointerType !== 'mouse') return;
+        var moved = e.clientX !== lastX || e.clientY !== lastY;
+        lastX = e.clientX;
+        lastY = e.clientY;
+        if (!moved || Date.now() < lockUntil || it.classList.contains('open')) return;
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          if (b.matches(':hover')) openOnly(it);
+        }, 120);
+      });
+      b.addEventListener('pointerleave', function () {
+        clearTimeout(timer);
+      });
+    });
+  })();
+
   /* ---- acordeón (Entregados) ---- */
   (function () {
     var items = document.querySelectorAll('.done>li.ex');
@@ -972,6 +1029,7 @@ import './consent.js';
 
   /* ---- pista móvil bajo los pares plano/foto ---- */
   document.querySelectorAll('.pane .pair').forEach(function (pr) {
+    if (pr.children.length < 2) return; /* solo plano, sin foto: no hay nada que deslizar */
     var h = document.createElement('div');
     h.className = 'pair-hint';
     h.textContent = 'Deslizá para ver el plano y la foto →';

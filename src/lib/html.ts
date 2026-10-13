@@ -107,7 +107,7 @@ export async function processHtml(html: string): Promise<ProcessResult> {
     const m = FILE_RE.exec(src);
     if (!m || !hasImage(m[1])) continue;
     const name = m[1];
-    const ctx: ImageCtx = name.startsWith('logo_') ? { sizes: '120px', widths: [160, 320, 480] } : ctxFor(img);
+    const ctx: ImageCtx = ctxFor(img);
     const attrs: Record<string, string | true> = {};
     for (const [k, v] of Object.entries(img.attributes)) {
       if (['src', 'alt', 'loading', 'decoding', 'width', 'height', 'srcset', 'sizes', 'data-lcp'].includes(k)) continue;
@@ -179,7 +179,7 @@ function inline(node: Node): string {
   if (!(node instanceof HTMLElement)) return '';
   const tag = node.tagName?.toLowerCase();
   if (!tag) return node.childNodes.map(inline).join('');
-  if (SKIP_TAGS.has(tag)) return '';
+  if (SKIP_TAGS.has(tag) && !(tag === 'button' && node.classList.contains('md-keep'))) return '';
   if (node.getAttribute('aria-hidden') === 'true') return '';
   if (SKIP_CLASSES.some((c) => node.classList.contains(c))) return '';
   if (tag === 'br') return ' ';

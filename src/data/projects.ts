@@ -87,7 +87,7 @@ const rawProjects: Project[] = [
     segment: 'residencial',
     statusLabel: 'Nuevo lanzamiento',
     kicker: 'Proyecto 01 · Nuevo lanzamiento',
-    loc: 'Tte. Máximo Caballero esq. José Pappalardo · A 50 m del Club Internacional de Tenis · Asunción',
+    loc: 'Tte. Máximo Caballero esq. José Pappalardo · Al lado del Club Internacional de Tenis · Asunción',
     hero: {
       image: 'trinity2_exterior_2.webp',
       alt: 'Fachada de Trinity 2, la nueva torre de Trinity Towers junto al Club Internacional de Tenis, Asunción',
@@ -106,7 +106,7 @@ const rawProjects: Project[] = [
     title: 'Trinity 2 · Nuevo lanzamiento junto al CIT',
     description:
       'Trinity 2: dieciséis niveles junto al Club Internacional de Tenis, de monoambientes a tres dormitorios (36 a 88 m²), con un piso entero de amenities. Nuevo lanzamiento de INMO en Asunción.',
-    ogTagline: 'Nuevo lanzamiento · A 50 m del CIT',
+    ogTagline: 'Nuevo lanzamiento · Al lado del CIT',
     address: { street: 'Tte. Máximo Caballero esq. José Pappalardo', locality: 'Asunción' },
     schemaType: 'ApartmentComplex',
     availability: 'InStock',
@@ -262,8 +262,8 @@ const rawProjects: Project[] = [
     segment: 'residencial',
     statusLabel: 'Entregado',
     kicker: 'Proyecto  · Entregado · Segunda etapa de Trinity Towers',
-    loc: 'Tte. Máximo Caballero esq. Calle 4 · A 50 m del Club Internacional de Tenis',
-    hero: { image: 'trinity3_aerial.webp', alt: 'Vista aérea de Trinity 3 junto al Club Internacional de Tenis', kenBurns: false },
+    loc: 'Tte. Máximo Caballero esq. Calle 4 · A pasos del Club Internacional de Tenis',
+    hero: { image: 'trinity3_aerial.webp', alt: 'Vista aérea de Trinity 3 a pasos del Club Internacional de Tenis', kenBurns: false },
     cardImage: 'trinity3_tower.webp',
     cardAlt: 'Torre de Trinity 3',
     nav: [
@@ -274,8 +274,8 @@ const rawProjects: Project[] = [
     ],
     title: 'Trinity 3 · Segunda etapa de Trinity Towers',
     description:
-      'Trinity 3: 28 departamentos de dos dormitorios (62 a 80 m²) con azotea, piscina panorámica, quincho climatizado y gimnasio, a 50 m del Club Internacional de Tenis, Asunción. Entregado.',
-    ogTagline: 'Entregado · A 50 m del CIT',
+      'Trinity 3: 28 departamentos de dos dormitorios (62 a 80 m²) con azotea, piscina panorámica, quincho climatizado y gimnasio, a pasos del Club Internacional de Tenis, Asunción. Entregado.',
+    ogTagline: 'Entregado · A pasos del CIT',
     address: { street: 'Tte. Máximo Caballero esq. Calle 4', locality: 'Asunción' },
     schemaType: 'ApartmentComplex',
     numberOfUnits: 28,
@@ -358,6 +358,45 @@ const rawProjects: Project[] = [
     ],
     amenities: ['Piscina panorámica', 'Dos salones de eventos', 'Gimnasio con sauna', 'Playground', 'Business center', 'Laundry'],
   },
+  {
+    slug: 'trinity-1',
+    name: 'Trinity 1',
+    order: 8,
+    status: 'delivered',
+    // TODO-CLIENTE: el material de Trinity 1 dice "proyecto terminado" pero no menciona el stock; se mantiene 100% vendido según el sitio actual
+    stock: 'agotado',
+    segment: 'residencial',
+    statusLabel: 'Entregado',
+    kicker: 'Proyecto  · Entregado',
+    loc: 'Torre 1 de Trinity Towers · Máximo Caballero esq. Pappalardo, a pasos del CIT',
+    hero: {
+      image: 'trinity1_fachada.webp',
+      alt: 'Acceso de Trinity Towers 1, a pasos del Club Internacional de Tenis',
+      kenBurns: true,
+    },
+    cardImage: 'trinity1_torre.webp',
+    cardAlt: 'Torre 1 de Trinity Towers',
+    nav: [
+      { id: 'proyecto', label: 'El proyecto' },
+      { id: 'galeria', label: 'Galería' },
+      { id: 'ficha', label: 'Ficha' },
+    ],
+    title: 'Trinity 1 · La primera torre de Trinity Towers',
+    description:
+      'Trinity 1: primera torre de Trinity Towers, con once pisos de departamentos (lofts, 1 y 2 dormitorios), piscina panorámica, salón de eventos y gimnasio, a pasos del Club Internacional de Tenis en Asunción. Entregado.',
+    ogTagline: 'Entregado · A pasos del CIT',
+    address: { street: 'Máximo Caballero esq. José Pappalardo', locality: 'Asunción' },
+    schemaType: 'ApartmentComplex',
+    availability: 'SoldOut',
+    facts: [
+      { name: 'Edificio', value: 'Planta baja, 2 pisos de estacionamiento y 11 pisos de departamentos' },
+      { name: 'Tipologías', value: 'Loft, 1 y 2 dormitorios (con o sin escritorio)' },
+      { name: 'Proyecta', value: 'F. Bibolini' },
+      { name: 'Construye', value: 'Tedec' },
+      { name: 'Estado', value: 'Entregado' },
+    ],
+    amenities: ['Piscina panorámica con terraza descubierta', 'Salón de eventos climatizado con parrilla', 'Gimnasio equipado', 'Playground', 'Biggie Express 24 horas'],
+  },
 ];
 
 /**
@@ -365,7 +404,7 @@ const rawProjects: Project[] = [
  * Es la única fuente del orden: slider "Proyectos" de la home, bloques verticales de cada proyecto
  * en la home, lista "Entregados", menú, "Otros proyectos", numeración "Proyecto 0N", sitemap,
  * llms.txt y JSON-LD. Para reordenar o cambiar la lógica de aparición, tocar SOLO este arreglo.
- * Los slugs sin página propia (hoy `trinity-1` y `marquis`, que solo existen en "Entregados")
+ * Los slugs sin página propia (hoy `marquis`, que solo existe en "Entregados")
  * pueden listarse acá para ubicarlos; los que no figuren van al final.
  */
 export const PROJECT_ORDER: string[] = [
@@ -413,7 +452,6 @@ export function stockRibbon(p: Pick<Project, 'stock' | 'statusLabel'>): { text: 
 
 /** Stock de edificios sin página propia que figuran en "Entregados" (el sitio dice "100% vendido"). */
 export const LEGACY_STOCK: Record<string, { stock: Stock; statusLabel: string }> = {
-  'trinity-1': { stock: 'agotado', statusLabel: 'Entregado' },
 };
 
 /**
@@ -443,7 +481,6 @@ export const projectPath = (slug: string): string => `/${slug}/`;
  * `image` vacío = tarjeta tipográfica (sin foto).
  */
 const LEGACY_BUILDINGS: Record<string, { name: string; stock: Stock; statusLabel: string; image?: string; alt?: string }> = {
-  'trinity-1': { name: 'Trinity 1', stock: 'agotado', statusLabel: 'Entregado', image: 'trinity2_exterior.webp', alt: 'Complejo Trinity Towers junto al CIT' },
   marquis: { name: 'Marquis', stock: 'ultimas', statusLabel: 'Últimas unidades' },
 };
 

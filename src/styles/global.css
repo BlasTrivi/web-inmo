@@ -100,8 +100,7 @@ body[data-hdr="light"] .topnav{color:var(--gray);text-shadow:none}
 .menu .aside{display:flex;flex-direction:column;justify-content:flex-end;gap:26px;border-left:1px solid var(--line);padding-left:var(--pad)}
 .menu .aside a{border-bottom:1px solid var(--line)}
 .menu .aside .row{display:flex;flex-wrap:wrap;gap:16px}
-.menu .logo-color{width:170px;margin-bottom:auto}
-@media (max-width:900px){.menu{grid-template-columns:1fr;padding-top:calc(120px + env(safe-area-inset-top,0px));overflow:auto}.menu .aside{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:24px}.menu .logo-color{display:none}}
+@media (max-width:900px){.menu{grid-template-columns:1fr;padding-top:calc(120px + env(safe-area-inset-top,0px));overflow:auto}.menu .aside{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:24px}}
 
 /* page transition overlay */
 
@@ -405,6 +404,43 @@ body[data-hdr="light"] .topnav{color:var(--gray);text-shadow:none}
 @media (max-width:900px){.ten{grid-template-columns:1fr}.tl{grid-template-columns:1fr 1fr}}
 @media (max-width:520px){.pill{grid-template-columns:1fr}}
 
+/* misión, visión y valores (apertura al hover en desktop, tap/teclado en el resto) */
+.mvv{margin-top:clamp(50px,7vw,100px)}
+.mvv-list{border-top:1px solid currentColor}
+.mvv-item{display:grid;grid-template-columns:5fr 7fr;column-gap:clamp(30px,6vw,110px);border-bottom:1px solid var(--line-d);align-items:start}
+.mvv-h{margin:0;font:inherit}
+.mvv-b{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:clamp(44px,5vw,76px) minmax(0,1fr) auto;align-items:baseline;gap:0 12px;width:100%;padding:clamp(22px,2.6vw,38px) 0;color:var(--mid);transition:color .4s var(--ease);-webkit-tap-highlight-color:transparent}
+.mvv-b:focus-visible{outline:2px solid var(--red);outline-offset:-2px}
+.mvv-n{font-size:var(--fs-label);letter-spacing:.08em;font-weight:500}
+.mvv-t{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.02em;line-height:1.04}
+.mvv-i{position:relative;width:clamp(18px,1.6vw,26px);height:clamp(18px,1.6vw,26px);align-self:center;color:var(--red)}
+.mvv-i::before,.mvv-i::after{content:"";position:absolute;left:0;right:0;top:calc(50% - 1px);height:2px;background:currentColor;transition:transform .45s var(--ease)}
+.mvv-i::after{transform:rotate(90deg)}
+.mvv-item.open .mvv-b,.mvv-b:hover,.mvv-b:focus-visible{color:var(--fg)}
+.mvv-item.open .mvv-i::after{transform:rotate(0)}
+.mvv-p{min-width:0}
+.mvv-in{padding:clamp(22px,2.6vw,38px) 0}
+.mvv-in>p{max-width:46ch;font-weight:400}
+.mvv-vals{display:grid;gap:0;max-width:60ch}
+.mvv-vals li{display:grid;grid-template-columns:clamp(34px,3.4vw,52px) minmax(0,1fr);gap:0 14px;padding:16px 0;border-top:1px solid var(--line-d)}
+.mvv-vals li:first-child{border-top:0;padding-top:0}
+.mvv-vals li:last-child{padding-bottom:0}
+.mvv-vn{font-size:var(--fs-lead);font-weight:600;letter-spacing:-.02em;line-height:1;color:var(--red)}
+.mvv-vals b{display:block;font-size:var(--fs-lead);font-weight:500;letter-spacing:-.005em;line-height:1.25;margin-bottom:8px}
+.mvv-vals p{margin:0;line-height:1.55}
+/* con JS: paneles colapsables (sin JS quedan todos abiertos) */
+.mvv.on .mvv-p{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .45s var(--ease),visibility 0s .45s}
+.mvv.on .mvv-in{overflow:hidden;min-height:0;opacity:0;padding-top:0;padding-bottom:0;transition:opacity .35s var(--ease),padding .45s var(--ease)}
+.mvv.on .mvv-item.open .mvv-p{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows .45s var(--ease),visibility 0s}
+.mvv.on .mvv-item.open .mvv-in{opacity:1;padding-top:clamp(22px,2.6vw,38px);padding-bottom:clamp(22px,2.6vw,38px);transition:opacity .45s .12s var(--ease),padding .45s var(--ease)}
+@media (max-width:900px){
+  .mvv-item{grid-template-columns:1fr}
+  .mvv-in{padding-top:0}
+  .mvv.on .mvv-item.open .mvv-in{padding-top:0}
+}
+@media (prefers-reduced-motion:reduce){.mvv .mvv-p,.mvv .mvv-in,.mvv-b,.mvv-i::before,.mvv-i::after{transition:none!important}}
+.reduce .mvv .mvv-p,.reduce .mvv .mvv-in,.reduce .mvv-b,.reduce .mvv-i::before,.reduce .mvv-i::after{transition:none!important}
+
 /* contact */
 .contact{padding-top:clamp(110px,16vh,180px)}
 .contact .grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,100px)}
@@ -590,7 +626,8 @@ body[data-hdr="light"] .topnav{color:var(--gray);text-shadow:none}
 
 /* ---- slider controls row ---- */
 .ctrl{display:flex;justify-content:space-between;align-items:center;padding-top:16px}
-.ctrl .dots{padding:0}
+.ctrl .dots{padding:0;min-width:0;flex:1 1 auto;margin-right:12px}
+.ctrl .dots i{flex:0 1 26px;min-width:6px}
 
 /* ---- cursor: square + brackets ---- */
 .cur{width:12px;height:12px;border-radius:0;background:transparent;border:1px solid #fff}
@@ -1207,7 +1244,7 @@ body:has(.menu.open) .wa,body:has(.gv.open) .wa,body:has(.sr.open) .wa,body:has(
 .legal-btn{font-size:var(--fs-small);letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:12px 18px;border:1px solid var(--gray);transition:background-color .25s,color .25s}
 @media (hover:hover){.legal-btn:hover{background:var(--gray);color:var(--light)}}
 @media (max-width:900px){
-  .legal-grid{grid-template-columns:1fr}
+  .legal-grid{grid-template-columns:minmax(0,1fr)}
   .legal-toc{position:static}
   .legal-body table{display:block;overflow-x:auto}
   .legal-body th,.legal-body td{min-width:140px}
@@ -1299,3 +1336,6 @@ body:has(.menu.open) .wa,body:has(.gv.open) .wa,body:has(.sr.open) .wa,body:has(
 .legal-toc summary::after{content:'+';font-size:22px;line-height:1}
 .legal-toc details[open] summary::after{content:'−'}
 @media (min-width:901px){.legal-toc summary{pointer-events:none}.legal-toc summary::after{content:none}}
+
+/* lista de entregados: el estado largo (p. ej. "Entregado en 2020 · 100% vendido") baja de renglón en móvil */
+@media (max-width:900px){.done>li.ex .st{white-space:normal}}
