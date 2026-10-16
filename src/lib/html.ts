@@ -58,6 +58,7 @@ function ctxFor(img: HTMLElement): ImageCtx {
   const up = ancestors(img);
   if (img.hasAttribute('data-lcp') || has(up, 'hero') || has(up, 'phero'))
     return CTX.hero;
+  if (has(up, 'hf')) return { sizes: '(max-width: 1920px) 100vw, 1920px', widths: WIDTHS.lg };
   if (has(up, 'feature')) return { sizes: '100vw', widths: WIDTHS.lg };
   if (has(up, 'intro')) return { sizes: '(max-width: 900px) 100vw, 62vw', widths: WIDTHS.md };
   if (has(up, 'mimg')) return { sizes: '55vw', widths: WIDTHS.md };

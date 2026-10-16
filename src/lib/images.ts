@@ -56,7 +56,10 @@ const cache = new Map<string, Promise<PictureData>>();
 
 function fitWidths(all: readonly number[], natural: number): number[] {
   const list = all.filter((w) => w <= natural);
-  return list.length ? list : [natural];
+  if (!list.length) return [natural];
+  // el ancho real de la foto entra como último candidato (si no, un 1536px nunca se serviría a un marco de 1500px)
+  if (natural > list[list.length - 1] * 1.01) list.push(natural);
+  return list;
 }
 
 export function pictureData(name: string, ctx: ImageCtx): Promise<PictureData> {

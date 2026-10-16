@@ -851,16 +851,22 @@ import './consent.js';
     var root = document.getElementById('mvv');
     if (!root) return;
     var items = root.querySelectorAll('.mvv-item');
-    // hover solo con mouse y layout de 2 columnas; en apilado (<=900px) los paneles que colapsan arriba
-    // desplazarían los encabezados bajo el puntero y encadenarían aperturas, así que ahí solo tap/click
-    var hoverMq = window.matchMedia('(hover:hover) and (pointer:fine) and (min-width:901px)');
+    // hover: solo con mouse real (fine pointer). Se abre al instante al mover el mouse sobre la fila completa.
+    // El reflujo de layout (un panel que colapsa arriba) no cuenta: solo actuamos si cambian clientX/clientY.
+    var hoverMq = window.matchMedia('(hover:hover) and (pointer:fine)');
+    var LOCK = window.matchMedia('(prefers-reduced-motion:reduce)').matches ? 80 : 380; // ventana de animación; durante ella solo se recuerda la última fila realmente apuntada
+    var lastX = -1,
+      lastY = -1,
+      lockUntil = 0,
+      pending = null,
+      pTimer = 0;
     function setOpen(it, open) {
       it.classList.toggle('open', open);
       it.querySelector('.mvv-b').setAttribute('aria-expanded', open ? 'true' : 'false');
     }
-    function openOnly(it) {
+    function openOnly(it, byHover) {
       if (it.classList.contains('open')) return;
-      lockUntil = Date.now() + 700;
+      lockUntil = byHover ? Date.now() + LOCK : 0;
       items.forEach(function (o) {
         setOpen(o, o === it);
       });
@@ -873,32 +879,34 @@ import './consent.js';
           rf();
         }
       }, 70);
+      if (byHover) {
+        clearTimeout(pTimer);
+        pTimer = setTimeout(function () {
+          var q = pending;
+          pending = null;
+          if (q && q !== it && hoverMq.matches) openOnly(q, true);
+        }, LOCK + 20);
+      }
     }
     root.classList.add('on');
-    var timer = 0,
-      lastX = -1,
-      lastY = -1,
-      lockUntil = 0;
     items.forEach(function (it) {
       var b = it.querySelector('.mvv-b');
       b.addEventListener('click', function () {
-        clearTimeout(timer);
-        openOnly(it);
+        pending = null;
+        openOnly(it, false);
       });
-      // hover: solo con movimiento real del mouse (no por el reflujo del layout al abrir/cerrar paneles)
-      b.addEventListener('pointermove', function (e) {
-        if (!hoverMq.matches || e.pointerType !== 'mouse') return;
+      it.addEventListener('pointermove', function (e) {
+        if (e.pointerType !== 'mouse' || !hoverMq.matches) return;
         var moved = e.clientX !== lastX || e.clientY !== lastY;
         lastX = e.clientX;
         lastY = e.clientY;
-        if (!moved || Date.now() < lockUntil || it.classList.contains('open')) return;
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-          if (b.matches(':hover')) openOnly(it);
-        }, 120);
-      });
-      b.addEventListener('pointerleave', function () {
-        clearTimeout(timer);
+        if (!moved) return;
+        if (Date.now() < lockUntil) {
+          pending = it;
+          return;
+        }
+        pending = null;
+        openOnly(it, true);
       });
     });
   })();
