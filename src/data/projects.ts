@@ -143,8 +143,8 @@ const rawProjects: Project[] = [
       alt: 'Piscina de The Address al atardecer sobre Asunción',
       kenBurns: true,
     },
-    cardImage: 'address_dr_remate_3.webp',
-    cardAlt: 'The Address de noche, con la azotea iluminada',
+    cardImage: 'address_fachada_contrapicado.webp',
+    cardAlt: 'Fachada de The Address vista desde abajo, contra el cielo',
     nav: [
       { id: 'proyecto', label: 'El proyecto' },
       { id: 'amenities', label: 'Amenities' },
@@ -175,8 +175,8 @@ const rawProjects: Project[] = [
     status: 'upcoming',
     stock: 'disponible',
     segment: 'premium',
-    statusLabel: 'Próximamente',
-    kicker: 'Proyecto 03 · En preparación',
+    statusLabel: 'En construcción',
+    kicker: 'Proyecto 03 · En construcción',
     loc: 'Luxury Residences · Un departamento por piso · Asunción',
     hero: {
       image: 'president_frame_torre.webp',
@@ -206,7 +206,7 @@ const rawProjects: Project[] = [
       { name: 'Unidades', value: 'Planta tipo de 4 dormitorios (pisos 5 al 25) y dúplex en el piso 26' },
       { name: 'Superficie planta tipo', value: '429,42 m² totales' },
       { name: 'Ubicación', value: 'A confirmar en el lanzamiento' },
-      { name: 'Estado', value: 'En preparación' },
+      { name: 'Estado', value: 'En construcción' },
     ],
     amenities: [
       'Lobby de doble altura',
@@ -222,13 +222,13 @@ const rawProjects: Project[] = [
     slug: 'boston-842',
     name: 'Boston 842',
     order: 4,
-    status: 'finished',
-    stock: 'disponible',
+    status: 'last-units',
+    stock: 'ultimas',
     segment: 'residencial',
-    statusLabel: 'Terminado',
-    kicker: 'Proyecto 04 · Terminado',
+    statusLabel: 'Últimas unidades',
+    kicker: 'Proyecto 04 · Terminado, últimas unidades',
     loc: 'Juan de Salazar entre Washington y Padre Cardozo · Las Mercedes · Asunción',
-    hero: { image: 'boston_aerial.webp', alt: 'Boston 842 desde el aire al atardecer', kenBurns: false },
+    hero: { image: 'boston_atardecer.webp', alt: 'Terraza de ladrillo visto de Boston 842 al atardecer', kenBurns: false },
     cardImage: 'boston_facade.webp',
     cardAlt: 'Fachada de ladrillo visto de Boston 842',
     nav: [
@@ -243,7 +243,7 @@ const rawProjects: Project[] = [
     title: 'Boston 842 · Estilo Soho en Las Mercedes',
     description:
       'Boston 842: siete pisos y 29 unidades de uno a tres dormitorios en Las Mercedes, Asunción. Ladrillo visto y diseño industrial, con dos terrazas, piscina, rooftop grill, quincho y gimnasio.',
-    ogTagline: 'Terminado · Las Mercedes, Asunción',
+    ogTagline: 'Últimas unidades · Las Mercedes, Asunción',
     address: { street: 'Juan de Salazar entre Washington y Padre Cardozo, barrio Las Mercedes', locality: 'Asunción' },
     schemaType: 'ApartmentComplex',
     numberOfUnits: 29,
@@ -267,8 +267,8 @@ const rawProjects: Project[] = [
     kicker: 'Proyecto  · Entregado · Segunda etapa de Trinity Towers',
     loc: 'Tte. Máximo Caballero esq. Calle 4 · A pasos del Club Internacional de Tenis',
     hero: { image: 'trinity3_aerial.webp', alt: 'Vista aérea de Trinity 3 a pasos del Club Internacional de Tenis', kenBurns: false },
-    cardImage: 'trinity3_tower.webp',
-    cardAlt: 'Torre de Trinity 3',
+    cardImage: 'trinity3_cerca.webp',
+    cardAlt: 'Torre de Trinity 3, vista de cerca',
     nav: [
       { id: 'proyecto', label: 'El proyecto' },
       { id: 'tipologias', label: 'Tipologías' },
@@ -300,8 +300,8 @@ const rawProjects: Project[] = [
     kicker: 'Proyecto  · Entregado',
     loc: 'Apartments & Lofts · Máximo Caballero esq. José Pappalardo · A pasos del CIT',
     hero: { image: 'laguna_02.webp', alt: 'Laguna Club, apartments & lofts a pasos del CIT en Asunción', kenBurns: false },
-    cardImage: 'laguna_facade.webp',
-    cardAlt: 'Fachada de Laguna Club',
+    cardImage: 'laguna_cerca.webp',
+    cardAlt: 'Fachada de Laguna Club, vista de cerca',
     nav: [
       { id: 'proyecto', label: 'El proyecto' },
       { id: 'tipologias', label: 'Tipologías' },
@@ -377,8 +377,8 @@ const rawProjects: Project[] = [
       alt: 'Acceso de Trinity Towers 1, a pasos del Club Internacional de Tenis',
       kenBurns: true,
     },
-    cardImage: 'trinity1_torre.webp',
-    cardAlt: 'Torre 1 de Trinity Towers',
+    cardImage: 'trinity1_cerca.webp',
+    cardAlt: 'Torre 1 de Trinity Towers, vista de cerca',
     nav: [
       { id: 'proyecto', label: 'El proyecto' },
       { id: 'galeria', label: 'Galería' },
@@ -400,6 +400,44 @@ const rawProjects: Project[] = [
     ],
     amenities: ['Piscina panorámica con terraza descubierta', 'Salón de eventos climatizado con parrilla', 'Gimnasio equipado', 'Playground', 'Biggie Express 24 horas'],
   },
+  {
+    slug: 'marquis',
+    name: 'Marquis',
+    order: 9,
+    status: 'delivered',
+    // últimas 2 unidades (según el sitio actual y las notas del cliente); estado: entregado
+    stock: 'ultimas',
+    segment: 'residencial',
+    statusLabel: 'Últimas unidades',
+    kicker: 'Proyecto  · Entregado · Últimas unidades',
+    loc: 'Villa Morra · A pocos pasos del Shopping Villa Morra y La Cuadrita · Asunción',
+    hero: {
+      image: 'marquis_hero.webp',
+      alt: 'Torre Marquis vista desde el aire, en pleno Villa Morra, Asunción',
+      kenBurns: true,
+    },
+    cardImage: 'marquis_hero.webp',
+    cardAlt: 'Torre Marquis en Villa Morra',
+    nav: [
+      { id: 'proyecto', label: 'El proyecto' },
+      { id: 'galeria', label: 'Galería' },
+      { id: 'ficha', label: 'Ficha' },
+    ],
+    title: 'Marquis · Departamentos en Villa Morra',
+    description:
+      'Marquis: edificio entregado en Villa Morra, Asunción, a pocos pasos del Shopping Villa Morra y La Cuadrita, con piscina en la terraza, gimnasio, salón con parrilla y sauna. Quedan las últimas 2 unidades.',
+    ogTagline: 'Entregado · Últimas 2 unidades · Villa Morra',
+    address: { street: 'Villa Morra', locality: 'Asunción' },
+    schemaType: 'ApartmentComplex',
+    availability: 'LimitedAvailability',
+    facts: [
+      { name: 'Ubicación', value: 'Villa Morra, a pocos pasos del Shopping Villa Morra y La Cuadrita' },
+      { name: 'Inauguración', value: '2022' },
+      { name: 'Unidades disponibles', value: '2' },
+      { name: 'Estado', value: 'Entregado · últimas unidades' },
+    ],
+    amenities: ['Piscina con deck en la terraza', 'Gimnasio', 'Salón con parrilla', 'Sala de niños', 'Sauna', 'Lavandería'],
+  },
 ];
 
 /**
@@ -412,14 +450,14 @@ const rawProjects: Project[] = [
  */
 export const PROJECT_ORDER: string[] = [
   'trinity-2',
-  'the-address',
   'president-tower',
+  'the-address',
   'boston-842',
   'trinity-3',
   'laguna-club',
   'infinity',
-  'trinity-1',
   'marquis',
+  'trinity-1',
 ];
 
 /** Posición de un slug en el orden único (los desconocidos van al final, estables). */
@@ -457,19 +495,8 @@ export function stockRibbon(p: Pick<Project, 'stock' | 'statusLabel'>): { text: 
 export const LEGACY_STOCK: Record<string, { stock: Stock; statusLabel: string }> = {
 };
 
-/**
- * "Otros proyectos": excluye el actual; primero los del mismo segmento (con unidades antes que vendidos),
- * después el resto según PROJECT_ORDER.
- */
-export const relatedProjects = (current: Project): Project[] => {
-  const others = projects.filter((p) => p.slug !== current.slug);
-  const sold = (p: Project) => (p.stock === 'agotado' ? 1 : 0);
-  const same = others
-    .filter((p) => p.segment === current.segment)
-    .sort((a, b) => sold(a) - sold(b) || orderIndex(a.slug) - orderIndex(b.slug));
-  const rest = others.filter((p) => p.segment !== current.segment).sort((a, b) => orderIndex(a.slug) - orderIndex(b.slug));
-  return [...same, ...rest];
-};
+/** "Otros proyectos": todos menos el actual, en el orden único (PROJECT_ORDER). */
+export const relatedProjects = (current: Project): Project[] => projects.filter((p) => p.slug !== current.slug);
 
 export const projectBySlug = (slug: string): Project => {
   const p = projects.find((x) => x.slug === slug);
@@ -484,7 +511,6 @@ export const projectPath = (slug: string): string => `/${slug}/`;
  * `image` vacío = tarjeta tipográfica (sin foto).
  */
 const LEGACY_BUILDINGS: Record<string, { name: string; stock: Stock; statusLabel: string; image?: string; alt?: string }> = {
-  marquis: { name: 'Marquis', stock: 'ultimas', statusLabel: 'Últimas unidades' },
 };
 
 export interface Building {
@@ -532,6 +558,7 @@ export const menuItems: { label: string; href: string; /** foto (hero) y estado:
   ...projects.map((p) => ({ label: p.name, href: projectPath(p.slug), image: p.hero.image, alt: p.hero.alt, status: p.statusLabel })),
   { label: 'Entregados', href: '/#entregados' },
   { label: 'Diez años', href: '/#nosotros' },
+  { label: 'Misión, visión y valores', href: '/#mvv' },
   { label: 'Por qué INMO', href: '/#por-que-inmo' },
   { label: 'Notas', href: '/notas/' },
   { label: 'Contacto', href: '/#contacto' },

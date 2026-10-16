@@ -179,8 +179,9 @@ import './consent.js';
       jump(0);
       return;
     }
+    var off = parseFloat(el.getAttribute('data-anchor-offset')) || 0; // anclas dentro de una sección: dejan lugar al header
     var go = function () {
-      jump(el.getBoundingClientRect().top + window.scrollY);
+      jump(el.getBoundingClientRect().top + window.scrollY - off);
     };
     go();
     if (motion) {
@@ -192,7 +193,7 @@ import './consent.js';
     userMoved = false;
     [500, 1200].forEach(function (ms) {
       setTimeout(function () {
-        var d = el.getBoundingClientRect().top;
+        var d = el.getBoundingClientRect().top - off;
         if (!userMoved && Math.abs(d) > 3 && Math.abs(d) < 700) go();
       }, ms);
     });

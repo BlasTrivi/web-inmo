@@ -405,7 +405,7 @@ body[data-hdr="light"] .topnav{color:var(--gray);text-shadow:none}
 @media (max-width:520px){.pill{grid-template-columns:1fr}}
 
 /* misión, visión y valores (apertura al hover en desktop, tap/teclado en el resto) */
-.mvv{margin-top:clamp(50px,7vw,100px)}
+.mvv{margin-top:clamp(50px,7vw,100px);scroll-margin-top:90px}
 .mvv-list{border-top:1px solid currentColor}
 .mvv-item{display:grid;grid-template-columns:5fr 7fr;column-gap:clamp(30px,6vw,110px);border-bottom:1px solid var(--line-d);align-items:start}
 .mvv-h{margin:0;font:inherit}
@@ -764,6 +764,7 @@ body[data-hdr="light"] .topnav{color:var(--gray);text-shadow:none}
 @media (max-width:900px){.ficha2{grid-template-columns:1fr}.ficha2 .r{grid-template-columns:1fr;gap:4px}}
 /* otros proyectos + pie de página de proyecto */
 .more{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,1.4vw,22px)}
+@media (min-width:1100px){.more{grid-template-columns:repeat(4,1fr)}}
 .more a{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--dark);display:block}
 .more img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
 @media (hover:hover) and (pointer:fine){.more a:hover img{transform:scale(1.05)}}
@@ -1201,11 +1202,40 @@ body:has(.menu.open) .wa,body:has(.gv.open) .wa,body:has(.sr.open) .wa,body:has(
 .why-head .t-lead{max-width:24ch}
 .why-head .acts{margin-top:clamp(24px,3vw,40px)}
 .why-list{border-top:1px solid currentColor}
+.why-copy{max-width:60ch}
+.why-copy p{margin:0 0 1.1em}
+.why-copy .why-close{margin:1.6em 0 0;padding-left:clamp(14px,1.8vw,24px);border-left:2px solid var(--red);font-size:var(--fs-h3);font-weight:500;letter-spacing:-.01em;line-height:1.2;text-wrap:balance;max-width:34ch}
+.why-sub{margin:clamp(40px,6vw,80px) 0 16px}
 .why-list li{display:grid;grid-template-columns:clamp(68px,8vw,124px) minmax(0,1fr);gap:0 clamp(14px,2.4vw,36px);padding:clamp(22px,3vw,40px) 0;border-bottom:1px solid var(--line-d);align-items:start}
 .why-list .n{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.03em;line-height:.95;color:var(--red)}
 .why-list h3{font-size:var(--fs-h3);font-weight:500;letter-spacing:-.01em;line-height:1.1;margin:0 0 10px;text-wrap:balance}
 .why-list .t-body{max-width:52ch}
 @media (max-width:900px){.why{padding-top:110px}.why-in{grid-template-columns:1fr}.why-head{position:static}.why-head .t-lead{max-width:none}}
+
+/* ---------- Autoridades (Diez años) ---------- */
+.auth{display:grid;grid-template-columns:5fr 7fr;gap:clamp(30px,6vw,110px);align-items:start;margin-top:clamp(60px,9vw,130px)}
+.auth-who .t-h{margin:14px 0 clamp(20px,3vw,36px);max-width:12ch}
+.auth-list{border-top:1px solid currentColor}
+.auth-list li{display:flex;flex-direction:column;gap:4px;padding:clamp(16px,2vw,24px) 0;border-bottom:1px solid var(--line-d)}
+.auth-list b{font-size:var(--fs-h3);font-weight:500;letter-spacing:-.01em;line-height:1.1}
+.auth-list span{color:var(--mid);font-size:var(--fs-small);line-height:1.4}
+.auth-msg{margin:0}
+.auth-msg blockquote{margin:14px 0 0;padding:0 0 0 clamp(14px,2vw,28px);border-left:2px solid var(--red)}
+.auth-msg .t-lead{max-width:34ch;text-wrap:pretty}
+.auth-more{margin-top:20px}
+.auth-more summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:10px;min-height:44px;font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--mid)}
+.auth-more summary::-webkit-details-marker{display:none}
+.auth-more summary::after{content:"+";font-size:1.4em;line-height:1;color:var(--red)}
+.auth-more[open] summary::after{content:"–"}
+.auth-more summary:hover{color:inherit}
+.auth-more summary:focus-visible{outline:2px solid var(--red);outline-offset:4px}
+.auth-more .less,.auth-more[open] .more{display:none}
+.auth-more[open] .less{display:inline}
+.auth-more .t-body{max-width:58ch;margin-top:8px}
+.auth-more .t-body p{margin:0 0 1.1em}
+.auth-msg figcaption{margin:clamp(20px,2.6vw,32px) 0 0 clamp(16px,2.2vw,30px);font-size:var(--fs-small);color:var(--mid);line-height:1.4}
+.auth-msg figcaption b{color:inherit;font-weight:600}
+@media (max-width:900px){.auth{grid-template-columns:1fr}.auth-who .t-h{max-width:none}}
 
 /* ---------- proyecto 100% vendido (versión compacta) ---------- */
 .soldout{padding-top:clamp(90px,12vw,170px)}
@@ -1354,3 +1384,6 @@ html.cb-open:has(#cbCfg:not([hidden])) .wa{opacity:0;visibility:hidden;pointer-e
 
 /* primer layout barato: secciones bajo el pliegue sin renderizar hasta que main.js quita .cv (idle tras el load / primera interaccion) */
 .cv #main>section:not(.hero):not(.phero):not([data-hs]):not([data-gal]):not([data-day]):not(:first-child):not(.cvx),.cv .foot:not(.cvx){content-visibility:auto;contain-intrinsic-size:auto 900px}
+
+/* menú con 18 entradas: en pantallas bajas de escritorio se compacta para que entre sin desplazar */
+@media (min-width:901px) and (max-height:860px){.menu li a{font-size:clamp(17px,2.3vh,24px);padding:2px 0}.menu .aside{margin-top:10px;gap:6px}}

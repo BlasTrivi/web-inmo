@@ -11,7 +11,7 @@ export interface Props {
   project: Project;
 }
 const { project } = Astro.props;
-// mismo segmento primero (con unidades antes que vendidos), luego el resto en el orden único
+// todos los demás, en el orden único (PROJECT_ORDER)
 const others = relatedProjects(project);
 const cards = await Promise.all(
   others.map(async (p) => ({

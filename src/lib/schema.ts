@@ -28,7 +28,7 @@ export function organizationSchema(): Json {
     email: SITE.email,
     telephone: SITE.phone,
     foundingDate: SITE.foundingDate,
-    founder: SITE.founders.map((name) => ({ '@type': 'Person', name, jobTitle: 'Socio cofundador' })),
+    founder: SITE.founders.map((name) => ({ '@type': 'Person', name, jobTitle: name === 'Giovanni Masulli' ? 'Presidente de InmoGroup S.A. e InmoDesarrollos' : 'Socio' })),
     address: {
       '@type': 'PostalAddress',
       streetAddress: SITE.address.street,

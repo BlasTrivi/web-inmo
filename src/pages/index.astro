@@ -28,7 +28,8 @@ const fragments = baseFragments.map((f, i) => {
   if (k === -1) return f;
   const slug = sortedHome[k].id.replace(/-home$/, '');
   const p = projects.find((x) => x.slug === slug);
-  return { ...sortedHome[k], html: p ? renumber(sortedHome[k].html, p.order) : sortedHome[k].html };
+  const html = p ? renumber(sortedHome[k].html, p.order).replace('<!--ribbon-->', ribbonHtml(p)) : sortedHome[k].html;
+  return { ...sortedHome[k], html };
 });
 
 // 2) slider "Proyectos": las tarjetas salen de projects.ts (todos los edificios de PROJECT_ORDER).
