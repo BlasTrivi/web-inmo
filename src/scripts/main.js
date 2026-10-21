@@ -269,65 +269,147 @@ import './consent.js';
     }
   });
 
-  /* ---- cursor personalizado ---- */
+  /* ---- cursor personalizado con acción contextual ----
+     Una sola fuente de verdad: data-cursor="Texto" en cualquier elemento (data-cursor="" lo silencia) o, si no lo tiene,
+     la tabla CURSOR_RULES (selector -> texto o función). Se resuelve subiendo desde el elemento bajo el puntero:
+     gana el ancestro más cercano; a igual nivel, la primera regla. Solo en mouseover (no en cada mousemove). */
   var cur = document.getElementById('cur');
   var cx = 0,
     cy = 0,
     tx = 0,
     ty = 0;
-  if (window.matchMedia('(hover:hover) and (pointer:fine)').matches && !reduce) {
+  var expanded = function (el, yes, no) {
+    return el.getAttribute('aria-expanded') === 'true' ? yes : no;
+  };
+  var CURSOR_RULES = [
+    // visores y modales
+    ['.sre-shield', 'Explorar 3D'],
+    ['.sre-exit', 'Salir'],
+    ['#srX, #gvX, #pdX, .gv .x', 'Cerrar'],
+    ['#pdPrev, #psPrev', 'Anterior'],
+    ['#pdNext, #psNext', 'Siguiente'],
+    ['#pdZoom', 'Acercar'],
+    ['.pdstage', function () { return document.getElementById('pdStage').classList.contains('zoomed') ? 'Mover' : 'Acercar'; }],
+    ['.emb-btn', 'Cargar 3D'],
+    ['a[href*="urbania3d"]:not([data-no-modal])', 'Explorar 3D'],
+    // cabecera y menú
+    ['#burger', function (el) { return expanded(el, 'Cerrar', 'Abrir menú'); }],
+    ['.topnav a', 'Elegir'],
+    ['.brand', 'Inicio'],
+    ['.mn-co a', 'Ir'],
+    ['.mn-l a', 'Ver proyecto'],
+    // contacto
+    ['.wa, #ctxLnk, [data-asesor], a[href*="wa.me"], a[href*="api.whatsapp.com"]', 'Escribinos'],
+    ['#fMail, #fWa, .form button[type="submit"]', 'Enviar'],
+    ['a[href^="mailto:"]', 'Escribir'],
+    ['a[href^="tel:"]', 'Llamar'],
+    // cookies
+    ['[data-cb="accept"]', 'Aceptar'],
+    ['[data-cb="reject"]', 'Rechazar'],
+    ['[data-cb="config"], [data-cb="back"], [data-cookie-prefs]', 'Ajustar'],
+    // navegación de página
+    ['.up', 'Subir'],
+    ['.cue', 'Bajar'],
+    // selects propios y pestañas
+    ['.sel-btn, .sel-list li, .sel-wrap', 'Elegir'],
+    ['.tsel .tabs li', 'Elegir'],
+    // planos y galerías
+    ['.plan-btn', 'Ver plano'],
+    ['[data-gallery] figure', 'Ampliar'],
+    // acordeones
+    ['.auth-more summary', function (el) { return el.parentNode.open ? 'Cerrar' : 'Leer'; }],
+    ['summary', function (el) { return el.parentNode.open ? 'Cerrar' : 'Abrir'; }],
+    ['.mvv-b', function (el) { return expanded(el, 'Cerrar', 'Abrir'); }],
+    ['.done>li.ex', function (el) { return el.classList.contains('open') ? 'Cerrar' : 'Abrir'; }],
+    // tarjetas de proyecto y notas
+    ['.ncard-a', 'Leer nota'],
+    ['.hero .card.k', 'Leer'],
+    ['.pslider a, .more a, .feature a, .hero .card, .done .ficha a[href^="/"]', 'Ver proyecto'],
+    // enlaces sin acción propia: externos "Abrir ↗", internos "Ir"
+    ['a[target="_blank"]', 'Abrir ↗'],
+    ['a[href]', 'Ir'],
+    // contenedores: arrastre horizontal y secciones fijadas por scroll vertical
+    ['.pslider, .strip2, .strip3', 'Arrastrá'],
+    ['.hs, .gal, .day', 'Scroll ↓']
+  ];
+  var cursorLabel = function (t) {
+    for (var el = t; el && el.nodeType === 1; el = el.parentNode) {
+      if (el.hasAttribute('data-cursor')) return el.getAttribute('data-cursor');
+      for (var i = 0; i < CURSOR_RULES.length; i++) {
+        if (el.matches(CURSOR_RULES[i][0])) {
+          var v = CURSOR_RULES[i][1];
+          return typeof v === 'function' ? v(el) : v;
+        }
+      }
+    }
+    return null;
+  };
+  var interactive = 'a,button,select,label,summary,.done li.ex,.tsel .tabs li,.sel-list li';
+  if (window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
+    var lbl = cur.querySelector('.lbl');
+    var shown = '';
+    var vw = window.innerWidth;
+    var flip = false;
+    var curPd = document.getElementById('pd');
+    window.addEventListener('resize', function () {
+      vw = window.innerWidth;
+    });
     document.addEventListener('mousemove', function (e) {
       tx = e.clientX;
       ty = e.clientY;
-      cur.classList.remove('off');
+      if (cur.classList.contains('off')) {
+        // primera aparición / regreso a la ventana: sin recorrido desde la última posición
+        cx = tx;
+        cy = ty;
+        cur.classList.remove('off');
+      }
     });
     // dentro de un iframe (showroom 3D) o fuera de la ventana la página no recibe mousemove:
     // ocultamos el cursor para que no quede congelado encima
     document.addEventListener('mouseout', function (e) {
       if (!e.relatedTarget || e.relatedTarget.tagName === 'IFRAME') cur.classList.add('off');
     });
+    document.addEventListener('mouseover', function (e) {
+      var t = e.target;
+      if (!t || t.nodeType !== 1) return;
+      var text = cursorLabel(t);
+      var isBig = !!t.closest(interactive);
+      cur.classList.toggle('big', isBig || !!text);
+      cur.classList.toggle('lab', !!text);
+      if (text && text !== shown) {
+        lbl.textContent = text;
+        shown = text;
+      }
+    });
+    // el burger / acordeones cambian de estado sin mover el puntero: re-resolvemos al terminar el clic
+    document.addEventListener('click', function (e) {
+      var t = document.elementFromPoint(e.clientX, e.clientY);
+      if (!t) return;
+      var text = cursorLabel(t);
+      if (text && text !== shown) {
+        lbl.textContent = text;
+        shown = text;
+      }
+    });
     (function loop() {
-      cx += (tx - cx) * 0.18;
-      cy += (ty - cy) * 0.18;
+      cx += reduce ? tx - cx : (tx - cx) * 0.18;
+      cy += reduce ? ty - cy : (ty - cy) * 0.18;
+      // el rótulo va a la derecha del puntero; cerca del borde derecho pasa a la izquierda
+      var f = tx > vw - 190;
+      if (f !== flip) {
+        flip = f;
+        cur.classList.toggle('flip', f);
+      }
       cur.style.transform = 'translate(' + cx + 'px,' + cy + 'px) translate(-50%,-50%)';
       requestAnimationFrame(loop);
     })();
-    document.querySelectorAll('a,button,select,label,.done li.has,.tsel .tabs li').forEach(function (el) {
-      el.addEventListener('mouseenter', function () {
-        cur.classList.add('big');
-      });
-      el.addEventListener('mouseleave', function () {
-        cur.classList.remove('big');
-      });
-    });
-    var lbl = cur.querySelector('.lbl');
-    document.querySelectorAll('.pslider,.strip2,.strip3').forEach(function (el) {
-      el.addEventListener('mouseenter', function () {
-        lbl.textContent = 'Arrastrá';
-        cur.classList.add('drag');
-      });
-      el.addEventListener('mouseleave', function () {
-        cur.classList.remove('drag', 'grabbing');
-      });
-    });
-    document.querySelectorAll('.sre-shield').forEach(function (el) {
-      el.addEventListener('mouseenter', function () {
-        lbl.textContent = 'Explorar 3D';
-        cur.classList.add('drag');
-      });
-      el.addEventListener('mouseleave', function () {
-        cur.classList.remove('drag', 'grabbing');
-      });
-    });
-    document.querySelectorAll('.hs,.gal,.day').forEach(function (el) {
-      el.addEventListener('mouseenter', function () {
-        lbl.textContent = 'Scroll ↓';
-        cur.classList.add('drag');
-      });
-      el.addEventListener('mouseleave', function () {
-        cur.classList.remove('drag');
-      });
-    });
+    // <dialog> modal (planos) vive en la top layer y taparía el cursor: mientras está abierto, el cursor se muda adentro
+    if (curPd) {
+      new MutationObserver(function () {
+        var host = curPd.hasAttribute('open') ? curPd : document.body;
+        if (cur.parentNode !== host) host.appendChild(cur);
+      }).observe(curPd, { attributes: true, attributeFilter: ['open'] });
+    }
     document.addEventListener('pointerdown', function () {
       cur.classList.add('grabbing');
     });
@@ -341,7 +423,16 @@ import './consent.js';
       });
     });
     document.documentElement.addEventListener('mouseleave', function () {
-      cur.classList.remove('grabbing', 'drag', 'big');
+      cur.classList.remove('grabbing', 'lab', 'big');
+    });
+  }
+
+  /* ---- flecha "Bajar" del hero de proyecto: baja a la siguiente sección ---- */
+  var heroCue = document.querySelector('.phero .cue');
+  if (heroCue) {
+    heroCue.addEventListener('click', function () {
+      var ph = heroCue.closest('.phero');
+      scrollToY(ph ? ph.getBoundingClientRect().bottom + window.scrollY : window.innerHeight);
     });
   }
 

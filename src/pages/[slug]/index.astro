@@ -7,7 +7,7 @@ import Disponibles from '../../components/Disponibles.astro';
 import { SITE, absoluteUrl } from '../../config/site';
 import { projects, projectPath, type Project } from '../../data/projects';
 import { getFragments, processHtml } from '../../lib/html';
-import { COMPACT_SECTIONS, compactFicha, compactGaleria, compactNav, compactProyecto } from '../../lib/compact';
+import { COMPACT_SECTIONS, compactFicha, compactGaleria, compactNav, compactProyecto, compactTipologias } from '../../lib/compact';
 import { renumber } from '../../lib/typo';
 import { buildNav, hasAvailability } from '../../lib/sections';
 import { CTX, preloadInfo } from '../../lib/images';
@@ -35,6 +35,7 @@ const shape = (f: { id: string; html: string }): string => {
   if (!soldOut) return f.id === 'proyecto' ? renumber(f.html, project.order) : f.html;
   if (f.id === 'proyecto') return compactProyecto(renumber(f.html, project.order));
   if (f.id === 'galeria') return compactGaleria(f.html);
+  if (f.id === 'tipologias') return compactTipologias(f.html);
   return compactFicha(f.html);
 };
 // Índice estandarizado: solo las secciones que la página realmente tiene, en el orden único (lib/sections.ts)

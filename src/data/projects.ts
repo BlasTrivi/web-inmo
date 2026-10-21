@@ -562,7 +562,7 @@ export interface MenuGroup {
 }
 const MENU_GROUP_META: { id: Phase; title: string; sub: string }[] = [
   { id: 'curso', title: 'Proyectos en curso', sub: 'En lanzamiento y en obra' },
-  { id: 'terminado', title: 'Terminados y entregados', sub: 'Listos para habitar' },
+  { id: 'terminado', title: 'Proyectos terminados y entregados', sub: 'Listos para habitar' },
 ];
 /** Zona inferior del menú: proyectos agrupados por `phase`, cada grupo en el orden único (PROJECT_ORDER). */
 export const menuGroups: MenuGroup[] = (() => {
