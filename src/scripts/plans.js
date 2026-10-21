@@ -7,6 +7,8 @@
  * botón / Esc / clic en el fondo, foco atrapado y devuelto, zoom (clic = 2x con desplazamiento, rueda,
  * pellizco en táctiles) y anterior / siguiente entre los planos del mismo proyecto.
  * Para sumar planos nuevos alcanza con agregarlos al HTML de la sección con `<figure class="plan">`.
+ * Los planos extra van en `.mplans .mp-row` como `<figure class="plan mini" data-title="título completo del modal">` (la leyenda
+ * visible es corta; `data-title` es opcional y, si está, manda sobre el `figcaption` para el título del modal).
  */
 export function initPlans(api) {
   var dlg = document.getElementById('pd');
@@ -30,7 +32,7 @@ export function initPlans(api) {
     var pane = fig.closest('.pane');
     var cap = fig.querySelector('figcaption');
     var h3 = pane && pane.querySelector('.det h3');
-    var title = (cap && cap.textContent.trim()) || (h3 && h3.textContent.trim()) || im.alt || 'Plano';
+    var title = fig.getAttribute('data-title') || (cap && cap.textContent.trim()) || (h3 && h3.textContent.trim()) || im.alt || 'Plano';
     var sub = [];
     var h = h3 && h3.textContent.trim();
     if (h && title.toLowerCase().indexOf(h.toLowerCase()) === -1) sub.push(h);

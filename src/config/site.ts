@@ -5,6 +5,14 @@
  */
 export const SITE_URL = 'https://inmo.com.py';
 
+/**
+ * ¿Publicar precios y condiciones comerciales (forma de pago, cochera/baulera) en "Unidades disponibles"?
+ * Los valores ya están cargados en `src/data/units.ts`; con `false` no se renderizan (ni salen en el HTML).
+ *
+ * TODO-CLIENTE: el cliente todavía no decidió si se publican los precios. Cambiar a `true` para mostrarlos.
+ */
+export const SHOW_PRICES = false;
+
 export const SITE = {
   url: SITE_URL,
   name: 'INMO Desarrollos',

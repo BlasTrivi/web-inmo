@@ -164,6 +164,18 @@ src/content/home/10-por-que-inmo.html:2   validar textos
 ```
 Listarlos de nuevo: `rg TODO-CLIENTE src`.
 
+## Actualizar unidades disponibles
+
+Las unidades de "Unidades disponibles" salen de `src/data/units.ts` (clave = slug del proyecto), generado desde la lista de precios mensual (Excel, una hoja por proyecto).
+
+1. `pip install openpyxl` (una vez).
+2. Desde la raíz: `python -I scripts/units-from-xlsx.py "ruta/al/excel.xlsx"`
+3. Revisar el resumen que imprime (unidades por proyecto) y el diff de `src/data/units.ts`. Hojas nuevas: agregarlas a `SHEET_TO_SLUG` en el script.
+
+Trinity 2 y Laguna Club no tienen hoja: muestran el aviso "consultá con un asesor".
+
+**Precios**: están cargados pero no se publican. El flag `SHOW_PRICES` (`src/config/site.ts`, marcado `TODO-CLIENTE`) está en `false`; con `true` se muestran precios ("USD 245.000") y condiciones comerciales (forma de pago, cochera/baulera, vigencia). Con `false` el HTML no contiene ningún precio.
+
 ## 10. Lighthouse
 
 Medido sobre el build final (`dist/` servido en local, Lighthouse CLI, Chrome headless). Columnas: Performance / Accesibilidad / Buenas prácticas / SEO.

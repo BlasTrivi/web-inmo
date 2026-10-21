@@ -108,7 +108,10 @@ export async function processHtml(html: string): Promise<ProcessResult> {
     const m = FILE_RE.exec(src);
     if (!m || !hasImage(m[1])) continue;
     const name = m[1];
-    const ctx: ImageCtx = ctxFor(img);
+    // data-defer: foto de un rotador (src/scripts/rotator.js). Mismo srcset que el resto, pero sin src/srcset
+    // reales (data-src / data-srcset) y sin preload: no se pide nada hasta que el script la activa.
+    const defer = img.hasAttribute('data-defer');
+    const ctx: ImageCtx = defer ? { ...ctxFor(img), eager: false } : ctxFor(img);
     const attrs: Record<string, string | true> = {};
     for (const [k, v] of Object.entries(img.attributes)) {
       if (['src', 'alt', 'loading', 'decoding', 'width', 'height', 'srcset', 'sizes', 'data-lcp'].includes(k)) continue;
@@ -118,7 +121,8 @@ export async function processHtml(html: string): Promise<ProcessResult> {
     const alt = img.getAttribute('alt') ?? '';
     jobs.push(
       (async () => {
-        const out = await pictureHtml(name, ctx, { alt, attrs, full: isGalleryImage(img) });
+        let out = await pictureHtml(name, ctx, { alt, attrs, full: isGalleryImage(img) });
+        if (defer) out = out.replace(' srcset=', ' data-srcset=').replace(' src="', ' data-src="');
         if (ctx.eager) preloads.push(await preloadInfo(name, ctx));
         img.replaceWith(out);
       })(),

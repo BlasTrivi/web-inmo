@@ -6,6 +6,10 @@
  * El cuerpo de cada página (secciones) vive en `src/content/projects/<slug>/NN-<id>.html`.
  */
 
+import { UNITS, type AvailableUnit, type ProjectUnits } from './units';
+
+export type { AvailableUnit } from './units';
+
 export type ProjectStatus =
   | 'launch' // Nuevo lanzamiento
   | 'last-units' // Terminado, últimas unidades
@@ -83,28 +87,12 @@ export interface Project {
    * muestra el aviso "disponibilidad y precios los comparte un asesor" + el botón "Contactá a tu asesor".
    * Cuando se carga, se renderiza como tabla (escritorio) / tarjetas (móvil).
    *
-   * TODO-CLIENTE: cargar unidades disponibles y precios (SharePoint)
-   * (listas de precios, planos y detalle de cada unidad viven en SharePoint y todavía no tenemos acceso).
+   * Se completa solo desde `src/data/units.ts` (clave = slug; se regenera cada mes con
+   * `scripts/units-from-xlsx.py`). Trinity 2 y Laguna Club no tienen hoja: siguen con el aviso del asesor.
    */
   units?: AvailableUnit[];
-}
-
-/** Una unidad a la venta. Todo es opcional salvo `unidad`; no se inventan datos: lo que falta no se muestra. */
-export interface AvailableUnit {
-  /** Identificador visible: "Piso 12", "Unidad 3B" */
-  unidad: string;
-  /** Tipología: "2 dormitorios", "Loft", "Dúplex A" */
-  tipologia?: string;
-  /** Superficie total en m² */
-  m2?: number;
-  dormitorios?: number;
-  piso?: string;
-  /** "Disponible", "Reservada", "Últimas unidades"... */
-  estado?: string;
-  /** Precio ya formateado ("USD 185.000"); si falta se muestra "Consultar" */
-  precio?: string;
-  /** URL del plano (opcional) */
-  plano?: string;
+  /** Fecha de la lista, condiciones comerciales y flag de enlace a #tipologias (de `src/data/units.ts`) */
+  unitsInfo?: Omit<ProjectUnits, 'units'>;
 }
 
 const rawProjects: Project[] = [
@@ -453,6 +441,9 @@ export const projects: Project[] = rawProjects
   .sort((a, b) => orderIndex(a.slug) - orderIndex(b.slug))
   .map((p, i) => ({
     ...p,
+    // unidades disponibles: salen de src/data/units.ts (lista mensual); un `units` propio en rawProjects tiene prioridad
+    units: p.units ?? UNITS[p.slug]?.units,
+    unitsInfo: UNITS[p.slug] ? { updated: UNITS[p.slug].updated, conditions: UNITS[p.slug].conditions, tipologiasLink: UNITS[p.slug].tipologiasLink } : undefined,
     order: i + 1,
     // el número del kicker sale del orden único ("Proyecto 03 · …")
     kicker: p.kicker.replace(/^Proyecto\s*\d*\s*·/, `Proyecto ${pad2(i + 1)} ·`),

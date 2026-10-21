@@ -36,7 +36,7 @@ function stkSize(sec) {
   if (!st) return 0;
   var h = st.getBoundingClientRect().height,
     d;
-  if (sec.hasAttribute('data-day')) d = Math.round(window.innerHeight * 0.75 * 5);
+  if (sec.hasAttribute('data-day')) d = Math.round(window.innerHeight * 0.75 * Math.max(5, sec.querySelectorAll('.imgs img').length));
   else {
     var tr = sec.querySelector('.track,.strip');
     d = tr ? Math.max(0, tr.scrollWidth - window.innerWidth) : 0;
@@ -276,7 +276,14 @@ export async function initMotion(a) {
         tEl = sec.querySelector('#dayTime'),
         hand = sec.querySelector('#dayHand'),
         arc = sec.querySelector('#dayArc');
-      var times = ['07:00', '09:00', '13:00', '17:00', '21:00'],
+      // horarios: salen de la lista (.list .t) para que el mapa foto/horario viva en el HTML; con 5 fotos queda como antes
+      var times = [].map.call(sec.querySelectorAll('.list .t'), function (t) {
+        return t.textContent.trim();
+      });
+      if (times.length !== imgs.length) times = ['07:00', '09:00', '13:00', '17:00', '21:00'];
+      var hrs = times.map(function (t) {
+          return parseInt(t, 10) + (parseInt(t.slice(3), 10) || 0) / 60;
+        }),
         cur = -1;
       function setStep(i) {
         if (i === cur) return;
@@ -299,9 +306,13 @@ export async function initMotion(a) {
         invalidateOnRefresh: true,
         onUpdate: function (st) {
           var p = st.progress;
-          setStep(Math.min(times.length - 1, Math.floor(p * times.length)));
-          hand.style.transform = 'rotate(' + ((7 + p * 14) / 24) * 360 + 'deg)';
-          arc.style.strokeDashoffset = 1 - p * (14 / 24);
+          var seg = p * times.length,
+            i = Math.min(times.length - 1, Math.floor(seg)),
+            // la aguja avanza entre el horario de esta foto y el de la siguiente
+            hr = hrs[i] + (i < times.length - 1 ? (hrs[i + 1] - hrs[i]) * (seg - i) : (seg - i));
+          setStep(i);
+          hand.style.transform = 'rotate(' + (hr / 24) * 360 + 'deg)';
+          arc.style.strokeDashoffset = 1 - (hr - hrs[0]) / 24;
         },
       });
     }

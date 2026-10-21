@@ -1,14 +1,14 @@
 ---
 /**
  * Sección "Unidades disponibles" (proyectos con stock; los 100% vendidos no la llevan).
- * Es data-driven: si el proyecto tiene `units` en projects.ts se muestra tabla (escritorio) / tarjetas (móvil);
- * si no, aviso "disponibilidad y precios los comparte un asesor" + botón "Contactá a tu asesor".
+ * Es data-driven: si el proyecto tiene unidades en `src/data/units.ts` (lista mensual, ver ese archivo) se muestra
+ * tabla (escritorio) / tarjetas (móvil); si no, aviso "disponibilidad y precios los comparte un asesor" + botón.
  *
- * TODO-CLIENTE: cargar unidades disponibles y precios (SharePoint). Los planos, listas de precios y
- * disponibilidad viven en SharePoint y todavía no tenemos acceso: no se inventan unidades ni precios.
+ * Los precios y las condiciones comerciales solo se renderizan si `SHOW_PRICES` (src/config/site.ts) es true.
+ * TODO-CLIENTE: el cliente tiene que decidir si se publican los precios.
  */
-import { ASESOR, asesorLink } from '../config/site';
-import { stockRibbon, type Project } from '../data/projects';
+import { ASESOR, SHOW_PRICES, asesorLink } from '../config/site';
+import { stockRibbon, type AvailableUnit, type Project } from '../data/projects';
 import { nb } from '../lib/typo';
 
 export interface Props {
@@ -16,27 +16,61 @@ export interface Props {
 }
 const { project } = Astro.props;
 const units = project.units ?? [];
+const info = project.unitsInfo;
 const ribbon = stockRibbon(project);
 // datos de disponibilidad que ya existen en la ficha (ej. Marquis "2", President "planta tipo y dúplex")
 const KEYS = ['Unidades disponibles', 'Unidades', 'Edificio', 'Tipologías', 'Residencias', 'Dúplex'];
 const facts = KEYS.map((k) => project.facts.find((f) => f.name === k)).filter((f): f is { name: string; value: string } => !!f).slice(0, 3);
 const href = asesorLink(project.name);
-const cols = [
+
+// ---- formatos (es-PY) ----
+const fmtM2 = (n: number) => n.toFixed(2).replace('.', ',').replace(/,00$/, '');
+const fmtUsd = (n: number) => `USD ${Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
+const fmtDate = (iso: string) => {
+  const [y, m, d] = iso.split('-').map(Number);
+  return `${d}/${m}/${y}`;
+};
+
+type Key = 'unidad' | 'piso' | 'tipologia' | 'dormitorios' | 'm2Cubiertos' | 'm2' | 'cocheras' | 'baulera' | 'estado' | 'precio';
+const cols: { key: Key; label: string }[] = [
   { key: 'unidad', label: 'Unidad' },
-  { key: 'tipologia', label: 'Tipología' },
-  { key: 'm2', label: 'm²' },
-  { key: 'dormitorios', label: 'Dorm.' },
   { key: 'piso', label: 'Piso' },
+  { key: 'tipologia', label: 'Tipología' },
+  { key: 'dormitorios', label: 'Dorm.' },
+  { key: 'm2Cubiertos', label: 'm² cubiertos' },
+  { key: 'm2', label: 'm² totales' },
+  { key: 'cocheras', label: 'Cocheras' },
+  { key: 'baulera', label: 'Baulera' },
   { key: 'estado', label: 'Estado' },
   { key: 'precio', label: 'Precio' },
-] as const;
-// solo se muestran las columnas que al menos una unidad completó
-const shown = cols.filter((c) => c.key === 'unidad' || units.some((u) => u[c.key] !== undefined && u[c.key] !== ''));
-const cell = (u: (typeof units)[number], key: (typeof cols)[number]['key']): string => {
+];
+const has = (k: Key) => units.some((u) => u[k] !== undefined && u[k] !== '' && u[k] !== 0);
+// solo se muestran las columnas que al menos una unidad completó; "Dorm." sobra si todas tienen tipología;
+// el precio NO se renderiza mientras SHOW_PRICES sea false
+const shown = cols.filter((c) => {
+  if (c.key === 'unidad') return true;
+  if (c.key === 'precio') return SHOW_PRICES && has('precio');
+  if (c.key === 'dormitorios') return has('dormitorios') && !units.every((u) => u.tipologia);
+  return has(c.key);
+});
+const text = (u: AvailableUnit, key: Key): string => {
   const v = u[key];
-  if (key === 'precio') return v ? String(v) : 'Consultar';
-  return v === undefined || v === '' ? '—' : String(v);
+  if (v === undefined || v === '' || v === 0) return '—';
+  if (key === 'm2' || key === 'm2Cubiertos') return `${fmtM2(v as number)} m²`;
+  if (key === 'precio') return fmtUsd(v as number);
+  return String(v);
 };
+const LIMIT = 8;
+const hasPlano = units.some((u) => u.plano);
+const c = info?.conditions;
+const condRows: [string, string][] = [];
+if (SHOW_PRICES && c) {
+  if (c.formaPago) condRows.push(['Forma de pago', c.formaPago]);
+  if (c.cocheraAdicional !== undefined) condRows.push(['Cochera adicional', fmtUsd(c.cocheraAdicional)]);
+  if (c.baulera !== undefined) condRows.push(['Baulera', fmtUsd(c.baulera)]);
+  if (c.generales) condRows.push(['Condiciones generales', c.generales]);
+  if (c.vigencia) condRows.push(['Vigencia de la lista', c.vigencia]);
+}
 ---
 
 <section class="page dark disp" id="disponibles" data-title={`${project.name} · Unidades disponibles`}>
@@ -52,20 +86,43 @@ const cell = (u: (typeof units)[number], key: (typeof cols)[number]['key']): str
     </div>
 
     {units.length > 0 ? (
-      <div class="disp-units" data-r>
+      <div class="disp-units" data-r data-units>
+        {info && <p class="t-label mid disp-date">Lista actualizada al {fmtDate(info.updated)}</p>}
         <table class="disp-table">
           <caption class="sr-only">Unidades disponibles en {project.name}</caption>
-          <thead><tr>{shown.map((c) => <th scope="col">{c.label}</th>)}{units.some((u) => u.plano) && <th scope="col">Plano</th>}</tr></thead>
-          <tbody>
-            {units.map((u) => (
-              <tr>
-                {shown.map((c) => <td data-label={c.label}>{cell(u, c.key)}</td>)}
-                {units.some((x) => x.plano) && <td data-label="Plano">{u.plano ? <a class="lnk" href={u.plano} target="_blank" rel="noopener">Ver plano</a> : '—'}</td>}
+          <thead><tr>{shown.map((col) => <th scope="col">{col.label}</th>)}{hasPlano && <th scope="col">Plano</th>}</tr></thead>
+          <tbody id="disp-rows">
+            {units.map((u, i) => (
+              <tr class={i >= LIMIT ? 'is-extra' : undefined}>
+                {shown.map((col) => {
+                  const t = text(u, col.key);
+                  return (
+                    <td data-label={col.label} class={t === '—' ? 'is-empty' : undefined}>
+                      {col.key === 'tipologia' && u.tipologia && info?.tipologiasLink
+                        ? <a class="disp-tip" href="#tipologias" title="Ver las tipologías del proyecto">{t}</a>
+                        : t}
+                      {col.key === 'tipologia' && u.nota && <small class="disp-nota">{u.nota}</small>}
+                    </td>
+                  );
+                })}
+                {hasPlano && <td data-label="Plano">{u.plano ? <a class="lnk" href={u.plano} target="_blank" rel="noopener">Ver plano</a> : '—'}</td>}
               </tr>
             ))}
           </tbody>
         </table>
-        <p class="t-label mid disp-note">Disponibilidad y precios sujetos a cambio. Confirmalos con tu asesor.</p>
+        {units.length > LIMIT && (
+          <button type="button" class="disp-more" hidden aria-expanded="false" aria-controls="disp-rows" data-more data-total={units.length}>
+            Ver todas ({units.length})
+          </button>
+        )}
+        {condRows.length > 0 && (
+          <dl class="disp-cond">
+            {condRows.map(([k, v]) => <div><dt>{k}</dt><dd>{nb(v)}</dd></div>)}
+          </dl>
+        )}
+        <p class="t-label mid disp-note">
+          {SHOW_PRICES ? 'Disponibilidad y precios sujetos a cambio. Confirmalos con tu asesor.' : 'Disponibilidad sujeta a cambio. Confirmala con tu asesor.'}
+        </p>
       </div>
     ) : (
       <p class="t-body disp-msg" data-r>
@@ -77,8 +134,50 @@ const cell = (u: (typeof units)[number], key: (typeof cols)[number]['key']): str
     <div class="disp-cta" data-r>
       <p class="q">¿Querés ver qué unidades hay en {nb(project.name)}?</p>
       <a class="asesor-btn asesor-btn--lg" data-asesor href={href} target="_blank" rel="noopener">{ASESOR.label}<span aria-hidden="true">→</span></a>
+      {!SHOW_PRICES && units.length > 0 && <p class="t-label mid disp-ask">Precios, formas de pago y cocheras: consultá con tu asesor.</p>}
       <a class="lnk" href="/#contacto">Dejar mis datos</a>
     </div>
   </div>
   <div class="tail"></div>
 </section>
+
+<style>
+  .disp-date{margin:0 0 14px}
+  .disp-nota{display:block;margin-top:2px;font-size:var(--fs-label);letter-spacing:.06em;text-transform:uppercase;color:var(--mid)}
+  .disp-tip{border-bottom:1px dotted currentColor}
+  .disp-tip:hover,.disp-tip:focus-visible{border-bottom-style:solid}
+  .disp-more{margin-top:18px;min-height:44px;padding:0 20px;border:1px solid rgba(255,255,255,.5);background:none;color:inherit;font:inherit;font-size:var(--fs-small);letter-spacing:.08em;text-transform:uppercase;font-weight:500;cursor:pointer}
+  .disp-more:hover{border-color:currentColor}
+  .disp-more:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+  .disp-units.is-collapsed tr.is-extra{display:none}
+  .disp-cond{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px 32px;margin:28px 0 0;padding:20px 0 0;border-top:1px solid rgba(255,255,255,.28)}
+  .disp-cond dt{font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--mid);font-weight:400}
+  .disp-cond dd{margin:4px 0 0;font-size:var(--fs-small);line-height:1.5}
+  .disp-ask{margin:0;max-width:34ch;line-height:1.5}
+  @media (max-width:700px){
+    .disp-table td.is-empty{display:none}
+    .disp-table tr{display:grid;grid-template-columns:1fr 1fr;gap:2px 16px}
+    .disp-table tr:not(.is-extra){display:grid}
+    .disp-table td{flex-direction:column;justify-content:flex-start;gap:2px;padding:6px 0}
+    .disp-table td[data-label="Tipología"],.disp-table td[data-label="Estado"],.disp-table td[data-label="Precio"]{grid-column:1/-1}
+    .disp-units.is-collapsed .disp-table tr.is-extra{display:none}
+    .disp-more{width:100%}
+    .disp-ask{flex:1 1 100%;max-width:none}
+  }
+</style>
+
+<script>
+  // "Ver todas": sin JS la tabla completa queda visible; con JS se pliega a 8 filas.
+  document.querySelectorAll<HTMLElement>('[data-units]').forEach((box) => {
+    const btn = box.querySelector<HTMLButtonElement>('[data-more]');
+    if (!btn) return;
+    const total = btn.dataset.total;
+    box.classList.add('is-collapsed');
+    btn.hidden = false;
+    btn.addEventListener('click', () => {
+      const collapsed = box.classList.toggle('is-collapsed');
+      btn.setAttribute('aria-expanded', String(!collapsed));
+      btn.textContent = collapsed ? `Ver todas (${total})` : 'Ver menos';
+    });
+  });
+</script>

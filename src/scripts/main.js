@@ -1511,5 +1511,20 @@ import './consent.js';
       );
     }, 2500);
   });
+  // rotadores de fotos (portada, manifiesto): chunk aparte, tras load + idle; las fotos diferidas no se piden antes
+  if (!reduce && document.querySelector('[data-rot]')) {
+    var startRot = function () {
+      idle(
+        function () {
+          import('./rotator.js').then(function (m) {
+            m.initRotators();
+          });
+        },
+        { timeout: 2500 },
+      );
+    };
+    if (document.readyState === 'complete') startRot();
+    else window.addEventListener('load', startRot);
+  }
   // enlace directo con ancla (sin GSAP): el navegador ya posiciona la página
 })();
