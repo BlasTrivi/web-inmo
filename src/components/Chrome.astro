@@ -6,7 +6,7 @@
  */
 import CookieConsent from './CookieConsent.astro';
 import { SITE, WA_MESSAGES, waLink } from '../config/site';
-import { menuItems } from '../data/projects';
+import { menuCompany, menuGroups } from '../data/projects';
 import { pictureData, pictureHtml } from '../lib/images';
 import { nb } from '../lib/typo';
 
@@ -21,10 +21,9 @@ const menuImg = await pictureHtml(
 );
 // Fotos del panel del menú: una capa por edificio (sin src; main.js las carga la primera vez que se abre el menú)
 const menuLayers = await Promise.all(
-  menuItems.map(async (item, i) => {
-    if (!item.image) return null;
+  menuGroups.flatMap((g) => g.items).map(async (item) => {
     const pd = await pictureData(item.image, { sizes: '(min-width: 901px) 52vw, 0px', widths: [768, 1080, 1440] });
-    return { k: i + 1, srcset: pd.webpSrcset, sizes: pd.sizes, alt: item.alt ?? '', w: pd.width, h: pd.height };
+    return { k: item.k, srcset: pd.webpSrcset, sizes: pd.sizes, alt: item.alt ?? '', w: pd.width, h: pd.height };
   }),
 );
 export interface Props {
@@ -34,7 +33,6 @@ export interface Props {
 const { waProject } = Astro.props;
 // TODO-CLIENTE: confirmar texto del mensaje (plantillas en site.ts → WA_MESSAGES)
 const waHref = waLink(waProject ? WA_MESSAGES.project.replace('{proyecto}', waProject) : WA_MESSAGES.home);
-const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
 <div id="sp" aria-hidden="true"><i></i></div>
@@ -57,13 +55,29 @@ const pad = (n: number) => String(n).padStart(2, '0');
     <div class="cap t-label" id="menuCap" data-def="Departamentos grandes, en serio · Asunción">Departamentos grandes, en serio · Asunción</div>
   </div>
   <div class="mcol" data-lenis-prevent>
-    <ul>
-      {menuItems.map((item, i) => <li><a href={item.href} data-k={item.image ? i + 1 : undefined} data-cap={item.status ? `${item.label} · ${item.status}` : undefined}><small>{pad(i + 1)}</small>{nb(item.label)}</a></li>)}
-    </ul>
+    <div class="mn">
+      <div class="mn-co-w">
+        <p class="mn-lab t-label mid" id="mnCoL">La empresa</p>
+        <ul class="mn-co" aria-labelledby="mnCoL">
+          {menuCompany.map((item) => <li><a href={item.href}>{nb(item.label)}</a></li>)}
+        </ul>
+      </div>
+      <div class="mn-groups">
+        {menuGroups.map((g) => (
+          <section class="mn-g" aria-labelledby={`mnG-${g.id}`}>
+            <h3 class="mn-h" id={`mnG-${g.id}`}>{g.title}</h3>
+            <p class="mn-s t-label mid">{g.sub}</p>
+            <ul class="mn-l">
+              {g.items.map((item) => <li><a href={item.href} data-k={item.k} data-cap={`${item.label} · ${item.tag}`}><span class="mn-n">{nb(item.label)}</span><span class={`mn-t ${item.tone}`}>{item.tag}</span></a></li>)}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </div>
     <div class="aside t-body">
       <div><span class="mid t-label">WhatsApp</span><br /><a href={SITE.whatsapp} target="_blank" rel="noopener">{SITE.phoneDisplay}</a></div>
       <div><span class="mid t-label">Correo</span><br /><a href={`mailto:${SITE.email}`}>{SITE.email}</a></div>
-      <div><span class="mid t-label">Oficinas</span><br />Av. Santa Teresa 2106, Torre 2, Piso 17<br />Torres del Paseo, Asunción</div>
+      <div><span class="mid t-label">Oficinas</span><br />Av. Santa Teresa 2106, Torre 2, Piso 17,<br class="mn-br" /> Torres del Paseo, Asunción</div>
       <div class="row t-label">
         <a href={SITE.social.instagram} target="_blank" rel="noopener">Instagram</a><a href={SITE.social.facebook} target="_blank" rel="noopener">Facebook</a><a href={SITE.social.tiktok} target="_blank" rel="noopener">TikTok</a><a href={SITE.social.linkedin} target="_blank" rel="noopener">LinkedIn</a>
       </div>

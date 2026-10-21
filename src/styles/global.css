@@ -513,8 +513,8 @@ body[data-hdr="light"] .topnav{color:var(--gray);text-shadow:none}
 .tl li::before{transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
 .tl.on li{opacity:1;transform:none}
 .tl.on li::before{transform:none}
-.tl.on li:nth-child(1){transition-delay:.15s}.tl.on li:nth-child(2){transition-delay:.4s}.tl.on li:nth-child(3){transition-delay:.65s}.tl.on li:nth-child(4){transition-delay:.9s}.tl.on li:nth-child(5){transition-delay:1.15s}
-.tl.on li:nth-child(1)::before{transition-delay:.15s}.tl.on li:nth-child(2)::before{transition-delay:.4s}.tl.on li:nth-child(3)::before{transition-delay:.65s}.tl.on li:nth-child(4)::before{transition-delay:.9s}.tl.on li:nth-child(5)::before{transition-delay:1.15s}
+.tl.on li:nth-child(1){transition-delay:.15s}.tl.on li:nth-child(2){transition-delay:.4s}.tl.on li:nth-child(3){transition-delay:.65s}.tl.on li:nth-child(4){transition-delay:.9s}.tl.on li:nth-child(5){transition-delay:1.15s}.tl.on li:nth-child(6){transition-delay:1.4s}.tl.on li:nth-child(7){transition-delay:1.65s}
+.tl.on li:nth-child(1)::before{transition-delay:.15s}.tl.on li:nth-child(2)::before{transition-delay:.4s}.tl.on li:nth-child(3)::before{transition-delay:.65s}.tl.on li:nth-child(4)::before{transition-delay:.9s}.tl.on li:nth-child(5)::before{transition-delay:1.15s}.tl.on li:nth-child(6)::before{transition-delay:1.4s}.tl.on li:nth-child(7)::before{transition-delay:1.65s}
 .reduce .tl::before{width:100%;transition:none}.reduce .tl li{opacity:1;transform:none;transition:none}.reduce .tl li::before{transform:none}
 
 /* pinned spacer keeps section colour */
@@ -1447,3 +1447,111 @@ html.cb-open:has(#cbCfg:not([hidden])) .wa{opacity:0;visibility:hidden;pointer-e
 .auth-more summary .more,.auth-more summary .less{display:inline;grid-template-columns:none;gap:0}
 .auth-more[open] summary .more{display:none}
 .auth-more:not([open]) summary .less{display:none}
+
+/* =====================================================================
+   BATCH A (feedback cliente): WhatsApp verde, menú en dos zonas,
+   formulario con tema y envío por mail, línea de tiempo más larga.
+   ===================================================================== */
+
+/* WhatsApp flotante en verde de marca (el ícono blanco queda sobre #25D366; se refuerza con borde y sombra) */
+.wa{background:#25D366;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.3),0 0 0 1px rgba(0,0,0,.14)}
+@media (hover:hover) and (pointer:fine){.wa.on:hover{background:#1EBE5A}}
+.wa:focus-visible{outline:2px solid var(--light);outline-offset:3px;box-shadow:0 0 0 5px #0b6b32}
+
+/* Menú: arriba "La empresa", abajo los proyectos en dos columnas por fase */
+.menu .mn{flex:none;display:flex;flex-direction:column;gap:clamp(14px,2.6vh,30px);min-height:0}
+.menu .mn-lab{margin:0 0 clamp(2px,.6vh,8px)}
+.menu .mcol ul.mn-co,.menu .mcol ul.mn-l{grid-auto-flow:row;display:flex;grid-template-rows:none;grid-template-columns:none;columns:auto;max-width:100%;overflow:visible;margin:0;padding:0;list-style:none}
+.menu .mcol ul.mn-co{flex-direction:row;flex-wrap:wrap;gap:0 clamp(16px,1.8vw,28px)}
+.menu .mcol ul.mn-l{flex-direction:column}
+.menu .mcol .mn li a{display:flex;white-space:normal;transform:none;letter-spacing:.01em;line-height:1.2;color:var(--light);opacity:.92;border-bottom:0}
+.menu .mcol .mn li a:hover{transform:none;opacity:1}
+.menu .mcol .mn li a:focus-visible{outline:2px solid var(--red);outline-offset:3px;opacity:1}
+.menu .mcol ul.mn-co a{font-size:clamp(15px,2vh,19px);padding:clamp(4px,.8vh,8px) 0;border-bottom:1px solid transparent}
+.menu .mcol ul.mn-co a:hover{border-bottom-color:var(--red)}
+.menu .mn-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(18px,2.4vw,40px);border-top:1px solid var(--line);padding-top:clamp(12px,2vh,22px)}
+.menu .mn-h{margin:0;font-size:clamp(17px,2.4vh,24px);font-weight:600;letter-spacing:-.01em;line-height:1.15;color:var(--light)}
+.menu .mn-s{margin:4px 0 clamp(6px,1.2vh,14px)}
+.menu .mcol ul.mn-l a{flex-direction:column;align-items:flex-start;gap:1px;padding:clamp(3px,.8vh,8px) 0;border-bottom:1px solid var(--line)}
+.menu .mn-n{font-size:clamp(15px,2.1vh,21px);font-weight:500}
+.menu .mn-t{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mid);display:inline-flex;align-items:center;gap:6px}
+.menu .mn-t::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.7}
+.menu .mn-t.open,.menu .mn-t.last{color:var(--light)}
+.menu .mn-t.open::before{background:var(--red);opacity:1}
+.menu .mn-t.last::before{background:#e0b341;opacity:1}
+.menu .mcol .aside{margin-top:auto;padding-top:clamp(10px,1.6vh,16px)}
+@media (min-width:901px){
+  .menu{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}
+  .menu .mcol ul.mn-l a{flex-direction:row;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:0 12px}
+  .menu .mn-t{white-space:nowrap}
+  .menu .aside .mn-br{display:none}
+  .menu .mcol .aside .row{gap:6px 18px}
+  .menu .mcol .aside{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(6px,1.2vh,12px) 18px;align-items:start;margin-top:auto}
+  .menu .mcol .aside>div:nth-child(3){display:block;grid-column:1/-1}
+  .menu .mcol .aside .row{grid-column:1/-1}
+  .menu .mcol{padding-left:clamp(24px,3vw,56px);padding-right:clamp(24px,3vw,56px)}
+}
+@media (min-width:1200px){.menu{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}}
+@media (max-width:900px){
+  .menu{grid-template-columns:minmax(0,1fr);overflow-x:hidden;overflow-y:auto;align-content:start}
+  .menu .mcol{display:flex;overflow:visible;height:auto;min-height:0;padding-top:calc(86px + env(safe-area-inset-top,0px))}
+  .menu .mn{gap:22px}
+  .menu .mcol ul.mn-co a{font-size:17px;padding:10px 0;min-height:44px;box-sizing:border-box;align-items:center}
+  .menu .mcol ul.mn-l a{padding:9px 0;min-height:44px;box-sizing:border-box;justify-content:center}
+  .menu .mn-n{font-size:19px}
+  .menu .mn-h{font-size:21px}
+  .menu .mcol .aside{margin-top:22px}
+}
+@media (max-width:640px){
+  .menu .mn-groups{grid-template-columns:1fr;gap:24px}
+  .menu .mcol ul.mn-co{display:grid;grid-template-columns:1fr 1fr;grid-auto-flow:row;gap:0 18px}
+}
+
+/* Formulario: dos acciones de envío */
+.fsend{display:flex;flex-wrap:wrap;align-items:center;gap:10px 28px;margin-top:6px}
+.form .fsend button{margin-top:0}
+
+/* Autoridades: dos personas bajo el presidente */
+.auth-list li+li{border-top:0}
+
+/* Línea de tiempo con siete hitos: en escritorio dos filas, cada hito con su propia línea */
+@media (min-width:901px){
+  .tl{grid-template-columns:repeat(4,1fr);row-gap:clamp(28px,3vw,48px)}
+  .tl::before{display:none}
+  .tl li{border-top:1px solid currentColor}
+  .tl li::before{top:-1px}
+}
+
+/* ===== Páginas de proyecto: botón "Contactá a tu asesor" + sección "Unidades disponibles" (feedback cliente, lote B) ===== */
+.asesor-btn{display:inline-flex;align-items:center;gap:12px;min-height:48px;padding:12px 22px;background:var(--light);color:var(--gray);border:1px solid var(--light);font-size:var(--fs-small);font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:1.2;white-space:nowrap;transition:background .3s var(--ease),color .3s var(--ease),border-color .3s var(--ease)}
+.asesor-btn span{transition:transform .4s var(--ease)}
+.asesor-btn:hover{background:var(--red);border-color:var(--red);color:#fff}
+.asesor-btn:hover span{transform:translateX(4px)}
+.asesor-btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.asesor-btn--lg{min-height:56px;padding:16px 30px;font-size:var(--fs-body)}
+.phero .asesor-btn{margin-top:22px}
+.disp .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.disp-in{padding-bottom:0}
+.disp-top{display:flex;flex-wrap:wrap;align-items:flex-start;gap:20px clamp(24px,5vw,72px);margin-top:clamp(16px,2vw,28px)}
+.disp .disp-rib{margin:0}
+.disp-facts{display:flex;flex-wrap:wrap;gap:16px clamp(24px,4vw,56px);margin:0;padding:0}
+.disp-facts>div{max-width:34ch}
+.disp-facts dt{font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--mid);font-weight:400}
+.disp-facts dd{margin:4px 0 0;font-size:var(--fs-body);line-height:1.5}
+.disp-msg{max-width:56ch;margin:clamp(20px,3vw,40px) 0 0}
+.disp-units{margin-top:clamp(20px,3vw,40px)}
+.disp-table{width:100%;border-collapse:collapse;font-size:var(--fs-body)}
+.disp-table th{padding:0 16px 12px 0;text-align:left;font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--mid);font-weight:400;border-bottom:1px solid rgba(255,255,255,.28)}
+.disp-table td{padding:14px 16px 14px 0;border-bottom:1px solid rgba(255,255,255,.14);vertical-align:top}
+.disp-note{margin-top:16px}
+.disp-cta{display:flex;flex-wrap:wrap;align-items:center;gap:20px 32px;margin-top:clamp(32px,5vw,64px);padding-top:clamp(28px,4vw,52px);border-top:1px solid rgba(255,255,255,.28)}
+.disp-cta .q{flex:1 1 100%;margin:0;font-size:var(--fs-h3);letter-spacing:-.01em;text-transform:none;font-weight:500;line-height:1.1;max-width:24ch}
+@media (max-width:700px){
+  .asesor-btn{white-space:normal}
+  .disp-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .disp-table,.disp-table tbody,.disp-table tr,.disp-table td{display:block}
+  .disp-table tr{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.28)}
+  .disp-table td{display:flex;justify-content:space-between;gap:16px;padding:6px 0;border:0}
+  .disp-table td::before{content:attr(data-label);font-size:var(--fs-label);letter-spacing:.08em;text-transform:uppercase;color:var(--mid)}
+  .disp-cta .asesor-btn{width:100%;justify-content:space-between}
+}

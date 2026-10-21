@@ -22,6 +22,11 @@ export const SITE = {
   phone: '+595981044061',
   phoneDisplay: '+595 981 044 061',
   whatsapp: 'https://wa.me/595981044061',
+  /**
+   * Mail comercial que recibe el botón "Enviar por mail" del formulario.
+   * TODO-CLIENTE: confirmar mail comercial (Flor). Mientras tanto usa el mail general de recepción.
+   */
+  contactEmail: 'recepcion@inmo.com.py',
   address: {
     street: 'Av. Santa Teresa 2106, Torre 2, Piso 17, Torres del Paseo',
     locality: 'Asunción',
@@ -35,6 +40,8 @@ export const SITE = {
     linkedin: 'https://www.linkedin.com/company/inmo-group-s-a/',
   },
   founders: ['Diego Prieto', 'Giovanni Masulli'],
+  /** Dirección de la empresa que no es cofundador (JSON-LD `employee`). */
+  executives: [{ name: 'Rodolfo Vozza', jobTitle: 'Director General' }],
   /** Fecha de la última revisión de contenido (sitemap, security.txt, humans.txt). */
   lastModified: '2026-09-30',
   /** Vencimiento de security.txt (RFC 9116). */
@@ -53,6 +60,16 @@ export const WA_MESSAGES = {
 
 export function waLink(text: string): string {
   return `${SITE.whatsapp}?text=${encodeURIComponent(text)}`;
+}
+
+/** Botón "Contactá a tu asesor" de las páginas de proyecto. TODO-CLIENTE: confirmar texto. */
+export const ASESOR = {
+  label: 'Contactá a tu asesor',
+  message: 'Hola, estoy en la web mirando {proyecto} y quiero hablar con un asesor.',
+} as const;
+
+export function asesorLink(projectName: string): string {
+  return waLink(ASESOR.message.replace('{proyecto}', projectName));
 }
 
 /** Textos legales y de consentimiento. */

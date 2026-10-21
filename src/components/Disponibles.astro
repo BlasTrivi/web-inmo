@@ -1,0 +1,84 @@
+---
+/**
+ * Sección "Unidades disponibles" (proyectos con stock; los 100% vendidos no la llevan).
+ * Es data-driven: si el proyecto tiene `units` en projects.ts se muestra tabla (escritorio) / tarjetas (móvil);
+ * si no, aviso "disponibilidad y precios los comparte un asesor" + botón "Contactá a tu asesor".
+ *
+ * TODO-CLIENTE: cargar unidades disponibles y precios (SharePoint). Los planos, listas de precios y
+ * disponibilidad viven en SharePoint y todavía no tenemos acceso: no se inventan unidades ni precios.
+ */
+import { ASESOR, asesorLink } from '../config/site';
+import { stockRibbon, type Project } from '../data/projects';
+import { nb } from '../lib/typo';
+
+export interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const units = project.units ?? [];
+const ribbon = stockRibbon(project);
+// datos de disponibilidad que ya existen en la ficha (ej. Marquis "2", President "planta tipo y dúplex")
+const KEYS = ['Unidades disponibles', 'Unidades', 'Edificio', 'Tipologías', 'Residencias', 'Dúplex'];
+const facts = KEYS.map((k) => project.facts.find((f) => f.name === k)).filter((f): f is { name: string; value: string } => !!f).slice(0, 3);
+const href = asesorLink(project.name);
+const cols = [
+  { key: 'unidad', label: 'Unidad' },
+  { key: 'tipologia', label: 'Tipología' },
+  { key: 'm2', label: 'm²' },
+  { key: 'dormitorios', label: 'Dorm.' },
+  { key: 'piso', label: 'Piso' },
+  { key: 'estado', label: 'Estado' },
+  { key: 'precio', label: 'Precio' },
+] as const;
+// solo se muestran las columnas que al menos una unidad completó
+const shown = cols.filter((c) => c.key === 'unidad' || units.some((u) => u[c.key] !== undefined && u[c.key] !== ''));
+const cell = (u: (typeof units)[number], key: (typeof cols)[number]['key']): string => {
+  const v = u[key];
+  if (key === 'precio') return v ? String(v) : 'Consultar';
+  return v === undefined || v === '' ? '—' : String(v);
+};
+---
+
+<section class="page dark disp" id="disponibles" data-title={`${project.name} · Unidades disponibles`}>
+  <div class="pad head"><h2 class="t-h" data-r>Unidades disponibles</h2></div>
+  <div class="pad disp-in">
+    <div class="disp-top" data-r>
+      <span class={`rib rib--${ribbon.tone} rib--hero disp-rib`} data-stock={project.stock}>{ribbon.text}</span>
+      {facts.length > 0 && (
+        <dl class="disp-facts">
+          {facts.map((f) => <div><dt>{f.name}</dt><dd>{nb(f.value)}</dd></div>)}
+        </dl>
+      )}
+    </div>
+
+    {units.length > 0 ? (
+      <div class="disp-units" data-r>
+        <table class="disp-table">
+          <caption class="sr-only">Unidades disponibles en {project.name}</caption>
+          <thead><tr>{shown.map((c) => <th scope="col">{c.label}</th>)}{units.some((u) => u.plano) && <th scope="col">Plano</th>}</tr></thead>
+          <tbody>
+            {units.map((u) => (
+              <tr>
+                {shown.map((c) => <td data-label={c.label}>{cell(u, c.key)}</td>)}
+                {units.some((x) => x.plano) && <td data-label="Plano">{u.plano ? <a class="lnk" href={u.plano} target="_blank" rel="noopener">Ver plano</a> : '—'}</td>}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p class="t-label mid disp-note">Disponibilidad y precios sujetos a cambio. Confirmalos con tu asesor.</p>
+      </div>
+    ) : (
+      <p class="t-body disp-msg" data-r>
+        La disponibilidad, los planos y los precios de las unidades de {nb(project.name)} te los comparte un asesor, siempre actualizados.
+        Escribinos y te enviamos la lista de unidades y las condiciones de compra.
+      </p>
+    )}
+
+    <div class="disp-cta" data-r>
+      <p class="q">¿Querés ver qué unidades hay en {nb(project.name)}?</p>
+      <a class="asesor-btn asesor-btn--lg" data-asesor href={href} target="_blank" rel="noopener">{ASESOR.label}<span aria-hidden="true">→</span></a>
+      <a class="lnk" href="/#contacto">Dejar mis datos</a>
+    </div>
+  </div>
+  <div class="tail"></div>
+</section>

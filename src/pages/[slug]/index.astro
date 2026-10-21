@@ -3,11 +3,13 @@ import Base from '../../layouts/Base.astro';
 import ProjectHero from '../../components/ProjectHero.astro';
 import ShowroomEmbed from '../../components/ShowroomEmbed.astro';
 import MoreProjects from '../../components/MoreProjects.astro';
+import Disponibles from '../../components/Disponibles.astro';
 import { SITE, absoluteUrl } from '../../config/site';
 import { projects, projectPath, type Project } from '../../data/projects';
 import { getFragments, processHtml } from '../../lib/html';
 import { COMPACT_SECTIONS, compactFicha, compactGaleria, compactNav, compactProyecto } from '../../lib/compact';
 import { renumber } from '../../lib/typo';
+import { buildNav, hasAvailability } from '../../lib/sections';
 import { CTX, preloadInfo } from '../../lib/images';
 import {
   breadcrumbSchema,
@@ -35,6 +37,10 @@ const shape = (f: { id: string; html: string }): string => {
   if (f.id === 'galeria') return compactGaleria(f.html);
   return compactFicha(f.html);
 };
+// Índice estandarizado: solo las secciones que la página realmente tiene, en el orden único (lib/sections.ts)
+const showShowroom = !soldOut && !!project.showroom;
+const showDisponibles = hasAvailability(project);
+const nav = buildNav([...fragments.map((f) => f.id), ...(showShowroom ? ['showroom'] : []), ...(showDisponibles ? ['disponibles'] : [])]);
 const processed = await Promise.all(fragments.map((f) => processHtml(shape(f))));
 const preloads = [await preloadInfo(project.hero.image, CTX.hero), ...processed.flatMap((p) => p.preloads)];
 const ogImage = `/og/${project.slug}.png`;
@@ -72,13 +78,14 @@ const jsonLd = graph([
   jsonLd={jsonLd}
   preloads={preloads.slice(0, 1)}
 >
-  <ProjectHero project={project} nav={soldOut ? compactNav(project.nav) : project.nav} />
+  <ProjectHero project={project} nav={soldOut ? compactNav(nav) : nav} />
   {processed.map((p, i) => (
     <>
       <Fragment set:html={p.html} />
-      {!soldOut && project.showroom && fragments[i].id === 'proyecto' && <ShowroomEmbed project={project} id="showroom" theme="light" level={2} />}
+      {!soldOut && project.showroom && fragments[i].id === 'tipologias' && <ShowroomEmbed project={project} id="showroom" theme="light" level={2} />}
     </>
   ))}
+  {showDisponibles && <Disponibles project={project} />}
   {soldOut && (
     <section class="page dark soldout" id="vendido" data-title="100% vendido">
       <div class="pad so-in">

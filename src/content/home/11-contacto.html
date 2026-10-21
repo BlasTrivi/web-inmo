@@ -14,22 +14,26 @@
         <a class="lnk" href="https://www.linkedin.com/company/inmo-group-s-a/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
-    <form class="form" id="form" novalidate data-r>
+    <form class="form" id="form" novalidate data-r data-mail="{{MAIL}}">
       <label><span class="t-label mid">Nombre</span><input name="nombre" id="fNombre" type="text" autocomplete="name" required aria-describedby="fNombreErr"><span class="ferr t-label" id="fNombreErr" role="alert" hidden>Escribí tu nombre para que podamos responderte.</span></label>
       <label><span class="t-label mid">Teléfono</span><input name="tel" type="tel" autocomplete="tel"></label>
+      <label class="sel-wrap"><span class="t-label mid">Tema de interés</span><select name="tema" data-custom>{{TOPTS}}</select></label>
       <label class="sel-wrap"><span class="t-label mid">Proyecto de interés</span><select name="proyecto" data-custom>{{POPTS}}</select></label>
       <label><span class="t-label mid">Mensaje</span><textarea name="msg" placeholder="Contanos qué estás buscando"></textarea></label>
       <div class="chk">
         <label class="chk-l"><input type="checkbox" name="priv" id="fPriv" required aria-describedby="fPrivErr"><span class="chk-t t-small">Leí y acepto la <a href="/privacidad/" target="_blank" rel="noopener">Política de privacidad</a></span></label>
         <p class="ferr t-label" id="fPrivErr" role="alert" hidden>Para continuar, aceptá la Política de privacidad.</p>
       </div>
-      <button class="lnk" type="submit">Enviar por WhatsApp</button>
-      <p class="t-label mid">Se abre WhatsApp con tu mensaje listo para enviar. No guardamos lo que escribís acá.</p>
+      <div class="fsend">
+        <button class="lnk" type="submit">Enviar por WhatsApp</button>
+        <button class="lnk" type="button" id="fMail">Enviar por mail</button>
+      </div>
+      <p class="t-label mid">Se abre WhatsApp o tu app de correo con el mensaje listo para enviar. No guardamos lo que escribís acá.</p>
     </form>
   </div>
   <footer class="pad foot t-label">
     <a class="up" href="/" aria-label="Volver arriba">↑</a>
-    <nav class="foot-links t-label" aria-label="Más información y legal"><a href="/#por-que-inmo">Por qué INMO</a><a href="/notas/">Notas</a><a href="/terminos/">Términos y condiciones</a><a href="/privacidad/">Política de privacidad</a><a href="/cookies/">Política de cookies</a><button type="button" data-cookie-prefs>Preferencias de cookies</button></nav>
+    <nav class="foot-links t-label" aria-label="Más información y legal"><a href="/#por-que-inmo">¿Por qué con INMO?</a><a href="/notas/">Notas</a><a href="/terminos/">Términos y condiciones</a><a href="/privacidad/">Política de privacidad</a><a href="/cookies/">Política de cookies</a><button type="button" data-cookie-prefs>Preferencias de cookies</button></nav>
     <div class="group">una marca de <img src="/brand/logo-group-white-red.svg" width="346" height="40" alt="INMOGROUP SA" decoding="async"></div>
     <div class="mid">© 2026 INMO Group SA. Asunción, Paraguay. Imágenes de proyectos en obra son referenciales.</div>
   </footer>

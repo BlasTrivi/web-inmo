@@ -120,7 +120,8 @@ import './consent.js';
     });
     mCap.textContent = (k !== '0' && a.dataset.cap) || mCap.dataset.def;
   }
-  menu.querySelectorAll('ul a').forEach(function (a) {
+  var mCol = menu.querySelector('.mn') || menu.querySelector('ul').parentNode;
+  mCol.querySelectorAll('a').forEach(function (a) {
     a.addEventListener('mouseenter', function () {
       showMenuImg(a);
     });
@@ -128,10 +129,10 @@ import './consent.js';
       if (a.matches(':focus-visible')) showMenuImg(a);
     });
   });
-  menu.querySelector('ul').addEventListener('mouseleave', function () {
+  mCol.addEventListener('mouseleave', function () {
     showMenuImg(null);
   });
-  menu.querySelector('ul').addEventListener('focusout', function (e) {
+  mCol.addEventListener('focusout', function (e) {
     if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) showMenuImg(null);
   });
   burger.addEventListener('click', function () {
@@ -542,7 +543,10 @@ import './consent.js';
       var parts = keys[0].split('|');
       ctxNm.textContent = parts[0].replace(/ (?=\d)/g, '\u00a0'); // "Trinity 2": el número no se separa del nombre
       ctxSt.textContent = parts[1];
-      ctxLnk.href = 'https://wa.me/595981044061?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20' + parts[2];
+      // "Contactá a tu asesor" (mismo mensaje que asesorLink() de src/config/site.ts); oculto en 100% vendido
+      ctxLnk.textContent = 'Contactá a tu asesor';
+      ctxLnk.hidden = /vendido/i.test(parts[1] || '');
+      ctxLnk.href = 'https://wa.me/595981044061?text=' + encodeURIComponent('Hola, estoy en la web mirando ' + decodeURIComponent(parts[2]) + ' y quiero hablar con un asesor.');
       ctx.classList.add('on');
     } else {
       ctxTimer = setTimeout(function () {
@@ -792,26 +796,53 @@ import './consent.js';
     form.priv.addEventListener('change', function () {
       if (form.priv.getAttribute('aria-invalid') === 'true') checkPriv();
     });
+    /* valida y arma el mensaje; send(canal) abre WhatsApp o el cliente de correo */
+    var buildMsg = function () {
+      var f = form;
+      if (!checkName()) {
+        f.nombre.focus();
+        return null;
+      }
+      if (!checkPriv()) {
+        f.priv.focus();
+        return null;
+      }
+      var none = 'Ninguno en particular';
+      return {
+        n: f.nombre.value.trim(),
+        t: f.tel.value.trim(),
+        tema: f.tema ? f.tema.value : '',
+        p: f.proyecto.value === none ? '' : f.proyecto.value,
+        m: f.msg.value.trim(),
+      };
+    };
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var f = e.target,
-        okName = checkName(),
-        okPriv = checkPriv();
-      if (!okName) {
-        f.nombre.focus();
-        return;
-      }
-      if (!okPriv) {
-        f.priv.focus();
-        return;
-      }
-      var n = f.nombre.value.trim(),
-        t = f.tel.value.trim(),
-        p = f.proyecto.value,
-        m = f.msg.value.trim();
-      var txt = 'Hola, soy ' + n + (t ? ' (' + t + ')' : '') + '. Me interesa ' + p + '.' + (m ? ' ' + m : '');
+      var d = buildMsg();
+      if (!d) return;
+      var txt =
+        'Hola, soy ' + d.n + (d.t ? ' (' + d.t + ')' : '') + '.' +
+        (d.tema ? ' Tema: ' + d.tema + '.' : '') +
+        (d.p ? ' Me interesa ' + d.p + '.' : '') +
+        (d.m ? ' ' + d.m : '');
       window.open('https://wa.me/595981044061?text=' + encodeURIComponent(txt), '_blank', 'noopener');
     });
+    var mailBtn = document.getElementById('fMail');
+    if (mailBtn)
+      mailBtn.addEventListener('click', function () {
+        var d = buildMsg();
+        if (!d) return;
+        var to = form.dataset.mail || '';
+        var subject = 'Consulta desde la web' + (d.tema ? ' · ' + d.tema : '') + (d.p ? ' · ' + d.p : '');
+        var body =
+          'Hola, soy ' + d.n + '.\n\n' +
+          (d.tema ? 'Tema de interés: ' + d.tema + '\n' : '') +
+          (d.p ? 'Proyecto de interés: ' + d.p + '\n' : '') +
+          (d.t ? 'Teléfono: ' + d.t + '\n' : '') +
+          (d.m ? '\n' + d.m + '\n' : '') +
+          '\nEnviado desde inmo.com.py';
+        window.location.href = 'mailto:' + to + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      });
   }
 
   /* ---- numeración de amenities (sin GSAP) ---- */

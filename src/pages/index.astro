@@ -45,7 +45,18 @@ const dotsHtml = buildings.map((_, i) => (i === 0 ? '<i class="on"></i>' : '<i><
 const mqSpans = names.map((n) => `<span>${n}</span>`).join('');
 const mqHtml = `<p class="vh">Edificios de INMO: ${listEs(names)}.</p><div class="mq" aria-hidden="true"><div class="in">${mqSpans}${mqSpans.replace(/<span>/g, '<span class="dup">')}</div></div>`;
 // select del formulario: un <option> por edificio + asesoramiento (el valor sigue siendo el nombre, como lee el envío por WhatsApp)
-const optsHtml = [...names, 'Asesoramiento para invertir'].map((n) => `<option>${n}</option>`).join('');
+const optsHtml = ['Ninguno en particular', ...names, 'Asesoramiento para invertir'].map((n) => `<option>${n}</option>`).join('');
+
+// select "Tema de interés" (el texto elegido viaja tal cual en el mensaje de WhatsApp / mail)
+const TEMAS = [
+  'Quiero comprar para vivir',
+  'Quiero invertir',
+  'Unidades disponibles y precios',
+  'Visitar un showroom o el edificio',
+  'Postventa / soy propietario',
+  'Otro',
+];
+const temasHtml = TEMAS.map((n) => `<option>${n}</option>`).join('');
 
 // 3) "Entregados": los <li> siguen el mismo orden y se renumeran
 function reorderDelivered(html: string): string {
@@ -78,7 +89,7 @@ const processed = await Promise.all(
     let h = f.html;
     if (f.id === 'proyectos') h = h.replace('{{PSLIDER}}', sliderHtml).replace('{{PSDOTS}}', dotsHtml).replace('{{PINTRO}}', introHtml);
     if (f.id === 'manifiesto') h = h.replace('{{MQ}}', mqHtml);
-    if (f.id === 'contacto') h = h.replace('{{POPTS}}', optsHtml);
+    if (f.id === 'contacto') h = h.replace('{{POPTS}}', optsHtml).replace('{{TOPTS}}', temasHtml).replace('{{MAIL}}', SITE.contactEmail);
     if (f.id === 'entregados') h = reorderDelivered(h);
     return processHtml(h);
   }),

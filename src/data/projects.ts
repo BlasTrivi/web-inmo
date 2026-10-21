@@ -29,6 +29,9 @@ export type Stock = 'disponible' | 'ultimas' | 'agotado';
  */
 export type Segment = 'premium' | 'residencial';
 
+/** Fase del proyecto (agrupa el menú principal). */
+export type Phase = 'curso' | 'terminado';
+
 export interface NavItem {
   /** id de la sección dentro de la página (ancla) */
   id: string;
@@ -41,6 +44,8 @@ export interface Project {
   /** Posición en el listado "Proyecto 0N" */
   order: number;
   status: ProjectStatus;
+  /** Fase para el menú: 'curso' = en lanzamiento o en obra; 'terminado' = terminado y entregado */
+  phase: Phase;
   /** TODO-CLIENTE: confirmar stock de cada edificio */
   stock: Stock;
   /** TODO-CLIENTE: confirmar segmento */
@@ -55,8 +60,6 @@ export interface Project {
   /** Imagen de las tarjetas "Otros proyectos" */
   cardImage: string;
   cardAlt: string;
-  /** Índice de la portada */
-  nav: NavItem[];
   /** <title> (se le agrega " · INMO Desarrollos") */
   title: string;
   /** meta description / descripción JSON-LD */
@@ -75,6 +78,33 @@ export interface Project {
   /** Amenities citados en el sitio */
   amenities: string[];
   numberOfUnits?: number;
+  /**
+   * Unidades disponibles (sección "Unidades disponibles"). Opcional: mientras esté vacío, la sección
+   * muestra el aviso "disponibilidad y precios los comparte un asesor" + el botón "Contactá a tu asesor".
+   * Cuando se carga, se renderiza como tabla (escritorio) / tarjetas (móvil).
+   *
+   * TODO-CLIENTE: cargar unidades disponibles y precios (SharePoint)
+   * (listas de precios, planos y detalle de cada unidad viven en SharePoint y todavía no tenemos acceso).
+   */
+  units?: AvailableUnit[];
+}
+
+/** Una unidad a la venta. Todo es opcional salvo `unidad`; no se inventan datos: lo que falta no se muestra. */
+export interface AvailableUnit {
+  /** Identificador visible: "Piso 12", "Unidad 3B" */
+  unidad: string;
+  /** Tipología: "2 dormitorios", "Loft", "Dúplex A" */
+  tipologia?: string;
+  /** Superficie total en m² */
+  m2?: number;
+  dormitorios?: number;
+  piso?: string;
+  /** "Disponible", "Reservada", "Últimas unidades"... */
+  estado?: string;
+  /** Precio ya formateado ("USD 185.000"); si falta se muestra "Consultar" */
+  precio?: string;
+  /** URL del plano (opcional) */
+  plano?: string;
 }
 
 const rawProjects: Project[] = [
@@ -82,6 +112,7 @@ const rawProjects: Project[] = [
     slug: 'trinity-2',
     name: 'Trinity 2',
     order: 1,
+    phase: 'curso',
     status: 'launch',
     stock: 'disponible',
     segment: 'residencial',
@@ -95,14 +126,6 @@ const rawProjects: Project[] = [
     },
     cardImage: 'trinity2_exterior_2.webp',
     cardAlt: 'Fachada de Trinity 2 junto al CIT',
-    nav: [
-      { id: 'proyecto', label: 'El proyecto' },
-      { id: 'amenities', label: 'Amenities' },
-      { id: 'niveles', label: 'Elegí tu nivel' },
-      { id: 'tipologias', label: 'Tipologías' },
-      { id: 'galeria', label: 'Galería' },
-      { id: 'ficha', label: 'Ficha y ubicación' },
-    ],
     title: 'Trinity 2 · Nuevo lanzamiento junto al CIT',
     description:
       'Trinity 2: dieciséis niveles junto al Club Internacional de Tenis, de monoambientes a tres dormitorios (36 a 88 m²), con un piso entero de amenities. Nuevo lanzamiento de INMO en Asunción.',
@@ -132,6 +155,7 @@ const rawProjects: Project[] = [
     slug: 'the-address',
     name: 'The Address',
     order: 2,
+    phase: 'terminado',
     status: 'last-units',
     stock: 'ultimas',
     segment: 'premium',
@@ -145,13 +169,6 @@ const rawProjects: Project[] = [
     },
     cardImage: 'address_fachada_contrapicado.webp',
     cardAlt: 'Fachada de The Address vista desde abajo, contra el cielo',
-    nav: [
-      { id: 'proyecto', label: 'El proyecto' },
-      { id: 'amenities', label: 'Amenities' },
-      { id: 'tipologias', label: 'Residencias y dúplex' },
-      { id: 'galeria', label: 'Galería' },
-      { id: 'ficha', label: 'Ficha y ubicación' },
-    ],
     title: 'The Address · Residencias y dúplex en Mburucuyá',
     description:
       'The Address: residencias de dos y tres dormitorios en suite y dúplex de cuatro con piscina privada sobre la avenida Santísima Trinidad, Asunción. Terminado, últimas unidades.',
@@ -172,6 +189,7 @@ const rawProjects: Project[] = [
     slug: 'president-tower',
     name: 'President Tower',
     order: 3,
+    phase: 'curso',
     status: 'upcoming',
     stock: 'disponible',
     segment: 'premium',
@@ -185,13 +203,6 @@ const rawProjects: Project[] = [
     },
     cardImage: 'president_frame_torre.webp',
     cardAlt: 'Render de la torre President Tower',
-    nav: [
-      { id: 'proyecto', label: 'El proyecto' },
-      { id: 'amenities', label: 'Amenities' },
-      { id: 'galeria', label: 'Galería' },
-      { id: 'unidades', label: 'Unidades' },
-      { id: 'ficha', label: 'Ficha' },
-    ],
     title: 'President Tower · Luxury residences, un departamento por piso',
     description:
       'President Tower: exclusividad y lujo en Asunción. Un departamento por piso con ascensor privado, lobby de doble altura, piscina, gimnasio, salón, coworking, kids room y playroom.',
@@ -222,6 +233,7 @@ const rawProjects: Project[] = [
     slug: 'boston-842',
     name: 'Boston 842',
     order: 4,
+    phase: 'terminado',
     status: 'last-units',
     stock: 'ultimas',
     segment: 'residencial',
@@ -231,15 +243,6 @@ const rawProjects: Project[] = [
     hero: { image: 'boston_atardecer.webp', alt: 'Terraza de ladrillo visto de Boston 842 al atardecer', kenBurns: false },
     cardImage: 'boston_facade.webp',
     cardAlt: 'Fachada de ladrillo visto de Boston 842',
-    nav: [
-      { id: 'proyecto', label: 'El proyecto' },
-      { id: 'materiales', label: 'Materiales' },
-      { id: 'galeria', label: 'Galería' },
-      { id: 'dia', label: 'Un día en Boston' },
-      { id: 'amenities', label: 'Amenities' },
-      { id: 'tipologias', label: 'Tipologías' },
-      { id: 'ficha', label: 'Ficha y ubicación' },
-    ],
     title: 'Boston 842 · Estilo Soho en Las Mercedes',
     description:
       'Boston 842: siete pisos y 29 unidades de uno a tres dormitorios en Las Mercedes, Asunción. Ladrillo visto y diseño industrial, con dos terrazas, piscina, rooftop grill, quincho y gimnasio.',
@@ -260,6 +263,7 @@ const rawProjects: Project[] = [
     slug: 'trinity-3',
     name: 'Trinity 3',
     order: 5,
+    phase: 'terminado',
     status: 'delivered',
     stock: 'disponible',
     segment: 'residencial',
@@ -269,12 +273,6 @@ const rawProjects: Project[] = [
     hero: { image: 'trinity3_aerial.webp', alt: 'Vista aérea de Trinity 3 a pasos del Club Internacional de Tenis', kenBurns: false },
     cardImage: 'trinity3_cerca.webp',
     cardAlt: 'Torre de Trinity 3, vista de cerca',
-    nav: [
-      { id: 'proyecto', label: 'El proyecto' },
-      { id: 'tipologias', label: 'Tipologías' },
-      { id: 'galeria', label: 'Galería' },
-      { id: 'ficha', label: 'Ficha' },
-    ],
     title: 'Trinity 3 · Segunda etapa de Trinity Towers',
     description:
       'Trinity 3: 28 departamentos de dos dormitorios (62 a 80 m²) con azotea, piscina panorámica, quincho climatizado y gimnasio, a pasos del Club Internacional de Tenis, Asunción. Entregado.',
@@ -293,6 +291,7 @@ const rawProjects: Project[] = [
     slug: 'laguna-club',
     name: 'Laguna Club',
     order: 6,
+    phase: 'terminado',
     status: 'delivered',
     stock: 'disponible',
     segment: 'residencial',
@@ -302,12 +301,6 @@ const rawProjects: Project[] = [
     hero: { image: 'laguna_02.webp', alt: 'Laguna Club, apartments & lofts a pasos del CIT en Asunción', kenBurns: false },
     cardImage: 'laguna_cerca.webp',
     cardAlt: 'Fachada de Laguna Club, vista de cerca',
-    nav: [
-      { id: 'proyecto', label: 'El proyecto' },
-      { id: 'tipologias', label: 'Tipologías' },
-      { id: 'galeria', label: 'Galería' },
-      { id: 'ficha', label: 'Ficha' },
-    ],
     title: 'Laguna Club · Apartments & lofts a pasos del CIT',
     description:
       'Laguna Club: cinco pisos de suites, lofts y un departamento familiar (39 a 60 m²), con dos niveles de cocheras y azotea con piscina panorámica, a pasos del CIT en Asunción. Entregado.',
@@ -327,6 +320,7 @@ const rawProjects: Project[] = [
     slug: 'infinity',
     name: 'Infinity',
     order: 7,
+    phase: 'terminado',
     status: 'sold-out',
     stock: 'agotado',
     segment: 'residencial',
@@ -340,12 +334,6 @@ const rawProjects: Project[] = [
     },
     cardImage: 'infinity_front.webp',
     cardAlt: 'Frente de Infinity',
-    nav: [
-      { id: 'proyecto', label: 'El proyecto' },
-      { id: 'tipologias', label: 'Tipologías' },
-      { id: 'galeria', label: 'Galería' },
-      { id: 'ficha', label: 'Ficha' },
-    ],
     title: 'Infinity · Apartments & lofts sobre Santísima Trinidad',
     description:
       'Infinity: apartments & lofts de 36 a 93 m² sobre la avenida Santísima Trinidad, Asunción, con piscina panorámica, dos salones de eventos, gimnasio con sauna y business center. 100% vendido.',
@@ -365,6 +353,7 @@ const rawProjects: Project[] = [
     slug: 'trinity-1',
     name: 'Trinity 1',
     order: 8,
+    phase: 'terminado',
     status: 'delivered',
     // TODO-CLIENTE: el material de Trinity 1 dice "proyecto terminado" pero no menciona el stock; se mantiene 100% vendido según el sitio actual
     stock: 'agotado',
@@ -379,11 +368,6 @@ const rawProjects: Project[] = [
     },
     cardImage: 'trinity1_cerca.webp',
     cardAlt: 'Torre 1 de Trinity Towers, vista de cerca',
-    nav: [
-      { id: 'proyecto', label: 'El proyecto' },
-      { id: 'galeria', label: 'Galería' },
-      { id: 'ficha', label: 'Ficha' },
-    ],
     title: 'Trinity 1 · La primera torre de Trinity Towers',
     description:
       'Trinity 1: primera torre de Trinity Towers, con once pisos de departamentos (lofts, 1 y 2 dormitorios), piscina panorámica, salón de eventos y gimnasio, a pasos del Club Internacional de Tenis en Asunción. Entregado.',
@@ -404,6 +388,7 @@ const rawProjects: Project[] = [
     slug: 'marquis',
     name: 'Marquis',
     order: 9,
+    phase: 'terminado',
     status: 'delivered',
     // últimas 2 unidades (según el sitio actual y las notas del cliente); estado: entregado
     stock: 'ultimas',
@@ -418,11 +403,6 @@ const rawProjects: Project[] = [
     },
     cardImage: 'marquis_hero.webp',
     cardAlt: 'Torre Marquis en Villa Morra',
-    nav: [
-      { id: 'proyecto', label: 'El proyecto' },
-      { id: 'galeria', label: 'Galería' },
-      { id: 'ficha', label: 'Ficha' },
-    ],
     title: 'Marquis · Departamentos en Villa Morra',
     description:
       'Marquis: edificio entregado en Villa Morra, Asunción, a pocos pasos del Shopping Villa Morra y La Cuadrita, con piscina en la terraza, gimnasio, salón con parrilla y sauna. Quedan las últimas 2 unidades.',
@@ -546,20 +526,54 @@ export const homeSections = [
   { id: 'proyectos', label: 'Proyectos', title: 'Proyectos' },
   { id: 'entregados', label: 'Entregados', title: 'Entregados' },
   { id: 'nosotros', label: 'Diez años', title: 'Diez años' },
-  { id: 'por-que-inmo', label: 'Por qué INMO', title: 'Por qué INMO' },
+  { id: 'por-que-inmo', label: '¿Por qué con INMO?', title: '¿Por qué con INMO?' },
   { id: 'contacto', label: 'Contacto', title: 'Contacto' },
 ] as const;
 
-/** Entradas del menú principal: secciones fijas + todos los proyectos en el orden único. */
-export const menuItems: { label: string; href: string; /** foto (hero) y estado: alimentan el panel de imagen del menú */ image?: string; alt?: string; status?: string }[] = [
+/** Zona superior del menú: la empresa (secciones de la home y notas). */
+export const menuCompany: { label: string; href: string }[] = [
   { label: 'Inicio', href: '/' },
   { label: 'Manifiesto', href: '/#manifiesto' },
-  { label: 'Proyectos', href: '/#proyectos' },
-  ...projects.map((p) => ({ label: p.name, href: projectPath(p.slug), image: p.hero.image, alt: p.hero.alt, status: p.statusLabel })),
-  { label: 'Entregados', href: '/#entregados' },
   { label: 'Diez años', href: '/#nosotros' },
   { label: 'Misión, visión y valores', href: '/#mvv' },
-  { label: 'Por qué INMO', href: '/#por-que-inmo' },
+  { label: '¿Por qué con INMO?', href: '/#por-que-inmo' },
   { label: 'Notas', href: '/notas/' },
   { label: 'Contacto', href: '/#contacto' },
 ];
+
+export interface MenuProject {
+  slug: string;
+  label: string;
+  href: string;
+  /** foto (hero): alimenta el panel de imagen del menú */
+  image: string;
+  alt: string;
+  /** etiqueta de estado (misma lógica que la fajita de stock) */
+  tag: string;
+  tone: RibbonTone;
+  /** posición global (1..n) para enlazar con la capa de foto */
+  k: number;
+}
+export interface MenuGroup {
+  id: Phase;
+  title: string;
+  sub: string;
+  items: MenuProject[];
+}
+const MENU_GROUP_META: { id: Phase; title: string; sub: string }[] = [
+  { id: 'curso', title: 'Proyectos en curso', sub: 'En lanzamiento y en obra' },
+  { id: 'terminado', title: 'Terminados y entregados', sub: 'Listos para habitar' },
+];
+/** Zona inferior del menú: proyectos agrupados por `phase`, cada grupo en el orden único (PROJECT_ORDER). */
+export const menuGroups: MenuGroup[] = (() => {
+  let k = 0;
+  return MENU_GROUP_META.map((g) => ({
+    ...g,
+    items: projects
+      .filter((p) => p.phase === g.id)
+      .map((p) => {
+        const r = stockRibbon(p);
+        return { slug: p.slug, label: p.name, href: projectPath(p.slug), image: p.hero.image, alt: p.hero.alt, tag: r.text, tone: r.tone, k: ++k };
+      }),
+  }));
+})();

@@ -4,6 +4,8 @@ import type { NavItem, Project } from '../data/projects';
 import { CTX, pictureHtml } from '../lib/images';
 import { ribbonHtml } from '../lib/ribbon';
 import { nb } from '../lib/typo';
+import { ASESOR, asesorLink } from '../config/site';
+import { hasAvailability } from '../lib/sections';
 
 export interface Props {
   project: Project;
@@ -15,6 +17,7 @@ const img = await pictureHtml(project.hero.image, CTX.hero, {
   alt: project.hero.alt,
   attrs: project.hero.kenBurns ? { class: 'kb' } : {},
 });
+const showAsesor = hasAvailability(project); // todos menos los 100% vendidos
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
@@ -26,6 +29,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <span class="k an">{project.kicker}</span>
       <h1 class="an">{nb(project.name)}</h1>
       <p class="loc an">{project.loc}</p>
+      {showAsesor && <a class="asesor-btn an" data-asesor href={asesorLink(project.name)} target="_blank" rel="noopener">{ASESOR.label}<span aria-hidden="true">→</span></a>}
     </div>
     <nav aria-label={`Secciones de ${project.name}`}>
       <ul class="idx">
