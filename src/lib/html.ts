@@ -122,7 +122,7 @@ export async function processHtml(html: string): Promise<ProcessResult> {
     jobs.push(
       (async () => {
         let out = await pictureHtml(name, ctx, { alt, attrs, full: isGalleryImage(img) });
-        if (defer) out = out.replace(' srcset=', ' data-srcset=').replace(' src="', ' data-src="');
+        if (defer) out = out.replaceAll(' srcset=', ' data-srcset=').replace(' src="', ' data-src="');
         if (ctx.eager) preloads.push(await preloadInfo(name, ctx));
         img.replaceWith(out);
       })(),

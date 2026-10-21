@@ -22,13 +22,13 @@ function loadSlide(img) {
   if (!ds) return (img.__p = Promise.resolve());
   img.__p = new Promise(function (res) {
     var pic = img.parentNode;
-    var srcEl = pic && pic.tagName === 'PICTURE' ? pic.querySelector('source[data-srcset]') : null;
+    var srcEls = pic && pic.tagName === 'PICTURE' ? [].slice.call(pic.querySelectorAll('source[data-srcset]')) : [];
     img.addEventListener('load', function () { (img.decode ? img.decode() : Promise.resolve()).catch(function () {}).then(res); }, { once: true });
     img.addEventListener('error', res, { once: true });
-    if (srcEl) {
+    srcEls.forEach(function (srcEl) {
       srcEl.setAttribute('srcset', srcEl.getAttribute('data-srcset'));
       srcEl.removeAttribute('data-srcset');
-    }
+    });
     img.setAttribute('src', ds);
     img.removeAttribute('data-src');
   });

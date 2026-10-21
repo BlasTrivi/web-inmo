@@ -176,17 +176,27 @@ Trinity 2 y Laguna Club no tienen hoja: muestran el aviso "consultá con un ases
 
 **Precios**: están cargados pero no se publican. El flag `SHOW_PRICES` (`src/config/site.ts`, marcado `TODO-CLIENTE`) está en `false`; con `true` se muestran precios ("USD 245.000") y condiciones comerciales (forma de pago, cochera/baulera, vigencia). Con `false` el HTML no contiene ningún precio.
 
+## Funciones recientes (notas técnicas)
+
+- **`SHOW_PRICES`** (`src/config/site.ts`): flag que decide si se publican precios y condiciones comerciales en "Unidades disponibles". En `false` (hoy) el HTML no contiene ningún precio; ver el detalle arriba. Marcado `TODO-CLIENTE`.
+- **`src/data/units.ts` y script mensual**: las unidades disponibles son datos generados (no editar a mano). Cada mes: `python -I scripts/units-from-xlsx.py "<excel>"` (ver "Actualizar unidades disponibles"). Los proyectos sin hoja muestran el aviso "consultá con un asesor". La sección es `src/components/Disponibles.astro`: tabla en escritorio, tarjetas en móvil, "Ver todas" pliega/despliega a partir de 8 unidades, y el botón "Contactá a tu asesor" abre WhatsApp con el proyecto ya indicado (`ASESOR` / `asesorLink` en `site.ts`).
+- **`src/scripts/rotator.js`**: rotador de fotos con fundido cruzado (portada de la home y bloques del manifiesto). Se arma con `data-rot` (+ `data-rot-int`, ms) en el contenedor y `<img class="rs">` por foto; las fotos extra llevan `data-defer` y no se piden hasta que el rotador entra en juego. No rota con `prefers-reduced-motion` ni con ahorro de datos. La leyenda de la portada se actualiza con `data-rcap`. Para sumar una foto basta con agregar otro `<img class="rs" data-defer …>`.
+- **Planos en miniatura ("Más planos")**: en `.mplans .mp-row` de cada tipología, `<figure class="plan mini" data-title="título del modal">`. Al hacer clic se abre el visor `#pd` (misma navegación anterior/siguiente que los planos principales). Ver el comentario de `src/scripts/plans.js`.
+- **Campo `phase` del menú** (`src/data/projects.ts`): cada proyecto declara `phase: 'curso' | 'terminado'`; el menú agrupa automáticamente en "Proyectos en curso" y "Proyectos terminados y entregados" (`menuGroups`). Para mover un proyecto de grupo, cambiar solo ese campo.
+- **`CURSOR_RULES`** (`src/scripts/main.js`): tabla `selector → texto` del cursor personalizado (escritorio). Alternativa por elemento: `data-cursor="Texto"` (o `data-cursor=""` para silenciarlo). Gana el ancestro más cercano.
+- **Imágenes de portada**: `CTX.hero` (`src/lib/images.ts`) usa en celular (≤700px) candidatos de hasta 1280w (`<source media>`), y el preload de la primera foto emite los mismos `imagesrcset`/`imagesizes` con su `media`. Si se agrega otra portada, no hay que tocar nada.
+
 ## 10. Lighthouse
 
-Medido sobre el build final (`dist/` servido en local, Lighthouse CLI, Chrome headless). Columnas: Performance / Accesibilidad / Buenas prácticas / SEO.
+Medido sobre el build final (`dist/` servido en local con `npx serve`, Lighthouse CLI, Chrome headless). Las filas de `/trinity-3/` en adelante son de la medición anterior (no se repitieron). Columnas: Performance / Accesibilidad / Buenas prácticas / SEO.
 
 | Página | Móvil (P/A/BP/SEO) | Escritorio (P/A/BP/SEO) |
 |---|---|---|
-| Home `/` | 96 / 100 / 100 / 100 (mediana de 3: 96, 94, 98) | 99 / 100 / 100 / 100 |
-| `/trinity-2/` | 98 / 100 / 100 / 100 (mediana de 3: 98, 92, 98) | 100 / 100 / 100 / 100 |
-| `/the-address/` | 99 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
-| `/president-tower/` | 99 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
-| `/boston-842/` | 95 / 100 / 100 / 100 (1 corrida; antes mediana 95) | 100 / 100 / 100 / 100 |
+| Home `/` | 94 / 100 / 100 / 100 (mediana de 3: 93, 98, 94; en 9 corridas 93-98) | 100 / 100 / 100 / 100 |
+| `/trinity-2/` | 96 / 100 / 100 / 100 (mediana de 3: 98, 96, 96) | 100 / 100 / 100 / 100 |
+| `/the-address/` | 97 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
+| `/president-tower/` | 97 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
+| `/boston-842/` | 98 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
 | `/trinity-3/` | 98 / 100 / 100 / 100 | 99 / 100 / 100 / 100 |
 | `/laguna-club/` | 96 / 100 / 100 / 100 | 99 / 100 / 100 / 100 |
 | `/infinity/` | 97 / 100 / 100 / 100 (1 corrida; antes 92-99) | 100 / 100 / 100 / 100 |
@@ -196,6 +206,10 @@ Medido sobre el build final (`dist/` servido en local, Lighthouse CLI, Chrome he
 | `/privacidad/` | 100 / 100 / 100 / 100 | 100 / 100 / 100 / 100 |
 
 Notas:
+- Las filas de Home a Boston 842 se midieron sobre el build final de esta versión (con rotadores, tablas de unidades y planos en miniatura). Las demás son de la medición anterior.
+- Home móvil queda en 93-98 (mediana 94): el TBT ronda 120-225 ms (parseo del HTML de la home + inicialización de GSAP/Lenis tras el `load`), no los rotadores ni las tablas. Las páginas de proyecto con tablas de unidades y planos en miniatura dan 96-98.
+- Portadas en celular: antes pedían ~480w (sizes="100vw" sobre un recorte `cover` alto) y se veían blandas. Ahora `CTX.hero` (`src/lib/images.ts`) ofrece 750/960/1080/1280w a calidad 45 vía `<source media="(max-width:700px)">`: 750w a 1x y 1.75x, 960w a 2x, 1280w a 3x, y cada archivo pesa menos que el de 750w que se servía antes. El preload de la primera foto lleva los mismos `imagesrcset`/`imagesizes` con su `media`.
+- Importante al medir: cada corrida de Lighthouse deja procesos de Chrome huérfanos si no se los cierra, y con unas decenas abiertas el TBT se dispara (de ~100 ms a 1.500-3.000 ms) y el Performance móvil cae a 60-80. Cerrar Chrome entre corridas.
 - SEO 66 en `/notas/` y en las notas de ejemplo es **intencional**: llevan `noindex` mientras no haya notas reales (falla solo la auditoría `is-crawlable`). Al publicar una nota real sin `ejemplo: true`, `/notas/` y esa nota pasan a 100.
 - El Performance móvil varía 90-99 entre corridas de la misma página (TBT de 0 a ~300 ms; el sitio carga GSAP/Lenis en un chunk aparte tras el `load`, y las secciones bajo el pliegue usan `content-visibility:auto` hasta ese momento para abaratar el primer layout). En un hosting real con CDN y compresión Brotli el resultado suele ser mejor que en el servidor local de prueba. Accesibilidad, Buenas prácticas y SEO: 100 en todas las páginas indexables.
 - `/404.html` no se audita con Lighthouse (responde con status 404).

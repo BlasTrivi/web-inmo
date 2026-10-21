@@ -9,10 +9,10 @@ import { hasAvailability } from '../lib/sections';
 
 export interface Props {
   project: Project;
-  /** Índice de la portada (por defecto, el del proyecto; la versión compacta de agotados pasa uno reducido) */
-  nav?: NavItem[];
+  /** Índice de la portada (la versión compacta de agotados pasa uno reducido) */
+  nav: NavItem[];
 }
-const { project, nav = project.nav } = Astro.props;
+const { project, nav } = Astro.props;
 const img = await pictureHtml(project.hero.image, CTX.hero, {
   alt: project.hero.alt,
   attrs: project.hero.kenBurns ? { class: 'kb' } : {},
