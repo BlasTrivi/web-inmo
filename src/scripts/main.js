@@ -316,7 +316,7 @@ import './consent.js';
     // planos y galerías
     ['.plan-btn', 'Ver plano'],
     // dentro de un carrusel arrastrable manda el arrastre (el clic igual amplía)
-    ['[data-gallery] figure', function (el) { return el.closest('.pslider, .strip2, .strip3') ? 'Arrastrá' : 'Ampliar'; }],
+    ['[data-gallery] figure', function (el) { return el.closest('.pslider, .strip2, .strip3, .hs, .gal') ? 'Arrastrá' : 'Ampliar'; }],
     // acordeones
     ['.auth-more summary', function (el) { return el.parentNode.open ? 'Cerrar' : 'Leer'; }],
     ['summary', function (el) { return el.parentNode.open ? 'Cerrar' : 'Abrir'; }],
@@ -330,8 +330,8 @@ import './consent.js';
     ['a[target="_blank"]', 'Abrir ↗'],
     ['a[href]', 'Ir'],
     // contenedores: arrastre horizontal y secciones fijadas por scroll vertical
-    ['.pslider, .strip2, .strip3', 'Arrastrá'],
-    ['.hs, .gal, .day', 'Scroll ↓']
+    ['.pslider, .strip2, .strip3, .hs, .gal', 'Arrastrá'],
+    ['.day', 'Scroll ↓']
   ];
   var cursorLabel = function (t) {
     for (var el = t; el && el.nodeType === 1; el = el.parentNode) {
